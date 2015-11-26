@@ -1,0 +1,28 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+	<window
+		apply="de.pogosystems.work.ui.controlling.SalesReportingController" >
+
+		<div align="center"  >
+			<combobox id="clientSelection" width="210px" />
+			<combobox id="brandSelection" width="210px" />
+			<combobox id="branchSelection" width="210px" />
+			<combobox id="yearSelection" width="80px">
+				<comboitem label="2015" value="2015" />
+				<comboitem label="2014" value="2014" />
+				<comboitem label="2013" value="2013" />
+				<comboitem label="2012" value="2012" />
+				<comboitem label="2011" value="2011" />
+				<comboitem label="2010" value="2010" />
+				<comboitem label="2009" value="2009" />
+				<comboitem label="2008" value="2008" />
+				<comboitem label="2007" value="2007" />
+				<comboitem label="2006" value="2006" />
+			</combobox>
+		</div>
+
+		<jasperreport id="report" height="900px"/>
+
+	</window>
+</zk>

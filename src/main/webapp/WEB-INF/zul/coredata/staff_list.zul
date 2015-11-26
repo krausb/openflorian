@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk>
+	<window border="normal" id="userListWindow"
+		apply="de.pogosystems.work.ui.hr.EmployeeListController"
+		title="${c:l('hr.list.title')}" vflex="true">
+		<notificationBox id="notificationBox" />
+		<vbox>
+            <hlayout height="30px">
+                <button id="newEntityButton" label="${c:l('hr.list.newbutton.label')}"/>
+            </hlayout>
+		    <vbox>
+			<listbox id="entityList" emptyMessage="${c:l('global.list.noEntries')}" vflex="1" >
+				<listhead>
+					<listheader label="${c:l('employee.model.employeeNr')}" sort="auto" hflex="3"/>
+					<listheader label="${c:l('employee.model.firstname')}" sort="auto" hflex="3"/>
+					<listheader label="${c:l('employee.model.lastname')}" sort="auto" hflex="3"/>
+					<listheader label="${c:l('employee.model.email')}" sort="auto" hflex="3"/>
+					<listheader label="${c:l('employee.model.zip')}" sort="auto" hflex="3"/>
+					<listheader label="${c:l('employee.model.city')}" sort="auto" hflex="3"/>
+				</listhead>
+			</listbox>
+			<paging id="paging"/>
+			</vbox>
+		</vbox>
+	</window>
+</zk>

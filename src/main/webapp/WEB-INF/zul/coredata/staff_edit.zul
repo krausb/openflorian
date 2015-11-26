@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk>
+    <window border="normal" id="employeeEditWindow" 
+        apply="org.zkoss.bind.BindComposer" 
+        viewModel="@id('vm') @init('de.pogosystems.work.ui.hr.EmployeeVM')"
+        title="${c:l('hr.editemployee.title')}">
+        <vlayout>
+            <notificationBox id="notificationBox" />
+            <hlayout>
+            	<tabbox>
+            		<tabs>
+            			<tab id="coredataTab" label="${c:l('hr.tabs.coredata.title')}" />
+            			<tab id="contractTab" label="${c:l('hr.tabs.contract.title')}" />
+            			<tab id="leavedaysTab" label="${c:l('hr.tabs.leavedays.title')}" />
+            			<tab id="absenceTab" label="${c:l('hr.tabs.absence.title')}" />
+            		</tabs>
+            		<tabpanels>
+            			<tabpanel id="coredataTabpanel">
+            				<vlayout>
+				                <hlayout>
+				                    <grid width="500px">
+				                        <columns>
+				                            <column width="150px" />
+				                            <column />
+				                        </columns>
+				                        <rows>
+				                            <row>
+				                                <label value="${c:l('employee.model.firstname')}" />
+				                                <textbox id="firstname" sclass="medium-textbox" value="@bind(vm.employee.firstname)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.middlename')}" />
+				                                <textbox id="middlename" sclass="medium-textbox" value="@bind(vm.employee.middlename)"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.lastname')}" />
+				                                <textbox id="lastname" sclass="medium-textbox" value="@bind(vm.employee.lastname)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.birthdate')}" />
+				                                <datebox id="birthdate" sclass="medium-textbox" value="@bind(vm.employee.birthdate)" constraint="no empty, no future"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.birthplace')}" />
+				                                <textbox id="birthplace" width="320px" value="@bind(vm.employee.birthplace)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.citizenshipcountry')}" />
+				                                <listbox mold="select" id="citizenshipCountry" model="@bind(vm.countries) @template('country')" selectedItem="@bind(vm.employee.citizenshipCountry)" width="320px">
+				                                	<template name="country">
+				                                		<listitem>
+				                                			<listcell label="${each.shortName}"/>
+				                                		</listitem>
+				                                	</template>
+				                                </listbox>
+				                            </row>
+				                        </rows>
+				                    </grid>
+				                    <grid width="500px">
+				                        <columns>
+				                            <column width="150px" />
+				                            <column />
+				                        </columns>
+				                        <rows>
+				                        	<row spans="2">
+				                        		<label value="${c:l('evaluator.model.avatar')}" />
+				                        	</row>
+				                            <row spans="2">
+				                                <vbox align="center" width="100%">
+				                                    <image id="photo" src="@bind(vm.employeePhoto)" width="150px" height="150px"/>
+				                                </vbox>
+				                            </row>
+				                            <row spans="2">
+				                                <hbox style="text-align: right;" hflex="1">
+				                                	<button id="uploadPhoto" onUpload="@command('uploadPhoto')" label="${c:l('global.button.upload')}" upload="true"/>
+				                                    <button id="deletePhoto" onClick="@command('deletePhoto')" label="${c:l('global.button.delete')}"/>
+				                                </hbox>
+				                            </row>
+				                        </rows>
+				                    </grid>
+				                </hlayout>
+				                <hlayout>
+				                    <grid width="500px">
+				                        <columns>
+				                            <column width="150px" />
+				                            <column />
+				                        </columns>
+				                        <rows>
+				                            <row>
+				                                <label value="${c:l('employee.model.street')}" />
+				                                <textbox id="street" sclass="medium-textbox" value="@bind(vm.employee.street)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.zip')}, ${c:l('employee.model.city')}" />
+				                                <hbox>
+				                                    <intbox id="zip" width="80px" value="@bind(vm.employee.zip)" constraint="/[0-9]{3,}/: ${c:l('global.validation.onlynumbers')}"/>
+				                                    <space spacing="10px" orient="vertical"/>
+				                                    <textbox id="city" width="225px" value="@bind(vm.employee.city)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                                </hbox>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.country')}" />
+				                                <listbox mold="select" id="country" model="@bind(vm.countries) @template('country')" selectedItem="@bind(vm.employee.country)" width="320px">
+				                                	<template name="country">
+				                                		<listitem>
+				                                			<listcell label="${each.shortName}"/>
+				                                		</listitem>
+				                                	</template>
+				                                </listbox>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.phonePrivate')}" />
+				                                <textbox id="phonePrivate" sclass="medium-textbox" value="@bind(vm.employee.phonePrivate)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.mobilePrivate')}" />
+				                                <textbox id="mobilePrivate" sclass="medium-textbox" value="@bind(vm.employee.mobilePrivate)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.faxPrivate')}" />
+				                                <textbox id="faxPrivate" sclass="medium-textbox" value="@bind(vm.employee.faxPrivate)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.phoneBusiness')}" />
+				                                <textbox id="phoneBusiness" sclass="medium-textbox" value="@bind(vm.employee.phoneBusiness)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.mobileBusiness')}" />
+				                                <textbox id="mobileBusiness" sclass="medium-textbox" value="@bind(vm.employee.mobileBusiness)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.faxBusiness')}" />
+				                                <textbox id="faxBusiness" sclass="medium-textbox" value="@bind(vm.employee.faxBusiness)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.email')}" />
+				                                <textbox id="email" sclass="medium-textbox" value="@bind(vm.employee.email)" constraint="/.+@.+\.[a-z]+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                        </rows>
+				                    </grid>
+				                    <grid width="500px">
+				                        <columns>
+				                            <column width="150px" />
+				                            <column />
+				                        </columns>
+				                        <rows>
+				                            <row>
+				                                <label value="${c:l('employee.model.socialsecuritynr')}" />
+				                                <textbox id="socialsecuritynr" sclass="medium-textbox" value="@bind(vm.employee.socialSecurityNr)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.vatid')}" />
+				                                <textbox id="vatid" sclass="medium-textbox" value="@bind(vm.employee.vatid)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.employeeNr')}" />
+				                                <textbox id="employeeNr" sclass="medium-textbox" value="@bind(vm.employee.employeeNr)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.accountingNr')}" />
+				                                <textbox id="accountingNr" sclass="medium-textbox" value="@bind(vm.employee.accountingNr)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.client')}" />
+				                                <listbox mold="select" id="client" model="@bind(vm.clients) @template('client')" selectedItem="@bind(vm.employee.client)" width="320px">
+				                                	<template name="client">
+				                                		<listitem>
+				                                			<listcell label="${each.name}"/>
+				                                		</listitem>
+				                                	</template>
+				                                </listbox>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employee.model.branch')}" />
+				                                <listbox mold="select" id="branch" model="@bind(vm.branches) @template('branch')" selectedItem="@bind(vm.employee.branch)" width="320px">
+				                                	<template name="branch">
+				                                		<listitem>
+				                                			<listcell label="${each.name}"/>
+				                                		</listitem>
+				                                	</template>
+				                                </listbox>
+				                            </row>
+				                            <row>
+				                            	<cell colspan="2">
+					                            	<vbox width="420px">
+					                            		<label value="${c:l('employee.model.note')}:" />
+					                            		<textbox id="note" width="470px" height="81px" value="@bind(vm.employee.note)" />
+					                            	</vbox>
+				                            	</cell>
+				                            </row>
+				                        </rows>
+				                    </grid>
+				                </hlayout>
+			                </vlayout>
+            			</tabpanel>
+            			<tabpanel id="contractTabpanel">
+            				<vlayout>
+				                <hlayout>
+									<grid width="500px">
+				                        <columns>
+				                            <column width="150px" />
+				                            <column />
+				                        </columns>
+				                        <rows>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.jobtitle')}" />
+				                                <textbox id="jobTitle" sclass="medium-textbox" value="@bind(vm.contract.jobTitle)" constraint="/.+/: ${c:l('global.validation.emptyfield')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.employeelevel')}" />
+				                                <listbox mold="select" id="employeeLevel" model="@bind(vm.employeeLevels) @template('employeeLevel')" selectedItem="@bind(vm.contract.employeeLevel)" width="320px">
+				                                	<template name="employeeLevel">
+				                                		<listitem>
+				                                			<listcell label="${each.name}"/>
+				                                		</listitem>
+				                                	</template>
+				                                </listbox>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.department')}" />
+				                                <listbox mold="select" id="department" model="@bind(vm.departments) @template('department')" selectedItem="@bind(vm.contract.department)" width="320px">
+				                                	<template name="department">
+				                                		<listitem>
+				                                			<listcell label="${each.name}"/>
+				                                		</listitem>
+				                                	</template>
+				                                </listbox>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.department')}" />
+				                                <vbox>
+					                                <combobox id="supervisor" model="@bind(vm.departments)" selectedItem="@bind(vm.contract.supervisor)" width="320px" />
+					                                <hbox>
+					                                	<button id="applyOwnerActorButton" label="${c:l('global.button.apply')}"/>
+	                                        			<button id="cancelOwnerActorSearchButton" label="${c:l('global.button.cancel')}"/>
+	                                        		</hbox>
+                                        		</vbox>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.leavedays')}" />
+				                                <intbox id="leaveDays" sclass="medium-textbox" value="@bind(vm.contract.leaveDays)" constraint="no negative, no empty: ${c:l('global.validation.onlynumbers')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.weeklyworkinghours')}" />
+				                                <doublebox id="weeklyWorkingHours" sclass="medium-textbox" value="@bind(vm.contract.weeklyWorkingHours)" constraint="no negative, no empty: ${c:l('global.validation.onlynumbers')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.hiredate')}" />
+				                                <datebox id="hireDate" sclass="medium-textbox" value="@bind(vm.contract.hireDate)" constraint="no empty"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.probation')}" />
+				                                <intbox id="probation" sclass="medium-textbox" value="@bind(vm.contract.probation)" constraint="no negative, no empty: ${c:l('global.validation.onlynumbers')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="" />
+				                                <hbox>
+				                                	<checkbox id="isContractTemporary" sclass="medium-textbox" value="@bind(vm.contract.contractTemporary)"/>
+				                                	<label value="${c:l('employeecontract.model.iscontracttemporary')}" />
+				                                </hbox>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.temporarycontractexpiration')}" />
+				                                <datebox id="temporaryContractExpiration" sclass="medium-textbox" value="@bind(vm.contract.temporaryContractExpiration)" constraint="no empty"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.maternityleaveexpiration')}" />
+				                                <datebox id="maternityLeaveExpiration" sclass="medium-textbox" value="@bind(vm.contract.maternityLeaveExpiration)" constraint="no empty"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.parentalleaveexpiration')}" />
+				                                <datebox id="parentalLeaveExpiration" sclass="medium-textbox" value="@bind(vm.contract.parentalLeaveExpiration)" constraint="no empty"/>
+				                            </row>
+				                        </rows>
+				                    </grid>
+									<grid width="500px">
+				                        <columns>
+				                            <column width="150px" />
+				                            <column />
+				                        </columns>
+				                        <rows>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.grosswage')}" />
+				                                <doublebox id="grossWage" sclass="medium-textbox" value="@bind(vm.contract.grossWage)" constraint="no negative: ${c:l('global.validation.onlynumbers')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.wagewithclientcontribution')}" />
+				                                <doublebox id="wageWithClientContribution" sclass="medium-textbox" value="@bind(vm.contract.wageWithClientContribution)" constraint="no negative: ${c:l('global.validation.onlynumbers')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.wagesplittingclient')}" />
+				                                <listbox mold="select" id="wageSplittingClient" model="@bind(vm.clients) @template('client')" selectedItem="@bind(vm.contract.wageSplittingClient)" width="320px">
+				                                	<template name="client">
+				                                		<listitem>
+				                                			<listcell label="${each.name}"/>
+				                                		</listitem>
+				                                	</template>
+				                                </listbox>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.wagesplittinggrosswage')}" />
+				                                <doublebox id="wageSplittingGrossWage" sclass="medium-textbox" value="@bind(vm.contract.wageSplittingGrossWage)" constraint="no negative, no empty: ${c:l('global.validation.onlynumbers')}"/>
+				                            </row>
+				                            <row>
+				                                <label value="${c:l('employeecontract.model.wagesplittingwagewithclientcontribution')}" />
+				                                <doublebox id="wageSplittingWageWithClientContribution" sclass="medium-textbox" value="@bind(vm.contract.wageSplittingWageWithClientContribution)" constraint="no negative: ${c:l('global.validation.onlynumbers')}"/>
+				                            </row>
+				                        </rows>
+				                	</grid>
+				            	</hlayout>
+				            </vlayout>
+            			</tabpanel>	
+            			<tabpanel id="leavedaysTabpanel">
+            				<vlayout>
+            					<hlayout>
+            						<vbox>
+            							<separator bar="false" height="10px"/>
+							            <hlayout sclass="z-valign-middle">
+							                <button id="leavedaysCalendarTodayButton" label="Today" />
+							                <button id="leavedaysCalendarPrevButton" image="/includes/img/icon/16/previous.png"/>
+							                <button id="leavedaysCalendarNextButton" image="/includes/img/icon/16/next.png"/>
+							                <separator width="470px" />
+							                <button id="leavedaysCalendarPageWeekButton" label="Week" width="55px"/>
+							                <button id="leavedaysCalendarPageMonthButton" label="Month" width="55px"/>
+							            </hlayout>
+							            <separator bar="false" height="5px"/>
+	            						<calendars id="leaveDaysCalendar" firstDayOfWeek="MONDAY" mold="month" width="750px" onCreate="@command('createLeaveday')" onEdit="@command('editLeaveday')" onUpdate="@command('updateLeaveday')"/>
+            						</vbox>
+            						<separator bar="false" width="5px"/>
+	                                <listbox id="leaveDaysList" model="@bind(vm.leaveDays) @template('leaveDays')" width="240px" vflex="1">
+										<listhead>
+											<listheader label="${c:l('hr.editemployee.leavedays.col.from')}" sort="auto" hflex="3"/>
+											<listheader label="${c:l('hr.editemployee.leavedays.col.to')}" sort="auto" hflex="3"/>
+											<listheader label="${c:l('hr.editemployee.leavedays.col.workdays')}" sort="auto" hflex="3"/>
+										</listhead>
+	                                	<template name="leaveDays">
+	                                		<listitem>
+	                                			<listcell label="${c:formatDate(each.from, 'dd.MM.yyyy')}"/>
+	                                			<listcell label="${c:formatDate(each.to, 'dd.MM.yyyy')}"/>
+	                                			<listcell label="${each.days}"/>
+	                                		</listitem>
+	                                	</template>
+	                                </listbox>
+				            	</hlayout>
+				            </vlayout>
+            			</tabpanel>
+            			<tabpanel id="absenceTabpanel">
+            				<vlayout>
+            					<hlayout>
+            						<vbox>
+            							<separator bar="false" height="10px"/>
+							            <hlayout sclass="z-valign-middle">
+							                <button id="absenceCalendarTodayButton" label="Today" />
+							                <button id="absenceCalendarPrevButton" image="/includes/img/icon/16/previous.png"/>
+							                <button id="absenceCalendarNextButton" image="/includes/img/icon/16/next.png"/>
+							                <separator width="470px" />
+							                <button id="absenceCalendarPageWeekButton" label="Week" width="55px"/>
+							                <button id="absenceCalendarPageMonthButton" label="Month" width="55px"/>
+							            </hlayout>
+							            <separator bar="false" height="5px"/>
+	            						<calendars id="absenceCalendar" firstDayOfWeek="MONDAY" mold="month" width="750px" onCreate="@command('createAbsence')" onEdit="@command('editAbsence')" onUpdate="@command('updateAbsence')"/>
+            						</vbox>
+            						<separator bar="false" width="5px"/>
+	                                <listbox id="absenceList" model="@bind(vm.absences) @template('absence')" width="240px" vflex="1">
+										<listhead>
+											<listheader label="${c:l('hr.editemployee.leavedays.col.from')}" sort="auto" hflex="3"/>
+											<listheader label="${c:l('hr.editemployee.leavedays.col.to')}" sort="auto" hflex="3"/>
+											<listheader label="${c:l('hr.editemployee.leavedays.col.workdays')}" sort="auto" hflex="3"/>
+										</listhead>
+	                                	<template name="leaveDays">
+	                                		<listitem>
+	                                			<listcell label="${c:formatDate(each.from, 'dd.MM.yyyy')}"/>
+	                                			<listcell label="${c:formatDate(each.to, 'dd.MM.yyyy')}"/>
+	                                			<listcell label="${each.days}"/>
+	                                		</listitem>
+	                                	</template>
+	                                </listbox>
+				            	</hlayout>
+				            </vlayout>
+            			</tabpanel>
+            		</tabpanels>
+            	</tabbox>
+            </hlayout>
+            <hlayout style="padding-top: 20px; text-align:left;">
+                <button id="deleteButton" onClick="@command('delete')" label="${c:l('global.button.delete')}" />
+                <space spacing="20px" orient="vertical"/>
+                <button id="applyButton" onClick="@command('apply')" label="${c:l('global.button.apply')}" />
+                <button id="saveButton" onClick="@command('save')" label="${c:l('global.button.save')} ..." />
+                <button id="cancelButton" onClick="@command('cancel')" label="${c:l('global.button.cancel')}" />
+            </hlayout>
+        </vlayout>
+        <label id="editUserMessages" />
+    </window>
+</zk>

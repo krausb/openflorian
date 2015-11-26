@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language-addon>
+	<addon-name>notification-box-addon</addon-name>
+	<language-name>xul/html</language-name>
+	<component>
+		<component-name>notificationBox</component-name>
+		<macro-uri>/WEB-INF/macros/notificationBox.zul</macro-uri>
+	</component>
+</language-addon>

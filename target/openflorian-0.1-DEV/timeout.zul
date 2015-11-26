@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?link rel="icon" type="image/x-icon" href="includes/img/icon/favicon.ico"?>
+<window apply="de.openflorian.ui.TimeoutController" />

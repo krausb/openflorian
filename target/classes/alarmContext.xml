@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd      
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd    
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd       
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+    
+	<tx:annotation-driven />
+	
+	<context:component-scan base-package="de.openflorian" />
+	<context:annotation-config />
+	
+	<bean id="alarmContext" class="de.openflorian.alarm.AlarmContext"/>
+	
+	<bean id="alarmFaxTransformator" class="de.openflorian.alarm.transform.AlarmFaxTransformator"/>
+
+	<bean id="alarmFaxParser" class="de.openflorian.alarm.parser.AlarmFaxParser"/>
+	
+	<bean id="alarmFaxOperationNrParser" class="de.openflorian.alarm.parser.OperationNrParserResponsable">
+		<property name="next" ref="alarmFaxCityParser" />
+	</bean>
+	
+	<bean id="alarmFaxCityParser" class="de.openflorian.alarm.parser.CityParserResponsable">
+		<property name="next" ref="alarmFaxStreetParser" />
+	</bean>	
+	
+	<bean id="alarmFaxStreetParser" class="de.openflorian.alarm.parser.StreetParserResponsable">
+		<property name="next" ref="alarmFaxCrosswayParser" />
+	</bean>	
+	
+	<bean id="alarmFaxCrosswayParser" class="de.openflorian.alarm.parser.CrosswayParserResponsable">
+		<property name="next" ref="alarmFaxPriorityParser" />
+	</bean>	
+	
+	<bean id="alarmFaxPriorityParser" class="de.openflorian.alarm.parser.PriorityParserResponsable">
+		<property name="next" ref="alarmFaxObjectParser" />
+	</bean>	
+	
+	<bean id="alarmFaxObjectParser" class="de.openflorian.alarm.parser.ObjectParserResponsable">
+		<property name="next" ref="alarmFaxBuzzwordParser" />
+	</bean>	
+	
+	<bean id="alarmFaxBuzzwordParser" class="de.openflorian.alarm.parser.BuzzwordParserResponsable">
+		<property name="next" ref="alarmFaxKeywordParser" />
+	</bean>	
+	
+	<bean id="alarmFaxKeywordParser" class="de.openflorian.alarm.parser.KeywordParserResponsable">
+		<property name="next" ref="alarmFaxResourcesParser" />
+	</bean>	
+	
+	<bean id="alarmFaxResourcesParser" class="de.openflorian.alarm.parser.ResourcesParserResponsable"/>
+
+</beans>

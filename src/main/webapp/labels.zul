@@ -1,0 +1,4 @@
+<?link rel="icon" type="image/x-icon" href="includes/img/icon/favicon.ico"?>
+<zk>
+<button label="Reload Labels" onClick="org.zkoss.util.resource.Labels.reset();execution.sendRedirect(null);"/>
+</zk>

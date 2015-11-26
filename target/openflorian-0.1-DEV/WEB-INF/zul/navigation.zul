@@ -1,0 +1,63 @@
+<?page id="navigation" title="Navigation" contentType="text/html;charset=UTF-8"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk>
+	<div apply="de.openflorian.ui.NavigationController">
+		<panel id="coredataPanel" collapsible="true">
+            <caption>
+                <vlayout>
+                    <label>${c:l('navigation.title.coredata')}</label>
+                </vlayout>
+            </caption>
+            <panelchildren>
+        		<listbox>
+                	<listitem id="departmentItem">
+                		<listcell id="departmentButton" label="${c:l('navigation.button.coredata.departments')}"  />
+                	</listitem>
+                	<listitem id="stationItem">
+                		<listcell id="stationButton" label="${c:l('navigation.button.coredata.stations')}"  />
+                	</listitem>
+                	<listitem id="operationResourcesItem">
+                		<listcell id="operationResourcesButton" label="${c:l('navigation.button.coredata.operationresources')}"  />
+                	</listitem>
+                	<listitem id="operationStaffItem">
+                		<listcell id="operationStaffButton" label="${c:l('navigation.button.coredata.operationsstaff')}"  />
+                	</listitem>
+                </listbox>
+            </panelchildren>
+        </panel>
+		<panel id="operationsPanel" collapsible="true">
+            <caption>
+                <vlayout>
+                    <label>${c:l('navigation.title.operations')}</label>
+                </vlayout>
+            </caption>
+            <panelchildren>
+        		<listbox>
+                	<listitem id="operationsItem">
+                		<listcell id="operationsButton" label="${c:l('navigation.button.operations.operations')}"  />
+                	</listitem>
+                </listbox>
+            </panelchildren>
+        </panel>
+	    <panel id="systemManagementPanel" collapsible="true">
+            <caption>
+                <vlayout>
+                    <label>${c:l('navigation.title.systemmanagement')}</label>
+                </vlayout>
+            </caption>
+            <panelchildren>
+        		<listbox>
+                	<listitem id="systemconfigurationButtonItem">
+                		<listcell id="systemconfigurationButton" label="${c:l('navigation.button.systemconfiguration')}"/>
+                	</listitem>
+                	<listitem id="usermanagementButtonItem">
+        		    	<listcell id="usermanagementButton" label="${c:l('navigation.button.usermanagement')}"/>
+        		    </listitem>
+                	<listitem id="systeminformationButtonItem">
+                		<listcell id="systeminformationButton" label="${c:l('navigation.button.systeminformation')}"/>
+                	</listitem>
+                </listbox>
+            </panelchildren>
+        </panel>
+	</div>
+</zk>

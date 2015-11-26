@@ -1,0 +1,293 @@
+package de.openflorian.data.model;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import de.openflorian.data.model.principal.Station;
+
+/**
+ * {@link Operation} DTO
+ * 
+ * @author Bastian Kraus <me@bastian-kraus.me>
+ */
+@Entity
+@Table(name="of_operation")
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Operation implements Serializable {
+	private static final long serialVersionUID = 718788446662271203L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	protected long id;
+    
+    @OneToOne
+    @JoinColumn(name = "stationId", nullable = true, insertable=true, updatable=true)
+	protected Station station;
+	
+	@Column
+	protected String operationNr;
+	
+	@Column
+	protected String object;
+	
+	@Column
+	protected String street;
+	
+	@Column
+	protected String crossway;
+	
+	@Column
+	protected String city;
+	
+	@Column
+	protected String priority;
+	
+	@Column
+	protected String keyword;
+	
+	@Column
+	protected String buzzword;
+	
+	@Column
+	protected String resourcesRaw;
+	
+	@ManyToMany
+	@JoinTable(
+			joinColumns={@JoinColumn(name="operation_id",referencedColumnName="id")},
+			inverseJoinColumns={@JoinColumn(name="operation_resource_id",referencedColumnName="id")}
+			)
+	protected List<OperationResource> resources;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getOperationNr() {
+		return operationNr;
+	}
+
+	public void setOperationNr(String operationNr) {
+		this.operationNr = operationNr;
+	}
+
+	public String getObject() {
+		return object;
+	}
+
+	public void setObject(String object) {
+		this.object = object;
+	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public String getCrossway() {
+		return crossway;
+	}
+
+	public void setCrossway(String crossway) {
+		this.crossway = crossway;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+
+	public String getBuzzword() {
+		return buzzword;
+	}
+
+	public void setBuzzword(String buzzword) {
+		this.buzzword = buzzword;
+	}
+
+	public String getResourcesRaw() {
+		return resourcesRaw;
+	}
+
+	public void setResourcesRaw(String resources) {
+		this.resourcesRaw = resources;
+	}
+
+	public Station getStation() {
+		return station;
+	}
+
+	public void setStation(Station station) {
+		this.station = station;
+	}
+
+	public List<OperationResource> getResources() {
+		return resources;
+	}
+
+	public void setResources(List<OperationResource> resources) {
+		this.resources = resources;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Operation [id=");
+		builder.append(id);
+		builder.append(", operationNr=");
+		builder.append(operationNr);
+		builder.append(", object=");
+		builder.append(object);
+		builder.append(", street=");
+		builder.append(street);
+		builder.append(", crossway=");
+		builder.append(crossway);
+		builder.append(", city=");
+		builder.append(city);
+		builder.append(", priority=");
+		builder.append(priority);
+		builder.append(", keyword=");
+		builder.append(keyword);
+		builder.append(", buzzword=");
+		builder.append(buzzword);
+		builder.append(", resources=");
+		builder.append(resources);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((buzzword == null) ? 0 : buzzword.hashCode());
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		result = prime * result
+				+ ((crossway == null) ? 0 : crossway.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((keyword == null) ? 0 : keyword.hashCode());
+		result = prime * result + ((object == null) ? 0 : object.hashCode());
+		result = prime * result
+				+ ((operationNr == null) ? 0 : operationNr.hashCode());
+		result = prime * result
+				+ ((priority == null) ? 0 : priority.hashCode());
+		result = prime * result
+				+ ((resources == null) ? 0 : resources.hashCode());
+		result = prime * result
+				+ ((resourcesRaw == null) ? 0 : resourcesRaw.hashCode());
+		result = prime * result + ((station == null) ? 0 : station.hashCode());
+		result = prime * result + ((street == null) ? 0 : street.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Operation))
+			return false;
+		Operation other = (Operation) obj;
+		if (buzzword == null) {
+			if (other.buzzword != null)
+				return false;
+		} else if (!buzzword.equals(other.buzzword))
+			return false;
+		if (city == null) {
+			if (other.city != null)
+				return false;
+		} else if (!city.equals(other.city))
+			return false;
+		if (crossway == null) {
+			if (other.crossway != null)
+				return false;
+		} else if (!crossway.equals(other.crossway))
+			return false;
+		if (id != other.id)
+			return false;
+		if (keyword == null) {
+			if (other.keyword != null)
+				return false;
+		} else if (!keyword.equals(other.keyword))
+			return false;
+		if (object == null) {
+			if (other.object != null)
+				return false;
+		} else if (!object.equals(other.object))
+			return false;
+		if (operationNr == null) {
+			if (other.operationNr != null)
+				return false;
+		} else if (!operationNr.equals(other.operationNr))
+			return false;
+		if (priority == null) {
+			if (other.priority != null)
+				return false;
+		} else if (!priority.equals(other.priority))
+			return false;
+		if (resources == null) {
+			if (other.resources != null)
+				return false;
+		} else if (!resources.equals(other.resources))
+			return false;
+		if (resourcesRaw == null) {
+			if (other.resourcesRaw != null)
+				return false;
+		} else if (!resourcesRaw.equals(other.resourcesRaw))
+			return false;
+		if (station == null) {
+			if (other.station != null)
+				return false;
+		} else if (!station.equals(other.station))
+			return false;
+		if (street == null) {
+			if (other.street != null)
+				return false;
+		} else if (!street.equals(other.street))
+			return false;
+		return true;
+	} 
+	
+}

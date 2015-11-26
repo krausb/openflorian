@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk>
+	<device-config>
+		<device-type>ajax</device-type>
+		<timeout-uri>/timeout.zul</timeout-uri><!-- An empty URL can cause the 
+			browser to reload the same URL -->
+	</device-config>
+
+	<desktop-config>
+		<theme-provider-class>zkthemer.ThemeProvider</theme-provider-class>
+	    <desktop-timeout>-1</desktop-timeout>
+		<tooltip-delay>250</tooltip-delay>
+		<theme-uri>/includes/css/work.css</theme-uri>
+	</desktop-config>
+
+    <library-property>
+	    <name>org.zkoss.web.preferred.locale</name>
+	    <value>de</value>
+    </library-property>
+
+	<library-property>
+	    <name>org.zkoss.theme.preferred</name>
+	    <value>atlantic</value>
+	</library-property>
+	
+    <!-- Our language additions -->
+    <language-config>
+        <addon-uri>/WEB-INF/lang-addon.xml</addon-uri>
+    </language-config>
+	
+	<system-config>
+		<!-- Stop execution when doModal is called -->
+		<disable-event-thread>true</disable-event-thread>
+		<id-generator-class>de.openflorian.zk.model.ConstantIdGenerator</id-generator-class>
+        <upload-charset>UTF-8</upload-charset>
+	</system-config>
+
+	<error-page>
+		<exception-type>java.lang.Throwable</exception-type>
+		<location>/WEB-INF/zul/error.zul</location>
+	</error-page>
+</zk>

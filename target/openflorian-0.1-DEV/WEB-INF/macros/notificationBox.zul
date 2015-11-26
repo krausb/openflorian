@@ -1,0 +1,28 @@
+<div id="notificationWrapper" visible="false" class="notifyError">
+
+	<style> 
+		.notifyError{
+			border:1px solid #E80808; 
+			background-color: #FDCDCD;
+			padding: 3px;
+		}		
+		.notifyOk {
+			border:1px solid #359545;
+			background-color: #CEE6C3;
+			padding: 3px;
+		}
+		.notifyWarning {
+			border:1px solid #F0C000;
+			background-color: #FFFFCE;
+			padding: 3px;
+		}
+		.notifyInfo {
+			border:1px solid #3C78B5;
+			background-color: #D8E4F1;
+			padding: 3px;
+		}
+	</style>
+	
+	<label id="notificationMessage" visible="false" />
+
+</div>
