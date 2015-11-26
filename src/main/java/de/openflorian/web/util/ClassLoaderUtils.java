@@ -1,5 +1,24 @@
 package de.openflorian.web.util;
 
+/*
+ * This file is part of Openflorian.
+ * 
+ * Copyright (C) 2015  Bastian Kraus
+ * 
+ * Openflorian is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version)
+ *     
+ * Openflorian is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *     
+ * You should have received a copy of the GNU General Public License
+ * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -24,10 +43,8 @@ public class ClassLoaderUtils {
 	/**
 	 * Loads a class from caller
 	 * 
-	 * @param name 
-	 * 			class name
-	 * @param callingLoader 
-	 * 			callingClass classloader
+	 * @param name class name
+	 * @param callingLoader callingClass classloader
 	 * @return {@link Class}
 	 * @throws ClassNotFoundException
 	 */
@@ -111,12 +128,11 @@ public class ClassLoaderUtils {
 	 * The algorithm used to find the resource is given in getResource()
 	 *
 	 * @param resourceName
-	 *            The name of the resource to load
+	 *            Name of resource to load
 	 * @param callingClass
-	 *            The Class object of the calling object
+	 *            Class of the calling object
 	 */
-	public static InputStream getResourceAsStream(String resourceName,
-			Class callingClass) {
+	public static InputStream getResourceAsStream(String resourceName, Class callingClass) {
 		URL url = getResource(resourceName, callingClass);
 		try {
 			return url != null ? url.openStream() : null;

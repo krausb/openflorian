@@ -1,5 +1,24 @@
 package de.openflorian.web.user;
 
+/*
+ * This file is part of Openflorian.
+ * 
+ * Copyright (C) 2015  Bastian Kraus
+ * 
+ * Openflorian is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version)
+ *     
+ * Openflorian is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *     
+ * You should have received a copy of the GNU General Public License
+ * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.Date;
@@ -22,11 +41,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
 @Entity
-@Table(name="user")
+@Table(name="of_user")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class User implements Serializable, Principal {
-	private static final long serialVersionUID = -3242511981172465662L;
+	private static final long serialVersionUID = 5823125038305413277L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

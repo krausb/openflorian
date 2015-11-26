@@ -1,5 +1,24 @@
 package de.openflorian.media.model;
 
+/*
+ * This file is part of Openflorian.
+ * 
+ * Copyright (C) 2015  Bastian Kraus
+ * 
+ * Openflorian is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version)
+ *     
+ * Openflorian is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *     
+ * You should have received a copy of the GNU General Public License
+ * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -22,15 +41,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  * The DTO automaticaly generates a public identifier to stream it<br/>
  * out to a web client.
  * 
- * @author Bastian Kraus <bk@pogo-systems.de>
- * @created 2015-01-15
+ * @author Bastian Kraus <me@bastian-kraus.me>
  */
 @Entity
 @Access(AccessType.FIELD)
-@Table(name="media_item")
+@Table(name="of_media_item")
 @XmlRootElement
 public class MediaItem implements Serializable {
-	private static final long serialVersionUID = 2557232080051384456L;
+	private static final long serialVersionUID = 8322557464837911640L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

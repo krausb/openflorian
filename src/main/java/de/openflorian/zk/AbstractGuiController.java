@@ -31,6 +31,24 @@ import de.openflorian.web.user.AuthenticatedUserSessionLocal;
 import de.openflorian.web.user.PermissionService;
 import de.openflorian.web.user.User;
 
+/*
+ * This file is part of Openflorian.
+ * 
+ * Copyright (C) 2015  Bastian Kraus
+ * 
+ * Openflorian is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version)
+ *     
+ * Openflorian is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *     
+ * You should have received a copy of the GNU General Public License
+ * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * Abstract UI Controller
@@ -259,7 +277,6 @@ public abstract class AbstractGuiController extends GenericForwardComposer {
             // Append error messages
             StringBuilder messageBuilder = new StringBuilder();
             for (String message : messages) {
-                // TODO List
                 messageBuilder.append(getLabel(message, null));
                 messageBuilder.append(" ");
             }
@@ -339,7 +356,6 @@ public abstract class AbstractGuiController extends GenericForwardComposer {
             Component comp = self.getFellowIfAny(id);
             if (comp != null && comp instanceof HtmlBasedComponent) {
                 HtmlBasedComponent htmlComp = (HtmlBasedComponent)comp;
-                // TODO Something more useful (unset of style does not seem possible). Maybe style classes?
                 htmlComp.setZclass("defaultField");
                 // ("border: 1px solid green");
             }
@@ -448,7 +464,6 @@ public abstract class AbstractGuiController extends GenericForwardComposer {
             	log.debug("open file with encoding: " + WebConstants.MEDIA_CHARSET);
                 return new InputStreamReader(media.getStreamData(), WebConstants.MEDIA_CHARSET);
             } catch (UnsupportedEncodingException e) {
-                // Should never happen
                 throw new RuntimeException("Unexpected unsupported charset", e);
             } catch (Exception e) {
             	throw new ZkException(e.getMessage(), e);
