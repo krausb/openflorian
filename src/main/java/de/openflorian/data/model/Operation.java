@@ -20,6 +20,7 @@ package de.openflorian.data.model;
  */
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -62,6 +63,12 @@ public class Operation implements Serializable {
 	protected String operationNr;
 	
 	@Column
+	protected double positionLongitude;
+	
+	@Column
+	protected double positionLatitude;
+	
+	@Column
 	protected String object;
 	
 	@Column
@@ -84,6 +91,15 @@ public class Operation implements Serializable {
 	
 	@Column
 	protected String resourcesRaw;
+	
+	@Column
+	protected Date incurredAt;
+	
+	@Column
+	protected Date takenOverAt;
+	
+	@Column
+	protected Date dispatchedAt;
 	
 	@ManyToMany
 	@JoinTable(
@@ -108,6 +124,22 @@ public class Operation implements Serializable {
 		this.operationNr = operationNr;
 	}
 
+	public double getPositionLongitude() {
+		return this.positionLongitude;
+	}
+	
+	public void setPositionLongitude(double positionLongitude) {
+		this.positionLongitude = positionLongitude;
+	}
+	
+	public double getPositionLatitude() {
+		return this.positionLatitude;
+	}
+	
+	public void setPositionLatitude(double positionLatitude) {
+		this.positionLatitude = positionLatitude;
+	}
+	
 	public String getObject() {
 		return object;
 	}
@@ -187,126 +219,5 @@ public class Operation implements Serializable {
 	public void setResources(List<OperationResource> resources) {
 		this.resources = resources;
 	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Operation [id=");
-		builder.append(id);
-		builder.append(", operationNr=");
-		builder.append(operationNr);
-		builder.append(", object=");
-		builder.append(object);
-		builder.append(", street=");
-		builder.append(street);
-		builder.append(", crossway=");
-		builder.append(crossway);
-		builder.append(", city=");
-		builder.append(city);
-		builder.append(", priority=");
-		builder.append(priority);
-		builder.append(", keyword=");
-		builder.append(keyword);
-		builder.append(", buzzword=");
-		builder.append(buzzword);
-		builder.append(", resources=");
-		builder.append(resources);
-		builder.append("]");
-		return builder.toString();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((buzzword == null) ? 0 : buzzword.hashCode());
-		result = prime * result + ((city == null) ? 0 : city.hashCode());
-		result = prime * result
-				+ ((crossway == null) ? 0 : crossway.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((keyword == null) ? 0 : keyword.hashCode());
-		result = prime * result + ((object == null) ? 0 : object.hashCode());
-		result = prime * result
-				+ ((operationNr == null) ? 0 : operationNr.hashCode());
-		result = prime * result
-				+ ((priority == null) ? 0 : priority.hashCode());
-		result = prime * result
-				+ ((resources == null) ? 0 : resources.hashCode());
-		result = prime * result
-				+ ((resourcesRaw == null) ? 0 : resourcesRaw.hashCode());
-		result = prime * result + ((station == null) ? 0 : station.hashCode());
-		result = prime * result + ((street == null) ? 0 : street.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof Operation))
-			return false;
-		Operation other = (Operation) obj;
-		if (buzzword == null) {
-			if (other.buzzword != null)
-				return false;
-		} else if (!buzzword.equals(other.buzzword))
-			return false;
-		if (city == null) {
-			if (other.city != null)
-				return false;
-		} else if (!city.equals(other.city))
-			return false;
-		if (crossway == null) {
-			if (other.crossway != null)
-				return false;
-		} else if (!crossway.equals(other.crossway))
-			return false;
-		if (id != other.id)
-			return false;
-		if (keyword == null) {
-			if (other.keyword != null)
-				return false;
-		} else if (!keyword.equals(other.keyword))
-			return false;
-		if (object == null) {
-			if (other.object != null)
-				return false;
-		} else if (!object.equals(other.object))
-			return false;
-		if (operationNr == null) {
-			if (other.operationNr != null)
-				return false;
-		} else if (!operationNr.equals(other.operationNr))
-			return false;
-		if (priority == null) {
-			if (other.priority != null)
-				return false;
-		} else if (!priority.equals(other.priority))
-			return false;
-		if (resources == null) {
-			if (other.resources != null)
-				return false;
-		} else if (!resources.equals(other.resources))
-			return false;
-		if (resourcesRaw == null) {
-			if (other.resourcesRaw != null)
-				return false;
-		} else if (!resourcesRaw.equals(other.resourcesRaw))
-			return false;
-		if (station == null) {
-			if (other.station != null)
-				return false;
-		} else if (!station.equals(other.station))
-			return false;
-		if (street == null) {
-			if (other.street != null)
-				return false;
-		} else if (!street.equals(other.street))
-			return false;
-		return true;
-	} 
 	
 }
