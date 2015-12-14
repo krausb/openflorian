@@ -61,7 +61,13 @@ public class NavigationController extends AbstractGuiController {
 	private Listitem usermanagementButtonItem;
 	private Listcell usermanagementButton;
 	
-	public User currentUser;
+	/*
+	 * Operation Management
+	 */
+	private Listitem operationsItem;
+	private Listcell operationsButton;
+	
+	private User currentUser;
 
 	@Override
 	public String getLoginPage() {
@@ -127,6 +133,16 @@ public class NavigationController extends AbstractGuiController {
 	public void onClick$systeminformationButton(Event event) {
 		log.debug("systeminformationButton.onClick()");
 		setContentZul( ZkGlobals.PAGE_SYSTEM_INFORMATION );
+	}
+	
+	/**
+	 * Event-Handler: operationsButton.onClick
+	 * 
+	 * @param event
+	 */
+	public void onClick$operationsButton(Event event) {
+		log.debug("operationsButton.onClick()");
+		setContentZul( ZkGlobals.PAGE_OPERATION_LIST );
 	}
 	
 }

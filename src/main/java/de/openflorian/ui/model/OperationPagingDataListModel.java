@@ -21,22 +21,22 @@ package de.openflorian.ui.model;
 
 import java.util.List;
 
-import de.openflorian.service.UserService;
+import de.openflorian.data.model.Operation;
+import de.openflorian.service.OperationService;
 import de.openflorian.web.core.ContainerManager;
-import de.openflorian.web.user.User;
 import de.openflorian.zk.model.DataListModel;
 import de.openflorian.zk.model.PagingDataListModel;
 
 /**
- * {@link PagingDataListModel} Implementation for {@link User}
+ * {@link PagingDataListModel} Implementation for {@link Operation}
  * <br/>
  * Supplies paged data lists from specific dao
  * 
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
-public class UserPagingDataListModel extends PagingDataListModel<User> {
+public class OperationPagingDataListModel extends PagingDataListModel<Operation> {
 
-	public UserPagingDataListModel(String sort, int pageSize) throws Exception {
+	public OperationPagingDataListModel(String sort, int pageSize) throws Exception {
 		super(sort, pageSize);
 	}
 
@@ -46,15 +46,15 @@ public class UserPagingDataListModel extends PagingDataListModel<User> {
 	 */
 	public void refresh() {
 
-		UserService service = (UserService)ContainerManager.getComponent("userService");
+		OperationService service = (OperationService)ContainerManager.getComponent("operationService");
 		
 		totalSize = service.count();
 		// amout of data changed
 		if(activePage*pageSize>=totalSize){
             activePage = 0;
         }
-		List<User> list = service.listByPage(this.sort, activePage, pageSize);
-		this.data = new DataListModel<User>(list);
+		List<Operation> list = service.listByPage(this.sort, activePage, pageSize);
+		this.data = new DataListModel<Operation>(list);
 	}
 	
 }

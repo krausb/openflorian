@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.zkoss.zk.ui.Desktop;
-import org.zkoss.zk.ui.WebApp;
 import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.event.EventQueues;
 
@@ -118,11 +116,8 @@ public final class AlarmContext implements InitializingBean, DisposableBean {
 						
 						if(op.getId() > 0) {
 							EventQueue.getInstance().publish(new AlarmFaxParsedEvent(((AlarmFaxTransformedEvent) event).getResultFile()));
-							EventQueue.getInstance().publish(new AlarmEvent(op));
 							
-							// publish to ZK event queues
-							EventQueues.lookup(ZkGlobals.EVENTS_QUEUE_ALARMEVENT, WebApps.getCurrent(), true)
-							  .publish(new ZkAlarmEvent(op));
+							AlarmContext.getInstance().alarmOperation(op);
 						}
 					} catch (FileNotFoundException e) {
 						log.error(e.getMessage(), e);
@@ -140,13 +135,7 @@ public final class AlarmContext implements InitializingBean, DisposableBean {
 			public void onEvent(Event event) {
 				log.debug("Event recieved...");
 				if(event instanceof AlarmDispatchedEvent) {
-					Operation currentOperation = AlarmContext.this.currentOperation; 
-					AlarmContext.this.currentOperation = null;
-					log.info("Current operation successfuly resetted.");
-					
-					// publish to ZK event queues
-					EventQueues.lookup(ZkGlobals.EVENTS_QUEUE_ALARMEVENT, WebApps.getCurrent(), true)
-					  .publish(new ZkAlarmDispatchedEvent(currentOperation));
+					AlarmContext.getInstance().dispatchOperation(getCurrentOperation());
 				}
 			}
 			
@@ -158,6 +147,36 @@ public final class AlarmContext implements InitializingBean, DisposableBean {
 		log.info("-> ... done.");
 		
 		log.info("Context initialized.");
+	}
+	
+	/**
+	 * Trigger a systemwide {@link AlarmEvent} and {@link ZkAlarmEvent} of given <code>o</code>
+	 * @param o {@link Operation}
+	 */
+	public void alarmOperation(Operation o) {
+		if(o == null)
+			throw new IllegalArgumentException("Given operation is null.");
+		
+		this.currentOperation = o;
+		EventQueue.getInstance().publish(new AlarmEvent(o));
+		EventQueues.lookup(ZkGlobals.EVENTS_QUEUE_ALARMEVENT, WebApps.getCurrent(), true)
+		  .publish(new ZkAlarmEvent(o));
+	}
+	
+	/**
+	 * Trigger a systemwide {@link ZkAlarmDispatchedEvent} of given <code>o</code>
+	 * @param o {@link Operation}
+	 */
+	public void dispatchOperation(Operation o) {
+		if(o == null)
+			throw new IllegalArgumentException("Given operation is null.");
+
+		Operation currentOperation = AlarmContext.this.currentOperation; 
+		this.currentOperation = null;
+		log.info("Current operation successfuly resetted.");
+		
+		EventQueues.lookup(ZkGlobals.EVENTS_QUEUE_ALARMEVENT, WebApps.getCurrent(), true)
+		  .publish(new ZkAlarmDispatchedEvent(currentOperation));
 	}
 	
 	@Override

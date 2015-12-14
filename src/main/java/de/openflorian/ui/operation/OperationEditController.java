@@ -21,34 +21,40 @@ package de.openflorian.ui.operation;
 
 import java.security.GeneralSecurityException;
 import java.security.Principal;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.xml.bind.ValidationException;
 
-import org.apache.commons.lang.StringUtils;
-import org.reflections.Reflections;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Datebox;
+import org.zkoss.zul.Doublebox;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Messagebox.ClickEvent;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
+import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
-import de.openflorian.crypt.CryptCipherService;
-import de.openflorian.crypt.CryptCipherService.CipherTarget;
+import de.openflorian.alarm.AlarmContext;
+import de.openflorian.alarm.AlarmEvent;
+import de.openflorian.alarm.ZkAlarmEvent;
+import de.openflorian.data.model.Operation;
 import de.openflorian.data.model.security.GlobalPermission;
-import de.openflorian.data.model.security.PermissionSet;
+import de.openflorian.event.EventQueue;
+import de.openflorian.service.OperationService;
 import de.openflorian.service.PermissionService;
-import de.openflorian.service.UserService;
 import de.openflorian.ui.ZkGlobals;
-import de.openflorian.web.core.AvailableComponent;
 import de.openflorian.web.core.ContainerManager;
 import de.openflorian.web.user.User;
 import de.openflorian.zk.AbstractGuiController;
@@ -65,25 +71,43 @@ import de.openflorian.zk.ZkException;
 public class OperationEditController extends AbstractGuiController implements EventListener {
 	private static final long serialVersionUID = -9103899038654112897L;
 	
-	private Window userEditWindow;
+	private Window 		operationEditWindow;
 	
-	private Button saveButton;
-	private Button cancelButton;
-	private Button applyButton;
-	private Button deleteButton;
+	private Tab			resourcesTab;
+	private Tabpanel	resourcesTabPanel;
 	
-	private long userId;
+	private Tab			dispatchTab;
+	private Tabpanel	dispatchTabPanel;
 	
-	private Textbox password;
-	private Textbox confirmPassword;
-	private String tmpPassword;
+	private Button 		saveButton;
+	private Button 		cancelButton;
+	private Button		applyButton;
+	private Button		deleteButton;
 	
-	private Textbox name;
-	private Textbox firstname;
-	private Textbox lastname;
-	private Textbox email;
+	private Button		alarmButton;
+	private	Button		dispatchButton;
+	private Button		takeOverButton;
 	
-	private Tabbox permissionsTab;
+	private long 		operationId;
+	
+	private Textbox 	operationNr;
+	private Doublebox 	positionLongitude;
+	private Doublebox 	positionLatitude;
+	private Textbox 	object;
+	private Textbox		street;
+	private Textbox		city;
+	private Textbox		crossway;
+	private Textbox		priority;
+	private Textbox		keyword;
+	private Textbox		buzzword;
+	private Textbox		resourcesRaw;
+	private Datebox		incurredAt;
+	private Label		takenOverAtLabel;
+	private Date		takenOverAt;
+	private Label		dispatchedAtLabel;
+	private Date		dispatchedAt;
+	
+	private Tabbox operationsTabbox;
 	
 	@Override
 	public String getLoginPage() {
@@ -100,11 +124,11 @@ public class OperationEditController extends AbstractGuiController implements Ev
     public void doAfterCompose(Component comp) throws Exception {
     	super.doAfterCompose(comp);
 
-    	User selectedUser = (User)execution.getAttribute(ZkGlobals.REQUEST_ENTITY);
+    	Operation selectedOperation = (Operation)execution.getAttribute(ZkGlobals.REQUEST_ENTITY);
 
-    	if(selectedUser != null) {
-    		log.debug("Recieved user to select: " + selectedUser.toString());
-    		fillZulFromUser(selectedUser);
+    	if(selectedOperation != null) {
+    		log.debug("Recieved operation to select: " + selectedOperation.toString());
+    		fillZul(selectedOperation);
     		deleteButton.setDisabled(false);
     	} else {
     		deleteButton.setDisabled(true);
@@ -118,20 +142,20 @@ public class OperationEditController extends AbstractGuiController implements Ev
 	 */
 	public void onClick$applyButton(Event event) {
 		try {
-			User u = getUserFromZul();
+			Operation o = getFromZul();
 			
-			UserService userService = (UserService)ContainerManager.getComponent("userService");
-			u = userService.persist(u);
-			if(u.getId() > 0) {
-				this.userId = u.getId();
-				execution.setAttribute(ZkGlobals.REQUEST_ENTITY,u);
-				fillZulFromUser(u);
+			OperationService operationService = (OperationService)ContainerManager.getComponent("operationService");
+			o = operationService.persist(o);
+			if(o.getId() > 0) {
+				this.operationId = o.getId();
+				execution.setAttribute(ZkGlobals.REQUEST_ENTITY,o);
+				fillZul(o);
 			}
 			
 			Clients.showNotification(Labels.getLabel("admin.user.edit.msg.usersaved"),"info", applyButton,"top_center", 2000);
 		} catch (WrongValueException e) {
 			log.debug(e.getMessage(), e);
-			setError(new ZkException(Labels.getLabel("user.model." + e.getComponent().getId()) + ": " + e.getMessage(), e));			
+			setError(new ZkException(Labels.getLabel("operation.model." + e.getComponent().getId()) + ": " + e.getMessage(), e));			
 		} catch (ZkException e) {
 			log.error(e.getMessage(), e);
 			setError(e);
@@ -147,19 +171,19 @@ public class OperationEditController extends AbstractGuiController implements Ev
 	/**
 	 * Event-Handler: saveButton.onClick
 	 * <br/>
-	 * Redirects to User List ZUL
+	 * Redirects to Operation List ZUL
 	 * 
 	 * @param event
 	 */
 	public void onClick$saveButton(Event event) {		
 		try {
-			User u = getUserFromZul();
+			Operation o = getFromZul();
 			
-			UserService userService = (UserService)ContainerManager.getComponent("userService");
-			u = userService.persist(u);
+			OperationService operationService = (OperationService)ContainerManager.getComponent("operationService");
+			o = operationService.persist(o);
 			
 			// redirect to user list
-			setContentZul(ZkGlobals.PAGE_SYSTEM_USERS);
+			setContentZul(ZkGlobals.PAGE_OPERATION_LIST);
 		} catch (WrongValueException e) {
 			log.debug(e.getMessage(), e);
 			setError(new ZkException(e.getMessage(), e));			
@@ -180,9 +204,9 @@ public class OperationEditController extends AbstractGuiController implements Ev
 	 * @param event
 	 */
 	public void onClick$deleteButton(Event event) {
-		if(userId > 0) {
+		if(operationId > 0) {
 			Messagebox.show(
-					Labels.getLabel("admin.user.edit.msg.deleteuser", new String[]{name.getText()}), 
+					Labels.getLabel("operation.edit.msg.delete", new String[]{operationNr.getText()}), 
 					Labels.getLabel("global.question"), 
 					new Messagebox.Button[]{Messagebox.Button.YES, Messagebox.Button.NO},
 					Messagebox.QUESTION,
@@ -190,12 +214,12 @@ public class OperationEditController extends AbstractGuiController implements Ev
 						
 						public void onEvent(ClickEvent event) throws Exception {
 							if(event.getButton() == Messagebox.Button.YES)
-								OperationEditController.this.deleteCurrentUser();
+								OperationEditController.this.deleteCurrentOperation();
 						}
 						
 					});
 		} else {
-			Clients.showNotification(Labels.getLabel("admin.user.edit.msg.nouserselected"),"info", applyButton,"top_center", 2000);
+			Clients.showNotification(Labels.getLabel("operation.edit.msg.noselected"),"info", applyButton,"top_center", 2000);
 		}
 	}
 	
@@ -204,32 +228,116 @@ public class OperationEditController extends AbstractGuiController implements Ev
 	 * @param event
 	 */
 	public void onClick$cancelButton(Event event) {
-		setContentZul(ZkGlobals.PAGE_SYSTEM_USERS);
+		setContentZul(ZkGlobals.PAGE_OPERATION_LIST);
+	}
+	
+	/**
+	 * Event-Handler: alarmButton.onClick
+	 * @param event
+	 */
+	public void onClick$alarmButton(Event event) {
+		if(operationId > 0) {
+			try {
+				Operation op = getFromZul();
+				
+				AlarmContext.getInstance().alarmOperation(op);
+			} catch (ZkException e) {
+				log.error(e.getMessage(), e);
+				setError(e);
+			} catch (GeneralSecurityException e) {
+				log.error(e.getMessage(), e);
+				setError(new ZkException(e.getMessage(), e));
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				setError(new ZkException(e.getMessage(), e));
+			}
+		}
+	}
+	
+	/**
+	 * Event-Handler: dispatchButton.onClick
+	 * @param event
+	 */
+	public void onClick$dispatchButton(Event event) {
+		if(operationId > 0) {
+			if(AlarmContext.getInstance().getCurrentOperation() != null && 
+					operationId == AlarmContext.getInstance().getCurrentOperation().getId()) {
+				
+				try {
+					AlarmContext.getInstance().dispatchOperation(getFromZul());
+				} catch (ZkException e) {
+					log.error(e.getMessage(), e);
+					setError(e);
+				} catch (GeneralSecurityException e) {
+					log.error(e.getMessage(), e);
+					setError(new ZkException(e.getMessage(), e));
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+					setError(new ZkException(e.getMessage(), e));
+				}
+			}
+		}
 	}
 	
 	
 	/**
-	 * Helper: Fill .zul with data from given {@code u} 
-	 * @param u {@link User}
+	 * Helper: Fill .zul with data from given <code>o</code>.
+	 *  
+	 * @param o {@link Operation}
 	 */
-	private void fillZulFromUser(User u) {
-		userId = u.getId();
+	private void fillZul(Operation o) {
+		operationId = o.getId();
 		
 		// fill core data
-		name.setText(u.getName());
-		password.setText("");
-		confirmPassword.setText("");
-		tmpPassword = u.getPassword();
-		
-		// fill contact data
 		try {
-			firstname.setText(u.getFirstname());
+			operationNr.setText(o.getOperationNr());
 		} catch (WrongValueException e) {}
+		
 		try {
-			lastname.setText(u.getLastname());
+			positionLongitude.setValue(o.getPositionLongitude());
 		} catch (WrongValueException e) {}
 
-		email.setText(u.getEmail());
+		try {
+			positionLatitude.setValue(o.getPositionLatitude());
+		} catch (WrongValueException e) {}
+		
+		try {
+			object.setText(o.getObject());
+		} catch (WrongValueException e) {}
+		
+		try {
+			street.setText(o.getStreet());
+		} catch (WrongValueException e) {}
+		
+		try {
+			city.setText(o.getCity());
+		} catch (WrongValueException e) {}
+		
+		try {
+			crossway.setText(o.getCrossway());
+		} catch (WrongValueException e) {}
+		
+		try {
+			priority.setText(o.getPriority());
+		} catch (WrongValueException e) {}
+		
+		try {
+			keyword.setText(o.getKeyword());
+		} catch (WrongValueException e) {}
+		
+		try {
+			buzzword.setText(o.getBuzzword());
+		} catch (WrongValueException e) {}
+		
+		incurredAt.setValue(o.getIncurredAt());
+		incurredAt.setFormat(ZkGlobals.FORMAT_DATETIME);
+
+		SimpleDateFormat format = new SimpleDateFormat(ZkGlobals.FORMAT_DATETIME);
+		takenOverAtLabel.setValue(format.format(o.getIncurredAt()));
+		takenOverAt = o.getTakenOverAt();
+		dispatchedAtLabel.setValue(format.format(o.getIncurredAt()));
+		dispatchedAt = o.getDispatchedAt();
+		
 		
 	}
 	
@@ -238,40 +346,39 @@ public class OperationEditController extends AbstractGuiController implements Ev
 	 * @return
 	 * @throws CoreException 
 	 */
-	private User getUserFromZul() throws GeneralSecurityException, ZkException {
-		User zu = new User();
+	private Operation getFromZul() throws GeneralSecurityException, ZkException {
+		Operation o = new Operation();
 		
 		// set core data
-		zu.setId(userId);
-		zu.setName(name.getValue());
-		if(!StringUtils.isEmpty(password.getValue())) {
-			if(password.getText().equals(confirmPassword.getText())) {
-				CryptCipherService cryptService = (CryptCipherService)ContainerManager.getComponent(AvailableComponent.CryptService.toString());
-				zu.setPassword(cryptService.encrypt(cryptService.encrypt(password.getText(), CipherTarget.Xor), CipherTarget.Blowfish));
-			} else {
-				throw new ZkException("admin.user.edit.validation.password");
-			}
-		} else {
-			if(tmpPassword == null)
-				throw new ZkException("user.error.passwordempty");
-			zu.setPassword(tmpPassword);
-		}
-		zu.setFirstname(firstname.getText());
-		zu.setLastname(lastname.getText());
-		zu.setEmail(email.getText());
-
-		return zu;
+		o.setId(operationId);
+		o.setOperationNr(operationNr.getValue());
+		o.setPositionLongitude(positionLongitude.getValue());
+		o.setPositionLatitude(positionLatitude.getValue());
+		o.setCity(city.getText());
+		o.setStreet(street.getText());
+		o.setObject(object.getText());
+		o.setCrossway(crossway.getText());
+		o.setPriority(priority.getText());
+		o.setKeyword(keyword.getText());
+		o.setBuzzword(buzzword.getText());
+		o.setIncurredAt(incurredAt.getValue());
+		o.setTakenOverAt(takenOverAt);
+		o.setDispatchedAt(dispatchedAt);
+		
+		o.setResourcesRaw(resourcesRaw.getText());
+		
+		return o;
 	}
 
 	/**
 	 * Helper: Delete current set operation
 	 */
 	private void deleteCurrentOperation() {
-		if(userId > 0) {
-			UserService userService = (UserService)ContainerManager.getComponent("userService");
-			userService.remove(userId);
+		if(operationId > 0) {
+			OperationService operationService = (OperationService)ContainerManager.getComponent("operationService");
+			operationService.remove(operationId);
 			
-			setContentZul(ZkGlobals.PAGE_SYSTEM_USERS);
+			setContentZul(ZkGlobals.PAGE_OPERATION_LIST);
 		}
 	}
 

@@ -32,8 +32,8 @@ import org.zkoss.zul.event.PagingEvent;
 import de.openflorian.data.model.security.GlobalPermission;
 import de.openflorian.service.PermissionService;
 import de.openflorian.ui.ZkGlobals;
-import de.openflorian.ui.model.UserPagingDataListModel;
-import de.openflorian.ui.renderer.UserListitemRenderer;
+import de.openflorian.ui.model.OperationPagingDataListModel;
+import de.openflorian.ui.renderer.OperationListitemRenderer;
 import de.openflorian.web.core.ContainerManager;
 import de.openflorian.web.user.User;
 import de.openflorian.zk.AbstractGuiController;
@@ -50,7 +50,7 @@ public class OperationListController extends AbstractGuiController {
 	
 	private Paging paging;
 	
-	private UserPagingDataListModel listModel;
+	private OperationPagingDataListModel listModel;
 	
 	@Override
 	public String getLoginPage() {
@@ -70,7 +70,7 @@ public class OperationListController extends AbstractGuiController {
     	
     	execution.removeAttribute(ZkGlobals.REQUEST_ENTITY);
     	
-    	listModel = new UserPagingDataListModel("name ASC", 15);
+    	listModel = new OperationPagingDataListModel("operationNr DESC", 15);
     	listModel.init();
     	
     	long totalDataListSize = listModel.getTotalSize();
@@ -93,7 +93,7 @@ public class OperationListController extends AbstractGuiController {
     	}
     	
     	entityList.setModel(listModel.getCurrentData());
-    	entityList.setItemRenderer(new UserListitemRenderer());
+    	entityList.setItemRenderer(new OperationListitemRenderer());
     }
 	
 	/**
@@ -105,7 +105,7 @@ public class OperationListController extends AbstractGuiController {
 		
 		if(selectedItem != null) {
 			execution.setAttribute(ZkGlobals.REQUEST_ENTITY, selectedItem.getValue());
-			setContentZul(ZkGlobals.PAGE_SYSTEM_USERS_EDIT);
+			setContentZul(ZkGlobals.PAGE_OPERATION_EDIT);
 		}
 	}
 	
@@ -113,9 +113,9 @@ public class OperationListController extends AbstractGuiController {
 	 * Event-Handler: newUserButton.onClick
 	 * @param event
 	 */
-	public void onClick$newUserButton(Event event) {
+	public void onClick$newOperationButton(Event event) {
 		execution.removeAttribute(ZkGlobals.REQUEST_ENTITY);
-		setContentZul(ZkGlobals.PAGE_SYSTEM_USERS_EDIT);
+		setContentZul(ZkGlobals.PAGE_OPERATION_EDIT);
 	}
 	
 }

@@ -82,15 +82,32 @@ public class AlarmViewController extends AbstractGuiController {
     	
     	currentTime.setValue(new SimpleDateFormat(ZkGlobals.FORMAT_DATETIME).format(new Date()));
     	
-    	keyword.setValue(currentOperation.getKeyword());
-    	buzzword.setValue(currentOperation.getBuzzword());
-    	operationNr.setValue(currentOperation.getOperationNr());
-    	object.setValue(currentOperation.getObject());
-    	street.setValue(currentOperation.getStreet());
-    	crossway.setValue(currentOperation.getCrossway());
-    	city.setValue(currentOperation.getCity());
-    	priority.setValue(currentOperation.getPriority());
-    	resourcesRaw.setValue(currentOperation.getResourcesRaw());
+    	if(currentOperation.getKeyword() != null)
+    		keyword.setValue(currentOperation.getKeyword());
+    	
+    	if(currentOperation.getBuzzword() != null)
+    		buzzword.setValue(currentOperation.getBuzzword());
+    	
+    	if(currentOperation.getOperationNr() != null)
+    		operationNr.setValue(currentOperation.getOperationNr());
+    	
+    	if(currentOperation.getObject() != null)
+    		object.setValue(currentOperation.getObject());
+    	
+    	if(currentOperation.getStreet() != null)
+    		street.setValue(currentOperation.getStreet());
+    	
+    	if(currentOperation.getCrossway() != null)
+    		crossway.setValue(currentOperation.getCrossway());
+
+    	if(currentOperation.getCity() != null)
+    		city.setValue(currentOperation.getCity());
+    	
+    	if(currentOperation.getPriority() != null)
+    		priority.setValue(currentOperation.getPriority());
+    	
+    	if(currentOperation.getResourcesRaw() != null)
+    		resourcesRaw.setValue(currentOperation.getResourcesRaw());
     	
     	alarmsound.play();
     }

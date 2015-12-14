@@ -80,6 +80,19 @@ public class ZkGlobals {
 	 */
 	public static final String PAGE_SYSTEM_INFORMATION	= "/WEB-INF/zul/system/information.zul";
 	
+	/* ****************************
+	 * Operations Management
+	 ******************************/
+	
+	/**
+	 * Users
+	 */
+	public static final String PAGE_OPERATION_LIST 		= "/WEB-INF/zul/operation/operation_list.zul";
+
+	/**
+	 * Users edit
+	 */
+	public static final String PAGE_OPERATION_EDIT		= "/WEB-INF/zul/operation/operation_edit.zul";
 	
 	/* ****************************
 	 * Operations View
@@ -108,7 +121,8 @@ public class ZkGlobals {
 	/**
 	 * Default Date Time Format
 	 */
-	public static final String FORMAT_DATETIME = "dd.MM.yyyy HH:mm:ss";
+	public static final String FORMAT_DATETIME 	= "dd.MM.yyyy HH:mm:ss";
+	public static final String FORMAT_DATE		= "dd.MM.yyyy";
 	
 	/*
 	 * REQUEST 

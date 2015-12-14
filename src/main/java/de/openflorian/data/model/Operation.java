@@ -20,6 +20,7 @@ package de.openflorian.data.model;
  */
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import de.openflorian.data.model.principal.Station;
+import de.openflorian.ui.ZkGlobals;
 
 /**
  * {@link Operation} DTO
@@ -116,6 +118,14 @@ public class Operation implements Serializable {
 		this.id = id;
 	}
 
+	public Station getStation() {
+		return station;
+	}
+
+	public void setStation(Station station) {
+		this.station = station;
+	}
+
 	public String getOperationNr() {
 		return operationNr;
 	}
@@ -125,21 +135,21 @@ public class Operation implements Serializable {
 	}
 
 	public double getPositionLongitude() {
-		return this.positionLongitude;
+		return positionLongitude;
 	}
-	
+
 	public void setPositionLongitude(double positionLongitude) {
 		this.positionLongitude = positionLongitude;
 	}
-	
+
 	public double getPositionLatitude() {
-		return this.positionLatitude;
+		return positionLatitude;
 	}
-	
+
 	public void setPositionLatitude(double positionLatitude) {
 		this.positionLatitude = positionLatitude;
 	}
-	
+
 	public String getObject() {
 		return object;
 	}
@@ -200,16 +210,32 @@ public class Operation implements Serializable {
 		return resourcesRaw;
 	}
 
-	public void setResourcesRaw(String resources) {
-		this.resourcesRaw = resources;
+	public void setResourcesRaw(String resourcesRaw) {
+		this.resourcesRaw = resourcesRaw;
 	}
 
-	public Station getStation() {
-		return station;
+	public Date getIncurredAt() {
+		return incurredAt;
 	}
 
-	public void setStation(Station station) {
-		this.station = station;
+	public void setIncurredAt(Date incurredAt) {
+		this.incurredAt = incurredAt;
+	}
+
+	public Date getTakenOverAt() {
+		return takenOverAt;
+	}
+
+	public void setTakenOverAt(Date takenOverAt) {
+		this.takenOverAt = takenOverAt;
+	}
+
+	public Date getDispatchedAt() {
+		return dispatchedAt;
+	}
+
+	public void setDispatchedAt(Date dispatchedAt) {
+		this.dispatchedAt = dispatchedAt;
 	}
 
 	public List<OperationResource> getResources() {
@@ -218,6 +244,143 @@ public class Operation implements Serializable {
 
 	public void setResources(List<OperationResource> resources) {
 		this.resources = resources;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((buzzword == null) ? 0 : buzzword.hashCode());
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		result = prime * result
+				+ ((crossway == null) ? 0 : crossway.hashCode());
+		result = prime * result
+				+ ((dispatchedAt == null) ? 0 : dispatchedAt.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result
+				+ ((incurredAt == null) ? 0 : incurredAt.hashCode());
+		result = prime * result + ((keyword == null) ? 0 : keyword.hashCode());
+		result = prime * result + ((object == null) ? 0 : object.hashCode());
+		result = prime * result
+				+ ((operationNr == null) ? 0 : operationNr.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(positionLatitude);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(positionLongitude);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result
+				+ ((priority == null) ? 0 : priority.hashCode());
+		result = prime * result
+				+ ((resources == null) ? 0 : resources.hashCode());
+		result = prime * result
+				+ ((resourcesRaw == null) ? 0 : resourcesRaw.hashCode());
+		result = prime * result + ((station == null) ? 0 : station.hashCode());
+		result = prime * result + ((street == null) ? 0 : street.hashCode());
+		result = prime * result
+				+ ((takenOverAt == null) ? 0 : takenOverAt.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Operation))
+			return false;
+		Operation other = (Operation) obj;
+		if (buzzword == null) {
+			if (other.buzzword != null)
+				return false;
+		} else if (!buzzword.equals(other.buzzword))
+			return false;
+		if (city == null) {
+			if (other.city != null)
+				return false;
+		} else if (!city.equals(other.city))
+			return false;
+		if (crossway == null) {
+			if (other.crossway != null)
+				return false;
+		} else if (!crossway.equals(other.crossway))
+			return false;
+		if (dispatchedAt == null) {
+			if (other.dispatchedAt != null)
+				return false;
+		} else if (!dispatchedAt.equals(other.dispatchedAt))
+			return false;
+		if (id != other.id)
+			return false;
+		if (incurredAt == null) {
+			if (other.incurredAt != null)
+				return false;
+		} else if (!incurredAt.equals(other.incurredAt))
+			return false;
+		if (keyword == null) {
+			if (other.keyword != null)
+				return false;
+		} else if (!keyword.equals(other.keyword))
+			return false;
+		if (object == null) {
+			if (other.object != null)
+				return false;
+		} else if (!object.equals(other.object))
+			return false;
+		if (operationNr == null) {
+			if (other.operationNr != null)
+				return false;
+		} else if (!operationNr.equals(other.operationNr))
+			return false;
+		if (Double.doubleToLongBits(positionLatitude) != Double
+				.doubleToLongBits(other.positionLatitude))
+			return false;
+		if (Double.doubleToLongBits(positionLongitude) != Double
+				.doubleToLongBits(other.positionLongitude))
+			return false;
+		if (priority == null) {
+			if (other.priority != null)
+				return false;
+		} else if (!priority.equals(other.priority))
+			return false;
+		if (resources == null) {
+			if (other.resources != null)
+				return false;
+		} else if (!resources.equals(other.resources))
+			return false;
+		if (resourcesRaw == null) {
+			if (other.resourcesRaw != null)
+				return false;
+		} else if (!resourcesRaw.equals(other.resourcesRaw))
+			return false;
+		if (station == null) {
+			if (other.station != null)
+				return false;
+		} else if (!station.equals(other.station))
+			return false;
+		if (street == null) {
+			if (other.street != null)
+				return false;
+		} else if (!street.equals(other.street))
+			return false;
+		if (takenOverAt == null) {
+			if (other.takenOverAt != null)
+				return false;
+		} else if (!takenOverAt.equals(other.takenOverAt))
+			return false;
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(this.operationNr + " " + this.buzzword);
+		if(this.incurredAt != null) {
+			SimpleDateFormat format = new SimpleDateFormat(ZkGlobals.FORMAT_DATETIME);
+			sb.append(", " + format.format(incurredAt));
+		}
+		return sb.toString();
 	}
 	
 }

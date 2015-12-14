@@ -51,11 +51,13 @@ import de.openflorian.web.user.User;
  */
 
 /**
- * Abstract UI Controller
+ * Abstract UI Controller<br/>
+ * <br/>
+ * Extends the {@link GenericForwardComposer} with UI logic like {@link AbstractGuiController#mayView(Principal)}
+ * or {@link AbstractGuiController#getLoginPage()}.
  * 
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
-@Deprecated
 public abstract class AbstractGuiController extends GenericForwardComposer {
 
 	/**
