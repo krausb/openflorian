@@ -1,4 +1,4 @@
-package de.openflorian.ui.operation;
+package de.openflorian.ui.resources;
 
 /*
  * This file is part of Openflorian.
@@ -29,6 +29,7 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Paging;
 import org.zkoss.zul.event.PagingEvent;
 
+import de.openflorian.data.model.OperationPermission;
 import de.openflorian.data.model.security.GlobalPermission;
 import de.openflorian.service.PermissionService;
 import de.openflorian.ui.ZkGlobals;
@@ -39,11 +40,11 @@ import de.openflorian.web.user.User;
 import de.openflorian.zk.AbstractGuiController;
 
 /**
- * Controller for {@link Operation} Management List
+ * Controller for {@link OperationResource} Management List
  * 
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
-public class OperationListController extends AbstractGuiController {
+public class ResourcesListController extends AbstractGuiController {
 	private static final long serialVersionUID = -9103899038654112897L;
 	
 	private Listbox entityList;
@@ -60,7 +61,7 @@ public class OperationListController extends AbstractGuiController {
 	@Override
 	public boolean mayView(Principal user) {
 		PermissionService ps = (PermissionService)ContainerManager.getComponent("permissionService");
-		return user != null && ps.hasPermission((User) user, GlobalPermission.ADMINISTER);
+		return user != null && ps.hasPermission((User) user, OperationPermission.ADMINISTER);
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -70,7 +71,7 @@ public class OperationListController extends AbstractGuiController {
     	
     	execution.removeAttribute(ZkGlobals.REQUEST_ENTITY);
     	
-    	listModel = new OperationPagingDataListModel("id DESC", 15);
+    	listModel = new OperationPagingDataListModel("operationNr DESC", 15);
     	listModel.init();
     	
     	long totalDataListSize = listModel.getTotalSize();

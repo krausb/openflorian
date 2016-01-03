@@ -20,8 +20,10 @@ package de.openflorian.alarm;
  */
 
 import java.io.FileNotFoundException;
+import java.util.Date;
 
 import javax.servlet.ServletContextListener;
+import javax.xml.bind.ValidationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +35,7 @@ import org.zkoss.zk.ui.event.EventQueues;
 
 import de.openflorian.alarm.parser.AlarmFaxParsedEvent;
 import de.openflorian.alarm.parser.AlarmFaxParser;
-import de.openflorian.alarm.transform.AlarmFaxTransformator;
+import de.openflorian.alarm.transform.AbstractAlarmFaxTransformator;
 import de.openflorian.alarm.transform.AlarmFaxTransformedEvent;
 import de.openflorian.config.ConfigurationProvider;
 import de.openflorian.data.model.Operation;
@@ -94,7 +96,7 @@ public final class AlarmContext implements InitializingBean, DisposableBean {
 				log.debug("Event recieved...");
 				if(event instanceof AlarmFaxIncomingEvent) {
 					log.debug("AlarmFaxIncomingEvent... transforming...");
-					AlarmFaxTransformator transformator = (AlarmFaxTransformator)ContainerManager.getComponent("alarmFaxTransformator");
+					AbstractAlarmFaxTransformator transformator = (AbstractAlarmFaxTransformator)ContainerManager.getComponent("alarmFaxTransformator");
 					transformator.transform((AlarmFaxIncomingEvent)event);
 				} 
 			}
@@ -171,12 +173,19 @@ public final class AlarmContext implements InitializingBean, DisposableBean {
 		if(o == null)
 			throw new IllegalArgumentException("Given operation is null.");
 
-		Operation currentOperation = AlarmContext.this.currentOperation; 
-		this.currentOperation = null;
-		log.info("Current operation successfuly resetted.");
-		
-		EventQueues.lookup(ZkGlobals.EVENTS_QUEUE_ALARMEVENT, WebApps.getCurrent(), true)
-		  .publish(new ZkAlarmDispatchedEvent(currentOperation));
+		try {
+			Operation currentOperation = AlarmContext.this.currentOperation;
+			currentOperation.setDispatchedAt(new Date());
+			operationService.persist(currentOperation);
+			
+			this.currentOperation = null;
+			log.info("Current operation successfuly resetted.");
+			
+			EventQueues.lookup(ZkGlobals.EVENTS_QUEUE_ALARMEVENT, WebApps.getCurrent(), true)
+			  .publish(new ZkAlarmDispatchedEvent(currentOperation));
+		} catch (ValidationException e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 	
 	@Override

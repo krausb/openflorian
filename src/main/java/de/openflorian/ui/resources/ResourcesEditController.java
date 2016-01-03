@@ -1,4 +1,4 @@
-package de.openflorian.ui.operation;
+package de.openflorian.ui.resources;
 
 /*
  * This file is part of Openflorian.
@@ -68,7 +68,7 @@ import de.openflorian.zk.ZkException;
  * 
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
-public class OperationEditController extends AbstractGuiController implements EventListener {
+public class ResourcesEditController extends AbstractGuiController implements EventListener {
 	private static final long serialVersionUID = -9103899038654112897L;
 	
 	private Window 		operationEditWindow;
@@ -214,7 +214,7 @@ public class OperationEditController extends AbstractGuiController implements Ev
 						
 						public void onEvent(ClickEvent event) throws Exception {
 							if(event.getButton() == Messagebox.Button.YES)
-								OperationEditController.this.deleteCurrentOperation();
+								ResourcesEditController.this.deleteCurrentOperation();
 						}
 						
 					});
@@ -275,11 +275,7 @@ public class OperationEditController extends AbstractGuiController implements Ev
 					log.error(e.getMessage(), e);
 					setError(new ZkException(e.getMessage(), e));
 				}
-			} else {
-				Clients.showNotification(Labels.getLabel("operation.edit.msg.wrongoperation"),"info", dispatchButton,"top_center", 2000);
 			}
-		} else {
-			Clients.showNotification(Labels.getLabel("operation.edit.msg.noselected"),"info", dispatchButton,"top_center", 2000);
 		}
 	}
 	
@@ -333,22 +329,16 @@ public class OperationEditController extends AbstractGuiController implements Ev
 			buzzword.setText(o.getBuzzword());
 		} catch (WrongValueException e) {}
 		
-		try {
-			resourcesRaw.setText(o.getResourcesRaw());
-		} catch (WrongValueException e) {}
-	
 		incurredAt.setValue(o.getIncurredAt());
 		incurredAt.setFormat(ZkGlobals.FORMAT_DATETIME);
 
 		SimpleDateFormat format = new SimpleDateFormat(ZkGlobals.FORMAT_DATETIME);
-		
-		if(o.getIncurredAt() != null)
-			takenOverAtLabel.setValue(format.format(o.getTakenOverAt()));
+		takenOverAtLabel.setValue(format.format(o.getIncurredAt()));
 		takenOverAt = o.getTakenOverAt();
-		
-		if(o.getDispatchedAt() != null)
-			dispatchedAtLabel.setValue(format.format(o.getDispatchedAt()));
+		dispatchedAtLabel.setValue(format.format(o.getIncurredAt()));
 		dispatchedAt = o.getDispatchedAt();
+		
+		
 	}
 	
 	/**

@@ -36,7 +36,7 @@
 	
 	<bean id="alarmContext" class="de.openflorian.alarm.AlarmContext"/>
 	
-	<bean id="alarmFaxTransformator" class="de.openflorian.alarm.transform.AlarmFaxTransformator"/>
+	<bean id="alarmFaxTransformator" class="de.openflorian.alarm.transform.BinaryAlarmFaxTransformator"/>
 
 	<bean id="alarmFaxParser" class="de.openflorian.alarm.parser.AlarmFaxParser"/>
 	

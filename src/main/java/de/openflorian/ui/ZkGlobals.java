@@ -95,6 +95,21 @@ public class ZkGlobals {
 	public static final String PAGE_OPERATION_EDIT		= "/WEB-INF/zul/operation/operation_edit.zul";
 	
 	/* ****************************
+	 * Resources Management
+	 ******************************/
+	
+	/**
+	 * Users
+	 */
+	public static final String PAGE_RESOURCES_LIST 		= "/WEB-INF/zul/operation/resources_list.zul";
+
+	/**
+	 * Users edit
+	 */
+	public static final String PAGE_RESOURCES_EDIT		= "/WEB-INF/zul/operation/resources_edit.zul";
+	
+	
+	/* ****************************
 	 * Operations View
 	 ******************************/
 	

@@ -321,6 +321,13 @@
 		     <artifactId>yahoo-weather-java-api</artifactId>
 		     <version>${weatherapi.version}</version>
 		</dependency>
+		
+		<!-- tesseract native binding -->
+		<dependency>
+			<groupId>de.vorb</groupId>
+			<artifactId>jtesseract</artifactId>
+			<version>${jtesseract.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -410,5 +417,6 @@
 		<!-- used in case of a transient dependency problem and java8 -->
 		<javassist.version>3.20.0-GA</javassist.version>
 		<weatherapi.version>1.2.0</weatherapi.version>
+		<jtesseract.version>0.0.4</jtesseract.version>
 	</properties>
 </project>

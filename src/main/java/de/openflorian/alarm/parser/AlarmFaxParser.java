@@ -22,7 +22,7 @@ package de.openflorian.alarm.parser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
-import java.util.stream.Stream;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +79,8 @@ public class AlarmFaxParser implements InitializingBean {
 			
 			firstParserResponsable.parse(fax, op);
 			log.debug("Parsed operation: " + op);
+			
+			op.setIncurredAt(new Date());
 			
 			return op;
 		} else {

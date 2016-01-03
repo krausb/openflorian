@@ -61,7 +61,13 @@ public class OperationResource implements Serializable {
 	private String callName;
 	
 	@Column
+	private String licensePlate;
+	
+	@Column
 	private String type;
+	
+	@Column
+	private String description;
 	
 	@Column
 	private String crew;
@@ -99,12 +105,28 @@ public class OperationResource implements Serializable {
 		this.callName = callName;
 	}
 
+	public String getLicensePlate() {
+		return licensePlate;
+	}
+
+	public void setLicensePlate(String licensePlate) {
+		this.licensePlate = licensePlate;
+	}
+
 	public String getType() {
 		return type;
 	}
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getCrew() {
@@ -122,7 +144,11 @@ public class OperationResource implements Serializable {
 		result = prime * result
 				+ ((callName == null) ? 0 : callName.hashCode());
 		result = prime * result + ((crew == null) ? 0 : crew.hashCode());
+		result = prime * result
+				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result
+				+ ((licensePlate == null) ? 0 : licensePlate.hashCode());
 		result = prime * result + ((station == null) ? 0 : station.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
@@ -147,7 +173,17 @@ public class OperationResource implements Serializable {
 				return false;
 		} else if (!crew.equals(other.crew))
 			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
 		if (id != other.id)
+			return false;
+		if (licensePlate == null) {
+			if (other.licensePlate != null)
+				return false;
+		} else if (!licensePlate.equals(other.licensePlate))
 			return false;
 		if (station == null) {
 			if (other.station != null)

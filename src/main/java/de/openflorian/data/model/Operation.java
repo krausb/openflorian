@@ -65,10 +65,10 @@ public class Operation implements Serializable {
 	protected String operationNr;
 	
 	@Column
-	protected double positionLongitude;
+	protected double positionLongitude = 0;
 	
 	@Column
-	protected double positionLatitude;
+	protected double positionLatitude = 0;
 	
 	@Column
 	protected String object;

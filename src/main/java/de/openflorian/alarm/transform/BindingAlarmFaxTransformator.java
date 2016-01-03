@@ -1,4 +1,4 @@
-package de.openflorian.data.model;
+package de.openflorian.alarm.transform;
 
 /*
  * This file is part of Openflorian.
@@ -19,34 +19,22 @@ package de.openflorian.data.model;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.Collection;
-import java.util.LinkedList;
-
-import de.openflorian.data.model.security.PermissionSet;
+import de.openflorian.alarm.AlarmFaxIncomingEvent;
 
 /**
- * Operations Module Permissions
- * 
- * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br/>
- * !!!!!BIG RED FLASHING NOTE!!!!!!!!!!!!<br/>
- * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br/>
- * If you change or add permissions keep sure that 
- * you update {@link PermissionSet#PERMISSION_TYPES()} method.
+ * Alarm Fax Transformator<br/>
+ * <br/>
+ * Processes the given alarm fax with an OCR binary like
+ * tesseract.
  * 
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
-public class OperationPermission implements PermissionSet {
+public class BindingAlarmFaxTransformator extends AbstractAlarmFaxTransformator {
 
-	public static final String ACCESS = "OPERATION";
-	
-	public static final String ADMINISTER = "OPERATION_ADMINISTER";
-	
-	public static Collection<String> PERMISSION_TYPES() {
-		Collection<String> col = new LinkedList<String>();
-		col.add(ACCESS);
-		col.add(ADMINISTER);
-		
-		return col;
+	@Override
+	public void transform(AlarmFaxIncomingEvent event) {
+		// TODO: Implement as fallback or alternative for {@link BinaryAlarmFaxTransformator
+		// Use DLL / LIB Binding to OCR capi
 	}
 	
 }
