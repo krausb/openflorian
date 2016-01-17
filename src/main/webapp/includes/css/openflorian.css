@@ -1,0 +1,41 @@
+/*
+* Openflorian CSS
+
+* @author Bastian Kraus <me@bastian-kraus.me>
+*/
+
+.medium-textbox {
+	width: 320px;
+}
+
+.alarm-view .big-heading span {
+	font-size: 4.0vw;
+	line-height: normal;
+}
+
+.alarm-view .heading span {
+	font-size: 2.0vw;
+	line-height: normal;
+}
+
+.alarm-view .smaller-heading span {
+	font-size: 1.0vw;
+	line-height: normal;
+}
+
+.alarm-view .z-row-content {
+	padding: 10px;
+}
+
+.alarm-view .operation-ta .z-grid * {
+	background-color: #3399ff !important;
+	color: #FFF !important;
+	font-weight: bold !important;
+}
+
+.alarm-view .operation-fire .z-grid *{
+	background-color: #ff3300 !important;
+	color: #FFF !important;
+	font-weight: bold !important;
+}
+

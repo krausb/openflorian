@@ -38,6 +38,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.openflorian.data.model.principal.Station;
 import de.openflorian.ui.ZkGlobals;
 
@@ -53,6 +55,9 @@ import de.openflorian.ui.ZkGlobals;
 public class Operation implements Serializable {
 	private static final long serialVersionUID = 718788446662271203L;
 
+	public static final String TECHNICAL_ASSISTANCE_ZCLASS = "operation-ta";
+	public static final String FIRE_ZCLASS = "operation-fire";
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	protected long id;
@@ -245,7 +250,23 @@ public class Operation implements Serializable {
 	public void setResources(List<OperationResource> resources) {
 		this.resources = resources;
 	}
+	
+	public boolean isTechnicalAssistanceOperation() {
+		if(!StringUtils.isEmpty(this.operationNr)) {
+			if(this.operationNr.toLowerCase().startsWith("t"))
+				return true;
+		}
+		return false;
+	}
 
+	public boolean isFireOperation() {
+		if(!StringUtils.isEmpty(this.operationNr)) {
+			if(this.operationNr.toLowerCase().startsWith("b"))
+				return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

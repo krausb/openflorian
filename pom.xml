@@ -1,21 +1,12 @@
-<!-- 
-    This file is part of Openflorian.
-    
-    Copyright (C) 2015  Bastian Kraus
-
-    Openflorian is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Openflorian is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
- -->
+<!-- This file is part of Openflorian. Copyright (C) 2015 Bastian Kraus Openflorian 
+	is free software: you can redistribute it and/or modify it under the terms 
+	of the GNU General Public License as published by the Free Software Foundation, 
+	either version 3 of the License, or (at your option) any later version. Openflorian 
+	is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+	without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+	PURPOSE. See the GNU General Public License for more details. You should 
+	have received a copy of the GNU General Public License along with Openflorian. 
+	If not, see <http://www.gnu.org/licenses/>. -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -268,14 +259,24 @@
 			<artifactId>zkmax</artifactId>
 			<version>${zk.version}</version>
 		</dependency>
-		
+		<dependency>
+		    <groupId>org.zkoss</groupId>
+		    <artifactId>zkopenlayers</artifactId>
+		    <version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.zkoss.zkforge</groupId>
+			<artifactId>gmapsz</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+
 		<!-- ZK Theme -->
 		<dependency>
 			<groupId>org.zkoss.theme</groupId>
 			<artifactId>atlantic</artifactId>
 			<version>${zk.theme.version}</version>
 		</dependency>
-		
+
 
 		<!-- Apache Commons -->
 		<dependency>
@@ -314,19 +315,26 @@
 			<artifactId>jasperreports</artifactId>
 			<version>${japser.version}</version>
 		</dependency>
-		
+
 		<!-- Weather API -->
 		<dependency>
-		     <groupId>com.github.fedy2</groupId>
-		     <artifactId>yahoo-weather-java-api</artifactId>
-		     <version>${weatherapi.version}</version>
+			<groupId>com.github.fedy2</groupId>
+			<artifactId>yahoo-weather-java-api</artifactId>
+			<version>${weatherapi.version}</version>
 		</dependency>
-		
+
 		<!-- tesseract native binding -->
 		<dependency>
 			<groupId>de.vorb</groupId>
 			<artifactId>jtesseract</artifactId>
 			<version>${jtesseract.version}</version>
+		</dependency>
+
+		<!-- Proj4J Geo Transformation -->
+		<dependency>
+			<groupId>org.osgeo</groupId>
+			<artifactId>proj4j</artifactId>
+			<version>${proj4j.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -418,5 +426,6 @@
 		<javassist.version>3.20.0-GA</javassist.version>
 		<weatherapi.version>1.2.0</weatherapi.version>
 		<jtesseract.version>0.0.4</jtesseract.version>
+		<proj4j.version>0.1.0</proj4j.version>
 	</properties>
 </project>

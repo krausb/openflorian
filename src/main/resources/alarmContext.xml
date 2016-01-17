@@ -61,6 +61,10 @@
 	</bean>	
 	
 	<bean id="alarmFaxObjectParser" class="de.openflorian.alarm.parser.ObjectParserResponsable">
+		<property name="next" ref="alarmFaxGeoCoordinateParser" />
+	</bean>
+	
+	<bean id="alarmFaxGeoCoordinateParser" class="de.openflorian.alarm.parser.GeoCoordinateParserResponsable">
 		<property name="next" ref="alarmFaxBuzzwordParser" />
 	</bean>	
 	

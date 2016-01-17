@@ -75,6 +75,7 @@
                     <tabbox width="510px" height="400px" id="operationsTabbox">
                         <tabs>
                         	<tab id="resourcesTab" label="${c:l('operation.edit.tabs.resources')}"/>
+                        	<tab id="mapTab" label="${c:l('operation.edit.tabs.map')}"/>
                         	<tab id="dispatchTab" label="${c:l('operation.edit.tabs.dispatch')}"/>
                         </tabs>
                         <tabpanels>
@@ -92,6 +93,9 @@
 			                        </rows>
 			                    </grid>   
 		                    </tabpanel> 
+		                    <tabpanel id="mapTabPanel">
+		                    		<openlayers id="map" vflex="1" hflex="1" width="500px" height="500px"/>
+		                    </tabpanel>
 		                    <tabpanel id="dispatchTabPanel">
 						        <grid width="500px">
 						            <columns>
@@ -125,6 +129,7 @@
                 <button id="saveButton" label="${c:l('global.button.save')} ..." />
                 <button id="cancelButton" label="${c:l('global.button.cancel')}" />
             </hlayout>
+            <button id="arrangeButton" label="Arrange..."/>
         </vlayout>
         <label id="editUserMessages" />
     </window>

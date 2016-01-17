@@ -3,12 +3,13 @@
 <?link rel="icon" type="image/x-icon" href="/includes/img/icon/favicon.ico"?>
 <?page title="${c:l('operation.view.title')}"?>
 <zk>
-	<window border="normal" id="operationView" 
+	<window border="none" id="operationView" 
         apply="de.openflorian.ui.viewport.OperationViewController" 
-        title="${c:l('operation.view.title')}"
         width="100%" height="100%">
         
-        <include id="view" width="100%" height="100%"/>
+        <script type="text/javascript" content="zk.googleAPIkey='AIzaSyBd86jnw2INMNCaQtVi18pmF7MC1bJVsG4'" />
+        
+        <include id="view" zclass="alarm-view" width="100%" height="100%"/>
         
 	</window>
 </zk>

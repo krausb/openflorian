@@ -19,6 +19,9 @@ package de.openflorian.ui.operation;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import static org.zkoss.openlayers.util.Helper.pair;
+import static org.zkoss.openlayers.util.Helper.toMap;
+
 import java.security.GeneralSecurityException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
@@ -26,13 +29,20 @@ import java.util.Date;
 
 import javax.xml.bind.ValidationException;
 
+import org.zkoss.openlayers.Openlayers;
+import org.zkoss.openlayers.base.Icon;
+import org.zkoss.openlayers.base.LonLat;
+import org.zkoss.openlayers.base.Pixel;
+import org.zkoss.openlayers.base.Projection;
+import org.zkoss.openlayers.base.Size;
+import org.zkoss.openlayers.layer.Google;
+import org.zkoss.openlayers.layer.Markers;
+import org.zkoss.openlayers.marker.Marker;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Datebox;
@@ -47,11 +57,8 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 import de.openflorian.alarm.AlarmContext;
-import de.openflorian.alarm.AlarmEvent;
-import de.openflorian.alarm.ZkAlarmEvent;
 import de.openflorian.data.model.Operation;
 import de.openflorian.data.model.security.GlobalPermission;
-import de.openflorian.event.EventQueue;
 import de.openflorian.service.OperationService;
 import de.openflorian.service.PermissionService;
 import de.openflorian.ui.ZkGlobals;
@@ -78,6 +85,9 @@ public class OperationEditController extends AbstractGuiController implements Ev
 	
 	private Tab			dispatchTab;
 	private Tabpanel	dispatchTabPanel;
+	
+	private Tab			mapTab;
+	private Tabpanel	mapTabPanel;
 	
 	private Button 		saveButton;
 	private Button 		cancelButton;
@@ -109,6 +119,12 @@ public class OperationEditController extends AbstractGuiController implements Ev
 	
 	private Tabbox operationsTabbox;
 	
+	private Openlayers map;
+	private Markers markers;
+	private Marker marker;
+	
+	private Button arrange;
+	
 	@Override
 	public String getLoginPage() {
 		return ZkGlobals.PAGE_LOGIN;
@@ -124,6 +140,12 @@ public class OperationEditController extends AbstractGuiController implements Ev
     public void doAfterCompose(Component comp) throws Exception {
     	super.doAfterCompose(comp);
 
+    	map.addLayer(new Google("Google Satellite", toMap(pair("numZoomLevels", 20))));
+    	map.setVisible(true);
+    	
+    	markers = new Markers("Markers");
+    	map.addLayer(markers);
+    	
     	Operation selectedOperation = (Operation)execution.getAttribute(ZkGlobals.REQUEST_ENTITY);
 
     	if(selectedOperation != null) {
@@ -134,6 +156,17 @@ public class OperationEditController extends AbstractGuiController implements Ev
     		deleteButton.setDisabled(true);
     	}
     }
+	
+	/**
+	 * Event-Handler: arrangeButton.onClick
+	 * 
+	 * @param event
+	 */
+	public void onClick$arrangeButton(Event event) {
+		Double longVal = positionLongitude.getValue();
+		Double latVal = positionLatitude.getValue();
+		initMap(longVal, latVal);
+	}
 	
 	/**
 	 * Event-Handler: cancelButton.onClick
@@ -342,13 +375,19 @@ public class OperationEditController extends AbstractGuiController implements Ev
 
 		SimpleDateFormat format = new SimpleDateFormat(ZkGlobals.FORMAT_DATETIME);
 		
-		if(o.getIncurredAt() != null)
+		if(o.getTakenOverAt() != null)
 			takenOverAtLabel.setValue(format.format(o.getTakenOverAt()));
 		takenOverAt = o.getTakenOverAt();
 		
 		if(o.getDispatchedAt() != null)
 			dispatchedAtLabel.setValue(format.format(o.getDispatchedAt()));
 		dispatchedAt = o.getDispatchedAt();
+		
+    	if(o.getPositionLatitude() != 0 && o.getPositionLongitude() != 0) {
+    		initMap(o.getPositionLongitude(), o.getPositionLatitude());
+    	} else {
+    		map.setVisible(false);
+    	}
 	}
 	
 	/**
@@ -390,6 +429,23 @@ public class OperationEditController extends AbstractGuiController implements Ev
 			
 			setContentZul(ZkGlobals.PAGE_OPERATION_LIST);
 		}
+	}
+	
+	/**
+	 * Helper: Init Map
+	 */
+	private void initMap(double longVal, double latVal) {
+		log.debug("Arrange map with coords long: " + longVal + "; lat: " + latVal);
+		
+		LonLat currentPosition = new LonLat(longVal,latVal).transform(new Projection("EPSG:4326"), map.getProjection());
+		map.setCenter(currentPosition, 15);
+		
+        Size size = new Size(21,25);
+        Pixel offset = new Pixel(-(size.getWidth()/2), -size.getHeight());
+        Icon icon = new Icon("/openflorian/includes/img/icon/marker.png",size,offset);
+        
+        marker = new Marker(currentPosition,icon);
+        markers.addMarker(marker);
 	}
 
 }
