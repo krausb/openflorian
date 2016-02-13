@@ -19,16 +19,19 @@ package de.openflorian.alarm.transform;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import io.vertx.core.eventbus.Message;
+
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
 
-import de.openflorian.alarm.AlarmFaxIncomingEvent;
-import de.openflorian.event.EventQueue;
+import de.openflorian.EventBusAdresses;
+import de.openflorian.OpenflorianContext;
+import de.openflorian.alarm.AlarmFaxEvent;
 
 /**
- * Binary Alarm Fax Transformator<br/>
+ * Binary Alarm Fax Transformator Verticle<br/>
  * <br/>
  * Processes the given alarm fax with an OCR binary like
  * tesseract.
@@ -36,15 +39,17 @@ import de.openflorian.event.EventQueue;
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
 public class BinaryAlarmFaxTransformator extends AbstractAlarmFaxTransformator {
-	
-	/* (non-Javadoc)
-	 * @see de.openflorian.alarm.transform.AbstractAlarmFaxTransformator#transform(de.openflorian.alarm.AlarmFaxIncomingEvent)
-	 */
-	@Override
-	public void transform(AlarmFaxIncomingEvent event) {
-		Runtime rt = Runtime.getRuntime();
 		
+	@Override
+	public void transform(Message<Object> msg) {
+		log.debug("Start transforming an alarm fax TIF file...");
+		
+		Process ps = null;
 		try {
+			AlarmFaxEvent event = (AlarmFaxEvent) msg.body();
+			
+			Runtime rt = Runtime.getRuntime();
+			
 			String resultTextFile = String.format("%s/%s",
 					faxObervationDirectory,
 					event.getResultFile().getName());
@@ -59,7 +64,7 @@ public class BinaryAlarmFaxTransformator extends AbstractAlarmFaxTransformator {
 
 			log.debug("Running cmd: " + cmd);
 			
-			Process ps = rt.exec(cmd);
+			ps = rt.exec(cmd);
 			
 			int exitCode = ps.waitFor();
 			if(exitCode == 0) {
@@ -67,7 +72,8 @@ public class BinaryAlarmFaxTransformator extends AbstractAlarmFaxTransformator {
 						event.getResultFile().getAbsolutePath(),
 						resultTextFile,
 						exitCode));
-				EventQueue.getInstance().publish(new AlarmFaxTransformedEvent(new File(resultTextFile + ".txt")));
+				
+				vertx.eventBus().send(EventBusAdresses.ALARMFAX_TRANSFORMED, new AlarmFaxEvent(new File(resultTextFile + ".txt")));
 			} else {
 				log.error(String.format("An error occured transforming '%s'. Exit code: %d",
 						event.getResultFile().getAbsolutePath(),
@@ -79,6 +85,9 @@ public class BinaryAlarmFaxTransformator extends AbstractAlarmFaxTransformator {
 			log.error(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			log.error(e.getMessage(), e);
+		} finally {
+			if(ps != null)
+				ps.destroy();
 		}
 	}
 	

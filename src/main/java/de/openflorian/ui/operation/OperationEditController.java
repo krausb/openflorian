@@ -19,9 +19,6 @@ package de.openflorian.ui.operation;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import static org.zkoss.openlayers.util.Helper.pair;
-import static org.zkoss.openlayers.util.Helper.toMap;
-
 import java.security.GeneralSecurityException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
@@ -29,15 +26,8 @@ import java.util.Date;
 
 import javax.xml.bind.ValidationException;
 
-import org.zkoss.openlayers.Openlayers;
-import org.zkoss.openlayers.base.Icon;
-import org.zkoss.openlayers.base.LonLat;
-import org.zkoss.openlayers.base.Pixel;
-import org.zkoss.openlayers.base.Projection;
-import org.zkoss.openlayers.base.Size;
-import org.zkoss.openlayers.layer.Google;
-import org.zkoss.openlayers.layer.Markers;
-import org.zkoss.openlayers.marker.Marker;
+import org.zkoss.gmaps.Ginfo;
+import org.zkoss.gmaps.Gmaps;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
@@ -56,7 +46,9 @@ import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
-import de.openflorian.alarm.AlarmContext;
+import de.openflorian.EventBusAdresses;
+import de.openflorian.OpenflorianContext;
+import de.openflorian.alarm.AlarmContextVerticle;
 import de.openflorian.data.model.Operation;
 import de.openflorian.data.model.security.GlobalPermission;
 import de.openflorian.service.OperationService;
@@ -119,9 +111,8 @@ public class OperationEditController extends AbstractGuiController implements Ev
 	
 	private Tabbox operationsTabbox;
 	
-	private Openlayers map;
-	private Markers markers;
-	private Marker marker;
+	private Gmaps operationMap;
+	private Ginfo operationMarker;
 	
 	private Button arrange;
 	
@@ -140,11 +131,7 @@ public class OperationEditController extends AbstractGuiController implements Ev
     public void doAfterCompose(Component comp) throws Exception {
     	super.doAfterCompose(comp);
 
-    	map.addLayer(new Google("Google Satellite", toMap(pair("numZoomLevels", 20))));
-    	map.setVisible(true);
-    	
-    	markers = new Markers("Markers");
-    	map.addLayer(markers);
+    	operationMap.setVisible(true);
     	
     	Operation selectedOperation = (Operation)execution.getAttribute(ZkGlobals.REQUEST_ENTITY);
 
@@ -271,9 +258,7 @@ public class OperationEditController extends AbstractGuiController implements Ev
 	public void onClick$alarmButton(Event event) {
 		if(operationId > 0) {
 			try {
-				Operation op = getFromZul();
-				
-				AlarmContext.getInstance().alarmOperation(op);
+				AlarmContextVerticle.getInstance().alarmOperation(getFromZul());
 			} catch (ZkException e) {
 				log.error(e.getMessage(), e);
 				setError(e);
@@ -293,11 +278,11 @@ public class OperationEditController extends AbstractGuiController implements Ev
 	 */
 	public void onClick$dispatchButton(Event event) {
 		if(operationId > 0) {
-			if(AlarmContext.getInstance().getCurrentOperation() != null && 
-					operationId == AlarmContext.getInstance().getCurrentOperation().getId()) {
+			if(AlarmContextVerticle.getInstance().getCurrentOperation() != null && 
+					operationId == AlarmContextVerticle.getInstance().getCurrentOperation().getId()) {
 				
 				try {
-					AlarmContext.getInstance().dispatchOperation(getFromZul());
+					AlarmContextVerticle.getInstance().dispatchOperation(getFromZul());
 				} catch (ZkException e) {
 					log.error(e.getMessage(), e);
 					setError(e);
@@ -386,7 +371,7 @@ public class OperationEditController extends AbstractGuiController implements Ev
     	if(o.getPositionLatitude() != 0 && o.getPositionLongitude() != 0) {
     		initMap(o.getPositionLongitude(), o.getPositionLatitude());
     	} else {
-    		map.setVisible(false);
+    		operationMap.setVisible(false);
     	}
 	}
 	
@@ -437,15 +422,14 @@ public class OperationEditController extends AbstractGuiController implements Ev
 	private void initMap(double longVal, double latVal) {
 		log.debug("Arrange map with coords long: " + longVal + "; lat: " + latVal);
 		
-		LonLat currentPosition = new LonLat(longVal,latVal).transform(new Projection("EPSG:4326"), map.getProjection());
-		map.setCenter(currentPosition, 15);
+		operationMap.setLng(longVal);
+		operationMap.setLat(latVal);
+		operationMap.setCenter(latVal, longVal);
+		operationMap.setZoom(16);
 		
-        Size size = new Size(21,25);
-        Pixel offset = new Pixel(-(size.getWidth()/2), -size.getHeight());
-        Icon icon = new Icon("/openflorian/includes/img/icon/marker.png",size,offset);
-        
-        marker = new Marker(currentPosition,icon);
-        markers.addMarker(marker);
+		operationMarker.setLat(latVal);
+		operationMarker.setLng(longVal);
+		operationMarker.setOpen(true);
 	}
 
 }

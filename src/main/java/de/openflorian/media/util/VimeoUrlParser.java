@@ -19,11 +19,11 @@ package de.openflorian.media.util;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.ParseException;
 
 /**
  * Youtube Link Parser<br/>
@@ -62,9 +62,6 @@ public class VimeoUrlParser {
 	    		foundId = normalMather.group(2);
 	    }
 	    
-	    if(StringUtils.isEmpty(foundId))
-	    	throw new ParseException("Unable to parse given URL: " + link);
-	    	
 	    return foundId;
 	}
 	

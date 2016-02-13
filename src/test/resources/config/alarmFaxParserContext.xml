@@ -72,10 +72,6 @@
 		<property name="next" ref="alarmFaxKeywordParser" />
 	</bean>	
 	
-	<bean id="alarmFaxKeywordParser" class="de.openflorian.alarm.parser.KeywordParserResponsable">
-		<property name="next" ref="alarmFaxResourcesParser" />
-	</bean>	
-	
-	<bean id="alarmFaxResourcesParser" class="de.openflorian.alarm.parser.ResourcesParserResponsable"/>
+	<bean id="alarmFaxKeywordParser" class="de.openflorian.alarm.parser.KeywordParserResponsable"/>
 
 </beans>

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 <?link rel="icon" type="image/x-icon" href="/includes/img/icon/favicon.ico"?>
+<?style href="/includes/css/weather-icons.min.css" type="text/css" ?>
+<?style href="/includes/css/weather-icons-wind.min.css" type="text/css" ?>
 <?page title="${c:l('operation.view.title')}"?>
 <zk>
 	<window border="none" id="operationView" 

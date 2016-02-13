@@ -41,7 +41,7 @@ import org.springframework.util.StringUtils;
  * 
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
-public class DefaultConfigurationProvider implements InitializingBean, ConfigurationProvider {
+public class DefaultConfigurationProvider implements ConfigurationProvider {
 	private Logger log = LoggerFactory.getLogger(getClass());
 	
 	private static List<ConfigurationInitializationAware> initializationAwares = new LinkedList<ConfigurationInitializationAware>();
@@ -89,8 +89,10 @@ public class DefaultConfigurationProvider implements InitializingBean, Configura
 		return properties.getProperty(name);
 	}
 	
-	@Override
-	public void afterPropertiesSet() throws Exception {
+	/**
+	 * Initialize instance
+	 */
+	public void initialize() {
 		log.debug("Initializing ConfigurationProvider...");
 		properties = new Properties();
 		InputStream input = null;
@@ -111,7 +113,7 @@ public class DefaultConfigurationProvider implements InitializingBean, Configura
 					e.printStackTrace();
 				}
 			}
-		}
+		}		
 	}
 	
 	/**
@@ -162,8 +164,7 @@ public class DefaultConfigurationProvider implements InitializingBean, Configura
     
 	@Override
 	public boolean isInitialized() {
-		// TODO Auto-generated method stub
-		return false;
+		return initialized;
 	}
 	
 }

@@ -33,6 +33,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * {@link Department} DTO
  * 
@@ -87,10 +89,10 @@ public final class Department implements Serializable {
 	protected String fax;
 
     @Column
-    protected Double geoLatitude;
+    protected Double geoLatitude = 0.0;
     
     @Column
-    protected Double geoLongitude;
+    protected Double geoLongitude = 0.0;
     
     @Column
     protected boolean isActive = false;
@@ -376,5 +378,29 @@ public final class Department implements Serializable {
 	public String toString() {
 		return this.name;
 	}
-		
+
+	/**
+	 * Deserialize from json
+	 * 
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	public static Department fromJson(String json) throws Exception {
+		ObjectMapper om = new ObjectMapper();
+		Department d = om.readValue(json, Department.class);
+	    return d;
+	}
+	
+	/**
+	 * Serialize to json
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String toJson() throws Exception {
+		ObjectMapper om = new ObjectMapper();
+		return om.writerWithDefaultPrettyPrinter().writeValueAsString(this);
+	}
+	
 }

@@ -28,7 +28,7 @@ import de.openflorian.event.Event;
  * 
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
-public abstract class AlarmFaxEvent extends Event {
+public class AlarmFaxEvent extends Event {
 	
 	public AlarmFaxEvent(File result) {
 		super("AlarmFaxEvent", result);

@@ -80,6 +80,23 @@
 			<version>${servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		
+		<!-- Jackson -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 
 
 		<!-- Logging -->
@@ -99,26 +116,10 @@
 			<version>${log4j.version}</version>
 		</dependency>
 
-		<!-- RESTEasy -->
 		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-client</artifactId>
-			<version>${resteasy.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jaxrs</artifactId>
-			<version>${resteasy.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jaxb-provider</artifactId>
-			<version>${resteasy.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jettison-provider</artifactId>
-			<version>${resteasy.version}</version>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-core</artifactId>
+			<version>3.2.0</version>
 		</dependency>
 
 		<!-- Spring Framework -->
@@ -241,13 +242,6 @@
 			<version>${zk.version}</version>
 		</dependency>
 
-		<!-- ZK Calendar -->
-		<dependency>
-			<groupId>org.zkoss.calendar</groupId>
-			<artifactId>calendar</artifactId>
-			<version>${zk.calendar.version}</version>
-		</dependency>
-
 		<!-- ZK PE / EE -->
 		<dependency>
 			<groupId>org.zkoss.zk</groupId>
@@ -258,11 +252,6 @@
 			<groupId>org.zkoss.zk</groupId>
 			<artifactId>zkmax</artifactId>
 			<version>${zk.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.zkoss</groupId>
-		    <artifactId>zkopenlayers</artifactId>
-		    <version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.zkoss.zkforge</groupId>
@@ -296,38 +285,25 @@
 			<artifactId>reflections</artifactId>
 			<version>${reflection.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>${javassist.version}</version>
-		</dependency>
-
+		
 		<!-- ESAPI -->
 		<dependency>
 			<groupId>org.owasp.esapi</groupId>
 			<artifactId>esapi</artifactId>
 			<version>${esapi.version}</version>
 		</dependency>
-
-		<!-- Japser Reports -->
-		<dependency>
-			<groupId>net.sf.jasperreports</groupId>
-			<artifactId>jasperreports</artifactId>
-			<version>${japser.version}</version>
-		</dependency>
-
+		
 		<!-- Weather API -->
 		<dependency>
 			<groupId>com.github.fedy2</groupId>
 			<artifactId>yahoo-weather-java-api</artifactId>
 			<version>${weatherapi.version}</version>
-		</dependency>
-
-		<!-- tesseract native binding -->
-		<dependency>
-			<groupId>de.vorb</groupId>
-			<artifactId>jtesseract</artifactId>
-			<version>${jtesseract.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-simple</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Proj4J Geo Transformation -->
@@ -336,6 +312,14 @@
 			<artifactId>proj4j</artifactId>
 			<version>${proj4j.version}</version>
 		</dependency>
+		
+		<!-- Super CSV -->
+		<dependency>
+			<groupId>net.sf.supercsv</groupId>
+			<artifactId>super-csv</artifactId>
+			<version>${supercsv.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -406,20 +390,15 @@
 
 		<commons-io>2.4</commons-io>
 		<commons-lang3>3.3.2</commons-lang3>
-		<commons-fileupload>1.3.1</commons-fileupload>
 
 		<hibernate.version>4.3.8.Final</hibernate.version>
 		<hibernate.validator>5.1.3.Final</hibernate.validator>
 		<zk.version>7.0.4</zk.version>
-		<zk.calendar.version>2.1.5</zk.calendar.version>
 		<zk.theme.version>1.1.0</zk.theme.version>
-		<zats.version>1.2.0</zats.version>
 		<sl4j.version>1.7.12</sl4j.version>
 		<log4j.version>1.2.17</log4j.version>
 		<spring.version>4.1.6.RELEASE</spring.version>
 		<resteasy.version>3.0.11.Final</resteasy.version>
-		<japser.version>6.1.0</japser.version>
-		<japser.fonts.version>1.0.0</japser.fonts.version>
 		<reflection.version>[0.1-DEV,)</reflection.version>
 		<esapi.version>2.1.0</esapi.version>
 		<!-- used in case of a transient dependency problem and java8 -->
@@ -427,5 +406,7 @@
 		<weatherapi.version>1.2.0</weatherapi.version>
 		<jtesseract.version>0.0.4</jtesseract.version>
 		<proj4j.version>0.1.0</proj4j.version>
+		<supercsv.version>2.4.0</supercsv.version>
+		<jackson.version>2.7.0</jackson.version>
 	</properties>
 </project>

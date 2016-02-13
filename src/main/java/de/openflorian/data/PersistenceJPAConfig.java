@@ -132,7 +132,7 @@ public class PersistenceJPAConfig {
 	protected Properties additionalProperties() {
 		Properties properties = new Properties();
 		// TODO: Change to 'none' for release
-		properties.setProperty("hibernate.hbm2ddl.auto", "update");
+		properties.setProperty("hibernate.hbm2ddl.auto", "none");
 		properties.setProperty("hibernate.default_schema", "openflorian");
 		properties.setProperty("hibernate.dialect",
 				"org.hibernate.dialect.MySQL5Dialect");

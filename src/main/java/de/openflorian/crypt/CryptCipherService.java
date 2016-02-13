@@ -28,7 +28,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import de.openflorian.config.ConfigurationProvider;
+import de.openflorian.OpenflorianContext;
 import de.openflorian.crypt.provider.BlowfishCipher;
 import de.openflorian.crypt.provider.XorCipher;
 
@@ -82,8 +82,6 @@ public class CryptCipherService implements InitializingBean {
 
 	private BlowfishCipher xorCipher;
 	private XorCipher blowfishCipher;
-
-	private ConfigurationProvider config;
 	
 	public enum CipherTarget {
 		Blowfish,
@@ -94,11 +92,11 @@ public class CryptCipherService implements InitializingBean {
 	public void afterPropertiesSet() {
 		log.info("Initializing CryptCipherService...");
 		
-		if(config != null) {
+		if(OpenflorianContext.getConfig() != null) {
 			if(StringUtils.isEmpty(CIPHER_KEY_BLOWFISH) ||StringUtils.isEmpty(CIPHER_KEY_XOR)) {
 				try {
-					CIPHER_KEY_BLOWFISH = config.getProperty(CONFIG_CIPHER_KEY_BLOWFISH);
-					CIPHER_KEY_XOR = config.getProperty(CONFIG_CIPHER_KEY_XOR);
+					CIPHER_KEY_BLOWFISH = OpenflorianContext.getConfig().getProperty(CONFIG_CIPHER_KEY_BLOWFISH);
+					CIPHER_KEY_XOR = OpenflorianContext.getConfig().getProperty(CONFIG_CIPHER_KEY_XOR);
 				} catch(Exception e) {
 					log.error(e.getMessage(), e);
 				}
@@ -159,16 +157,6 @@ public class CryptCipherService implements InitializingBean {
 			log.error(e.getMessage(), e);
 		}
 		return null;
-	}
-
-	/**
-	 * Dependency injection: {@link ConfigurationProvider}
-	 * 
-	 * @param config
-	 */
-	public void setConfigurationProvider(ConfigurationProvider config) {
-		this.config = config;
-	}
-	
+	}	
 	
 }

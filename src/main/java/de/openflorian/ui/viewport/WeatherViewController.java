@@ -26,7 +26,6 @@ import java.util.Date;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Timer;
 
@@ -36,6 +35,7 @@ import com.github.fedy2.weather.data.unit.BarometricPressureState;
 import com.github.fedy2.weather.data.unit.DegreeUnit;
 
 import de.openflorian.ui.ZkGlobals;
+import de.openflorian.util.YahooWeatherConditionconditions;
 import de.openflorian.zk.AbstractGuiController;
 
 /**
@@ -55,11 +55,9 @@ public class WeatherViewController extends AbstractGuiController {
 	private Label condition;
 	private Label humidity;
 	private Label pressure;
-	private Label visibility;
-	private Image rising;
+	private Label rising;
 	private Label windSpeed;
 	private Label windDirection;
-	private Label windChill;
 	
 	private Label currentTime;
 	
@@ -97,24 +95,22 @@ public class WeatherViewController extends AbstractGuiController {
 			YahooWeatherService service = new YahooWeatherService();
 			
 			Channel c = service.getForecast("12836980", DegreeUnit.CELSIUS);
-			weather.setValue(c.getDescription());
+			
 			temperature.setValue(c.getItem().getCondition().getTemp() + " °C");
-			condition.setValue(c.getItem().getCondition().getText());
+			condition.setSclass("wi weather-icon " + YahooWeatherConditionconditions.map(c.getItem().getCondition().getCode()));
 			humidity.setValue(String.valueOf(c.getAtmosphere().getHumidity()) + " %");
 			pressure.setValue(String.valueOf(c.getAtmosphere().getPressure()) + " hPa");
-			visibility.setValue(String.valueOf(c.getAtmosphere().getVisibility()));
 			
 			if(c.getAtmosphere().getRising() == BarometricPressureState.RISING) {
-				rising.setSrc(ZkGlobals.ICON_SMALL_UP);
+				rising.setSclass("wi pressure wi-direction-up-right");
 			} else if(c.getAtmosphere().getRising() == BarometricPressureState.FALLING) {
-				rising.setSrc(ZkGlobals.ICON_SMALL_DOWN);
+				rising.setSclass("wi pressure wi-direction-down-right");
 			} else if(c.getAtmosphere().getRising() == BarometricPressureState.STEADY) {
-				rising.setSrc(ZkGlobals.ICON_SMALL_STEADY);
+				rising.setSclass("wi pressure wi-direction-right");
 			}
 			
 			windSpeed.setValue(c.getWind().getSpeed() + " km/h");
-			windDirection.setValue(String.valueOf(c.getWind().getDirection()));
-			windChill.setValue(String.valueOf(c.getWind().getChill()) + " °C");
+			windDirection.setSclass("wi windspeed wi-wind towards-" + c.getWind().getDirection() + "-deg");
 
 			currentTime.setValue(new SimpleDateFormat(ZkGlobals.FORMAT_DATETIME).format(new Date()));
 		} catch (Exception e) {

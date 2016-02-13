@@ -22,18 +22,10 @@ package de.openflorian.ui.viewport;
 import java.security.Principal;
 
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zul.Button;
 
-import de.openflorian.alarm.AlarmContext;
-import de.openflorian.alarm.AlarmDispatchedEvent;
-import de.openflorian.alarm.ZkAlarmDispatchedEvent;
-import de.openflorian.alarm.ZkAlarmEvent;
-import de.openflorian.data.model.Operation;
-import de.openflorian.event.EventQueue;
+import de.openflorian.alarm.AlarmContextVerticle;
 import de.openflorian.ui.ZkGlobals;
 import de.openflorian.zk.AbstractGuiController;
 
@@ -67,8 +59,6 @@ public class OperationDispatcherController extends AbstractGuiController {
 	@Override
     public void doAfterCompose(Component comp) throws Exception {
     	super.doAfterCompose(comp);
-    	
-
     }
 	
 	/**
@@ -78,7 +68,7 @@ public class OperationDispatcherController extends AbstractGuiController {
 	 * 		{@link Event}
 	 */
 	public void onClick$dispatch(Event event) {
-		EventQueue.getInstance().publish(new AlarmDispatchedEvent(AlarmContext.getInstance().getCurrentOperation()));
+		AlarmContextVerticle.getInstance().dispatchOperation(AlarmContextVerticle.getInstance().getCurrentOperation());
 	}
 	
 }

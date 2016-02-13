@@ -4,6 +4,8 @@
     <window border="normal" id="operationEditWindow" 
         apply="de.openflorian.ui.operation.OperationEditController" 
         title="${c:l('user.edit.title')}">
+        
+        <script type="text/javascript" content="zk.googleAPIkey='AIzaSyBd86jnw2INMNCaQtVi18pmF7MC1bJVsG4'" />
         <vlayout>
             <notificationBox id="notificationBox" />
             <hlayout>
@@ -94,7 +96,9 @@
 			                    </grid>   
 		                    </tabpanel> 
 		                    <tabpanel id="mapTabPanel">
-		                    		<openlayers id="map" vflex="1" hflex="1" width="500px" height="500px"/>
+		                    	<gmaps version="3.9" id="operationMap" width="100%" height="400px" showSmallCtrl="true" protocol="http">
+									<ginfo id="operationMarker" lat="48.76957000379086" lng="11.615598860359174" content="${c:l('operation.alarm.marker.content')}"/>
+								</gmaps>
 		                    </tabpanel>
 		                    <tabpanel id="dispatchTabPanel">
 						        <grid width="500px">

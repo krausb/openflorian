@@ -28,11 +28,9 @@ import javax.xml.bind.ValidationException;
 
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Datebox;
@@ -46,12 +44,9 @@ import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
-import de.openflorian.alarm.AlarmContext;
-import de.openflorian.alarm.AlarmEvent;
-import de.openflorian.alarm.ZkAlarmEvent;
+import de.openflorian.alarm.AlarmContextVerticle;
 import de.openflorian.data.model.Operation;
 import de.openflorian.data.model.security.GlobalPermission;
-import de.openflorian.event.EventQueue;
 import de.openflorian.service.OperationService;
 import de.openflorian.service.PermissionService;
 import de.openflorian.ui.ZkGlobals;
@@ -240,7 +235,7 @@ public class ResourcesEditController extends AbstractGuiController implements Ev
 			try {
 				Operation op = getFromZul();
 				
-				AlarmContext.getInstance().alarmOperation(op);
+				AlarmContextVerticle.getInstance().alarmOperation(op);
 			} catch (ZkException e) {
 				log.error(e.getMessage(), e);
 				setError(e);
@@ -260,11 +255,11 @@ public class ResourcesEditController extends AbstractGuiController implements Ev
 	 */
 	public void onClick$dispatchButton(Event event) {
 		if(operationId > 0) {
-			if(AlarmContext.getInstance().getCurrentOperation() != null && 
-					operationId == AlarmContext.getInstance().getCurrentOperation().getId()) {
+			if(AlarmContextVerticle.getInstance().getCurrentOperation() != null && 
+					operationId == AlarmContextVerticle.getInstance().getCurrentOperation().getId()) {
 				
 				try {
-					AlarmContext.getInstance().dispatchOperation(getFromZul());
+					AlarmContextVerticle.getInstance().dispatchOperation(getFromZul());
 				} catch (ZkException e) {
 					log.error(e.getMessage(), e);
 					setError(e);

@@ -27,15 +27,61 @@
 	padding: 10px;
 }
 
-.alarm-view .operation-ta .z-grid * {
+.alarm-view .operation-ta .bg-grid.z-grid *,
+.alarm-view .operation-ta .operation-resources {
 	background-color: #3399ff !important;
 	color: #FFF !important;
 	font-weight: bold !important;
 }
 
-.alarm-view .operation-fire .z-grid *{
+.alarm-view .operation-fire .bg-grid.z-grid *,
+.alarm-view .operation-fire .operation-resources {
 	background-color: #ff3300 !important;
 	color: #FFF !important;
 	font-weight: bold !important;
 }
 
+.alarm-view .operation-resource {
+	border: 4px solid #FFF;
+	margin: 10px;
+	padding: 10px;
+	font-size: 1.0vw;
+}
+
+/******* Weather *********/
+
+.weather-view .weather-icon {
+	font-size: 22.0vw;
+	margin-top: -50px;
+	margin-left: 80px;
+	line-height: normal;
+}
+
+.weather-view .wi.wi-thermometer,
+.weather-view .temperature {
+	font-size: 12.0vw;
+	line-height: normal;
+}
+
+.weather-view .wi.wi-humidity,
+.weather-view .humidity {
+	font-size: 10.0vw;
+	line-height: normal;
+}
+
+.weather-view .wi.wi-barometer,
+.weather-view .pressure {
+	font-size: 6.0vw;
+	line-height: normal;
+}
+
+.weather-view .wi.wi-strong-wind,
+.weather-view .windspeed {
+	font-size: 6.0vw;
+	line-height: normal;
+}
+
+.weather-view .current-time {
+	font-weight: bold;
+	font-size: 1.0vw;
+}

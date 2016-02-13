@@ -29,7 +29,7 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zul.Include;
 
-import de.openflorian.alarm.AlarmContext;
+import de.openflorian.alarm.AlarmContextVerticle;
 import de.openflorian.alarm.ZkAlarmDispatchedEvent;
 import de.openflorian.alarm.ZkAlarmEvent;
 import de.openflorian.data.model.Operation;
@@ -72,6 +72,8 @@ public class OperationViewController extends AbstractGuiController {
 
 			@Override
 			public void onEvent(Event event) throws Exception {
+				if(log.isDebugEnabled())
+					log.debug("Recieving " + event);
 				if(event instanceof ZkAlarmEvent) {
 					OperationViewController.this.log.debug("ZkAlarmEvent catched...");
 					if(((ZkAlarmEvent) event).getOperation() != null)
@@ -84,7 +86,7 @@ public class OperationViewController extends AbstractGuiController {
     		
 		});
     	
-    	Operation operation = AlarmContext.getInstance().getCurrentOperation();
+    	Operation operation = AlarmContextVerticle.getInstance().getCurrentOperation();
     	if(operation != null)
     		showAlarmView(operation);
     	else

@@ -22,9 +22,6 @@ package de.openflorian.media.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.ParseException;
-
 /**
  * Youtube Link Parser<br/>
  * <Br/>
@@ -52,10 +49,7 @@ public class YoutubeUrlParse {
 	    if(embedMatcher.find()){
 	    	foundId = embedMatcher.group(1);
 	    }
-	    
-	    if(StringUtils.isEmpty(foundId))
-	    	throw new ParseException("Unable to parse given URL: " + link);
-	    	
+
 	    return foundId;
 	}
 	

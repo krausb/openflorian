@@ -36,17 +36,11 @@
 	
 	<bean id="bootstrapManager" class="de.openflorian.web.core.DefaultBootstrapManager" />
 	
-	<bean id="configurationProvider" class="de.openflorian.config.DefaultConfigurationProvider">
-		<property name="configurationFileName" value="openflorian.properties" />
-	</bean>
-	
 	<bean id="i18n" class="de.openflorian.web.core.DefaultI18nProvider">
 		<property name="bootstrapManager" ref="bootstrapManager" />
 	</bean>
 	
-	<bean id="cryptService" class="de.openflorian.crypt.CryptCipherService">
-		<property name="configurationProvider" ref="configurationProvider" />
-	</bean>
+	<bean id="cryptService" class="de.openflorian.crypt.CryptCipherService" />
 
 	<bean id="countryService" class="de.openflorian.service.CountryService" />
 	<bean id="countryDao" class="de.openflorian.data.dao.principal.CountryDao" />
@@ -59,5 +53,8 @@
 
 	<bean id="operationService" class="de.openflorian.service.OperationService" />
 	<bean id="operationDao" class="de.openflorian.data.dao.OperationDao" />
+
+	<bean id="operationResourceService" class="de.openflorian.service.OperationResourceService" />
+	<bean id="operationResourceDao" class="de.openflorian.data.dao.OperationResourceDao" />
 
 </beans>

@@ -1,4 +1,4 @@
-package de.openflorian.alarm.transform;
+package de.openflorian.alarm.archive;
 
 /*
  * This file is part of Openflorian.
@@ -25,34 +25,31 @@ import io.vertx.core.eventbus.Message;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 import de.openflorian.EventBusAdresses;
 import de.openflorian.OpenflorianContext;
 import de.openflorian.alarm.FaxDirectoryObserverVerticle;
+import de.openflorian.alarm.parser.AlarmFaxParsedEvent;
 import de.openflorian.config.ConfigurationProvider;
 import de.openflorian.util.StringUtils;
 
 /**
- * Alarm Fax Transformator<br/>
+ * Alarm Fax Archiver<br/>
  * <br/>
- * Processes the given alarm fax with an OCR binary like
- * tesseract.
+ * Puts the transformed and parsed Alarm Fax after {@link AlarmFaxParsedEvent}
+ * into {@link AlarmFaxArchiver#CONFIG_ARCHIVATION_DIRECTORY}.
  * 
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
-public abstract class AbstractAlarmFaxTransformator extends AbstractVerticle {
+public class AlarmFaxArchiver extends AbstractVerticle {
 
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
-	public static final String CONFIG_TRANSFORMATION_CMD = "alarm.transform.cmd";
-	public static final String CONFIG_TRANSFORMATION_VAR_OUTPUT = "alarm.transform.var.output";
-	public static final String CONFIG_TRANSFORMATION_VAR_INPUT = "alarm.transform.var.input";
-
-	protected String transformationCmd;
-	protected String faxObervationDirectory;
+	public static final String CONFIG_ARCHIVATION_DIRECTORY = "alarm.observer.archivedir";
 	
-	protected String transformationCmdVarInput;
-	protected String transformationCmdVarOutput;
+	private String faxObervationDirectory;
+	private String faxArchivationDirectory;
 	
 	@Override
 	public void start(Future<Void> startFuture) {
@@ -60,35 +57,33 @@ public abstract class AbstractAlarmFaxTransformator extends AbstractVerticle {
 		if(config == null)
 			throw new IllegalStateException("No ConfigurationProvider present/injected.");
 		
-		log.info("Setting up Fax Transformator Verticle...");
-		
-		transformationCmd = config.getProperty(CONFIG_TRANSFORMATION_CMD);
-		transformationCmdVarInput = config.getProperty(CONFIG_TRANSFORMATION_VAR_INPUT);
-		transformationCmdVarOutput = config.getProperty(CONFIG_TRANSFORMATION_VAR_OUTPUT);
+		log.info("Setting up AlarmFaxArchiver...");
+ 
+		faxArchivationDirectory = config.getProperty(CONFIG_ARCHIVATION_DIRECTORY);
 		faxObervationDirectory = config.getProperty(FaxDirectoryObserverVerticle.CONFIG_OBSERVING_DIRECTORY);
 		
-		if(StringUtils.isEmpty(transformationCmd))
-			throw new IllegalStateException("Transformation command '" + CONFIG_TRANSFORMATION_CMD + "' is missing.");
+		if(StringUtils.isEmpty(faxArchivationDirectory))
+			throw new IllegalStateException("faxArchivationDirectory faxArchivationDirectory '" + CONFIG_ARCHIVATION_DIRECTORY + "' is missing.");
 		else if(StringUtils.isEmpty(faxObervationDirectory)) 
 			throw new IllegalStateException("Fax observing directory '" + FaxDirectoryObserverVerticle.CONFIG_OBSERVING_DIRECTORY + "' is missing.");
 		else {
-			log.info(CONFIG_TRANSFORMATION_CMD + ": " + transformationCmd);
-			log.info(CONFIG_TRANSFORMATION_VAR_INPUT + ": " + transformationCmdVarInput);
-			log.info(CONFIG_TRANSFORMATION_VAR_OUTPUT + ": " + transformationCmdVarOutput);
+			log.info(CONFIG_ARCHIVATION_DIRECTORY + ": " + faxArchivationDirectory);
 			log.info(FaxDirectoryObserverVerticle.CONFIG_OBSERVING_DIRECTORY + ": " + faxObervationDirectory);
 		}
 		
-		log.info("Register Bus Listener...");
-		vertx.eventBus().consumer(EventBusAdresses.ALARMFAX_NEWFAX, msg -> transform(msg));
+		log.info("Registering EventBus consumers...");
+		vertx.eventBus().consumer(EventBusAdresses.ALARMFAX_PARSED, msg -> archive(msg));
 		
 		startFuture.complete();
 	}
-	
+
 	/**
-	 * Transform the incoming file from {@link AlarmFaxIncomingEvent#getResultFile()}
-	 * with 
+	 * Takes given <code>event</code> and moves the parsed and transformed
+	 * Alarm Fax TIF and TXT files to the {@link AlarmFaxArchiver#CONFIG_ARCHIVATION_DIRECTORY}
+	 *  
 	 * @param event
 	 */
-	public abstract void transform(Message<Object> msg);
-
+	public void archive(Message<Object> msg) {
+		
+	}
 }

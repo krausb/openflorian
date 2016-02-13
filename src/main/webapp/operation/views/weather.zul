@@ -2,63 +2,48 @@
 <?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 <?link rel="icon" type="image/x-icon" href="/includes/img/icon/favicon.ico"?>
 <zk xmlns:h="http://www.w3.org/1999/xhtml">
-	<div id="weatherView" 
+	<div id="weatherView"  sclass="weather-view"
         apply="de.openflorian.ui.viewport.WeatherViewController" 
         width="100%" height="100%">
         
-        <h:h1>${c:l('operation.weather.title')}</h:h1>
-        
-        <grid width="500px">
-            <columns>
-                <column width="150px" />
-                <column />
-            </columns>
-            <rows>
-                <row>
-                    <label value=" " />
-                    <label id="weather"/>
-                </row>
-                <row>
-                    <label value="${c:l('operation.weather.currentTime')}" />
-                    <label id="currentTime" value=""/>
-                </row>
-                <row>
-                    <label value="${c:l('operation.weather.temperature')}" />
-                    <label id="temperature" value="" />
-                </row>
-                <row>
-                    <label value="${c:l('operation.weather.condition')}" />
-                    <label id="condition" value="" />
-                </row>
-                <row>
-                    <label value="${c:l('operation.weather.humidity')}" />
-                    <label id="humidity" value="" />
-                </row>
-                <row>
-                    <label value="${c:l('operation.weather.pressure')}" />
-                    <hbox>
-                    	<label id="pressure" value="" />
-                    	<image id="rising" width="16px" height="16px"/>
-                    </hbox>
-                </row>
-                <row>
-                    <label value="${c:l('operation.weather.visibility')}" />
-                    <label id="visibility" value="" />
-                </row>
-                <row>
-                    <label value="${c:l('operation.weather.windspeed')}" />
-                    <label id="windSpeed" value="" />
-                </row>
-                <row>
-                    <label value="${c:l('operation.weather.winddirection')}" />
-                    <label id="windDirection" value="" />
-                </row>
-                <row>
-                    <label value="${c:l('operation.weather.windchill')}" />
-                    <label id="windChill" value="" />
-                </row>
-			</rows>
-		</grid>
+				<vlayout width="100%" style="text-align: center;">
+                	<hlayout>
+                		<label id="condition" value=" " />
+                		<space width="300px"/>
+                		<vlayout>
+                			<hlayout>
+			                    <label value=" " sclass="wi wi-thermometer" />
+			                    <space width="30px"/>
+			                    <label id="temperature" sclass="temperature" value="" />
+	                    	</hlayout>
+	                    	<hlayout>
+			                    <label value=" " sclass="wi wi-humidity" />
+			                    <space width="30px"/>
+			                    <label id="humidity" sclass="humidity" value="" />
+	                    	</hlayout>
+	                    </vlayout>
+                    </hlayout>
+                    <space height="40px"/>
+                    <hlayout>
+	                    <hlayout>
+	                        <label value=" " sclass="wi wi-barometer" />
+	                        <space width="10px"/>
+	                    	<label id="pressure" value="" sclass="pressure"/>
+	                    	<label id="rising" sclass="pressure"/>
+	                    </hlayout>
+	                    <space width="100px"/>
+	                	<hlayout>
+		                    <label value=" " sclass="wi wi-strong-wind"/>
+		                    <space width="10px"/>
+		                    <label id="windSpeed" value=" " sclass="windspeed"/>
+		                    <label id="windDirection" value=" " sclass="windspeed"/>
+	                    </hlayout>
+                    </hlayout>
+                	<hlayout>
+	                    <label value="${c:l('operation.weather.currentTime')}" sclass="current-time"  />
+	                    <label id="currentTime" sclass="current-time" value=""/>
+                    </hlayout>
+                </vlayout>
         <timer id="refreshTimer" delay="15000" repeats="true"/>
 	</div>
 </zk>

@@ -24,11 +24,11 @@ import org.zkoss.zul.Div;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Label;
 
+import de.openflorian.service.PermissionService;
 import de.openflorian.web.core.AvailableComponent;
 import de.openflorian.web.core.ContainerManager;
 import de.openflorian.web.core.WebConstants;
 import de.openflorian.web.user.AuthenticatedUserSessionLocal;
-import de.openflorian.web.user.PermissionService;
 import de.openflorian.web.user.User;
 
 /*

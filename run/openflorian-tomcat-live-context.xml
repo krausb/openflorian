@@ -20,7 +20,7 @@
  */
  -->
 <Context displayName="openflorian" 
-         docBase="<PATH_TO_TOMCAT_SERVER>/war/openflorian.war"
+         docBase="$PATH_TO_TOMCAT_SERVER/war/openflorian.war"
          path="/openflorian">
  
         <Resource name="jdbc/openflorian" 
@@ -34,12 +34,12 @@
                     testWhileIdle="true"
                     timeBetweenEvictionRunsMillis="300000"
                     factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-                    username="<USER>"
-                    password="<PASSWORD>"
+                    username="USER"
+                    password="PASSWORD"
                     driverClassName="com.mysql.jdbc.Driver"
                     url="jdbc:mysql://127.0.0.1:3306/openflorian?useUnicode=true&amp;characterEncoding=utf8"
                 />
 
-        <Environment name="config.dir" value="<PATH_TO_TOMCAT_SERVER>/conf/openflorian" type="java.lang.String" override="false" />
-        <Environment name="data.dir" value="<PATH_TO_TOMCAT_SERVER>/data" type="java.lang.String" override="false"/>
+        <Environment name="config.dir" value="$PATH_TO_TOMCAT_SERVER/conf/openflorian" type="java.lang.String" override="false" />
+        <Environment name="data.dir" value="$PATH_TO_TOMCAT_SERVER/data" type="java.lang.String" override="false"/>
 </Context>

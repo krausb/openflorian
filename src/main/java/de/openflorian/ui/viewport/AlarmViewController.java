@@ -23,7 +23,6 @@ import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
 import org.zkoss.gmaps.Ginfo;
 import org.zkoss.gmaps.Gmaps;
 import org.zkoss.zk.ui.Component;
@@ -32,10 +31,13 @@ import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
+import org.zkoss.zul.Vlayout;
 
-import de.openflorian.alarm.AlarmContext;
+import de.openflorian.alarm.AlarmContextVerticle;
 import de.openflorian.data.model.Operation;
+import de.openflorian.data.model.OperationResource;
 import de.openflorian.ui.ZkGlobals;
+import de.openflorian.util.StringUtils;
 import de.openflorian.zk.AbstractGuiController;
 
 /**
@@ -70,6 +72,8 @@ public class AlarmViewController extends AbstractGuiController {
 	private Label priority;
 	private Label resourcesRaw;
 	
+	private Vlayout resourcesBox;
+	
 	private Gmaps operationMap;
 	private Ginfo operationMarker;
 	
@@ -96,7 +100,7 @@ public class AlarmViewController extends AbstractGuiController {
     	
     	operationMap.setVisible(true);
     	
-    	Operation currentOperation = AlarmContext.getInstance().getCurrentOperation();
+    	Operation currentOperation = AlarmContextVerticle.getInstance().getCurrentOperation();
     	
     	if(currentOperation.isFireOperation())
     		alarmView.setZclass(Operation.FIRE_ZCLASS);
@@ -164,6 +168,17 @@ public class AlarmViewController extends AbstractGuiController {
 		if(currentOperation.getIncurredAt() != null)
 			alarmTime.setValue(format.format(currentOperation.getIncurredAt()));
     	
+		if(currentOperation.getResources() != null && currentOperation.getResources().size() > 0) {
+			for(OperationResource resource: currentOperation.getResources()) {
+				Div resourceDiv = new Div();
+				resourceDiv.setSclass("operation-resource");
+				resourceDiv.setParent(resourcesBox);
+				
+				Label resourceLabel = new Label(resource.getCallName());
+				resourceLabel.setParent(resourceDiv);
+			}
+		}
+		
     	alarmsound.play();
     }
 	

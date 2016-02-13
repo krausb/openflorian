@@ -24,13 +24,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -38,10 +41,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.openflorian.data.model.principal.Station;
 import de.openflorian.ui.ZkGlobals;
+import de.openflorian.util.StringUtils;
 
 /**
  * {@link Operation} DTO
@@ -96,7 +100,7 @@ public class Operation implements Serializable {
 	@Column
 	protected String buzzword;
 	
-	@Column
+	@Lob
 	protected String resourcesRaw;
 	
 	@Column
@@ -108,7 +112,7 @@ public class Operation implements Serializable {
 	@Column
 	protected Date dispatchedAt;
 	
-	@ManyToMany
+	@ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(
 			joinColumns={@JoinColumn(name="operation_id",referencedColumnName="id")},
 			inverseJoinColumns={@JoinColumn(name="operation_resource_id",referencedColumnName="id")}
@@ -391,6 +395,30 @@ public class Operation implements Serializable {
 		} else if (!takenOverAt.equals(other.takenOverAt))
 			return false;
 		return true;
+	}
+	
+	/**
+	 * Deserialize from json
+	 * 
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	public static Operation fromJson(String json) throws Exception {
+		ObjectMapper om = new ObjectMapper();
+		Operation o = om.readValue(json, Operation.class);
+	    return o;
+	}
+	
+	/**
+	 * Serialize to json
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String toJson() throws Exception {
+		ObjectMapper om = new ObjectMapper();
+		return om.writerWithDefaultPrettyPrinter().writeValueAsString(this);
 	}
 	
 	@Override

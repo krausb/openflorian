@@ -1,4 +1,4 @@
-package de.openflorian.alarm.transform;
+package de.openflorian;
 
 /*
  * This file is part of Openflorian.
@@ -19,22 +19,22 @@ package de.openflorian.alarm.transform;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.EventBus;
 
 /**
- * Alarm Fax Transformator<br/>
- * <br/>
- * Processes the given alarm fax with an OCR binary like
- * tesseract.
+ * {@link EventBus} adresses for Openflorian
  * 
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
-public class BindingAlarmFaxTransformator extends AbstractAlarmFaxTransformator {
+public class EventBusAdresses {
 
-	@Override
-	public void transform(Message<Object> msg) {
-		// TODO: Implement as fallback or alternative for {@link BinaryAlarmFaxTransformator
-		// Use DLL / LIB Binding to OCR capi
-	}
+	public static final String ALARMFAX_NEWFAX 			= "alarmfax.newFax";
+	public static final String ALARMFAX_TRANSFORMED		= "alarmfax.transformedFax";
+	public static final String ALARMFAX_PARSED			= "alarmfax.parsedFax";
+	public static final String ALARMFAX_ARCHIVED		= "alarmfax.archived";
+	
+	public static final String ALARM_INCURRED			= "alarm.incurred";
+	public static final String ALARM_TAKENOVER			= "alarm.takenover";
+	public static final String ALARM_DISPATCHED			= "alarm.dispatched";
 	
 }

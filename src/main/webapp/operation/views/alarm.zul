@@ -7,7 +7,7 @@
         apply="de.openflorian.ui.viewport.AlarmViewController"
         width="100%" height="100%">
         <vlayout>
-        	<grid width="100%" oddRowSclass="none">
+        	<grid width="100%" oddRowSclass="none" sclass="bg-grid">
 	            <rows>
 	            	<row zclass="smaller-heading">
 	            		<cell>
@@ -47,10 +47,22 @@
 	            	</row>
 	        	</rows>
 			</grid>
-    		<gmaps version="3.9" id="operationMap" width="100%" height="400px" showSmallCtrl="true" protocol="http">
-				<ginfo id="operationMarker" lat="48.76957000379086" lng="11.615598860359174" content="${c:l('operation.alarm.marker.content')}"/>
-			</gmaps>
 			<grid width="100%">
+				<columns>
+					<column width="50%"/>
+					<column width="50%"/>
+				</columns>
+				<rows>
+					<row>
+						<gmaps version="3.9" id="operationMap" width="100%" height="400px" showSmallCtrl="true" protocol="http">
+							<ginfo id="operationMarker" lat="48.76957000379086" lng="11.615598860359174" content="${c:l('operation.alarm.marker.content')}"/>
+						</gmaps>
+						<vlayout id="resourcesBox" sclass="operation-resources">
+						</vlayout>
+					</row>
+				</rows>
+			</grid>
+			<grid width="100%" sclass="bg-grid">
 				<rows>
 	            	<row>
 	            		<label id="resourcesRaw" multiline="true" value="" />

@@ -33,9 +33,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.StringUtils;
+import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.constraint.NotNull;
+import org.supercsv.cellprocessor.ift.CellProcessor;
 
 import de.openflorian.data.model.principal.Station;
+import de.openflorian.util.StringUtils;
 
 /**
  * {@link OperationResource} DTO
@@ -135,6 +138,23 @@ public class OperationResource implements Serializable {
 
 	public void setCrew(String crew) {
 		this.crew = crew;
+	}
+	
+	/**
+	 * {@link OperationResource} super {@link CellProcessor}[]
+	 * 
+	 * @return the cell processors
+	 */
+	public static CellProcessor[] getProcessors() {
+	        final CellProcessor[] processors = new CellProcessor[] { 
+	                new NotNull(), // callname
+	                new NotNull(), // licence plate
+	                new NotNull(), // type
+	                new Optional(new NotNull()), // description
+	                new Optional(new NotNull()) // crew
+	        };
+	        
+	        return processors;
 	}
 
 	@Override

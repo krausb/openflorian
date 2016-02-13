@@ -21,9 +21,12 @@ package de.openflorian.alarm.parser;
 
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import de.openflorian.OpenflorianContext;
 import de.openflorian.config.ConfigurationProvider;
 import de.openflorian.data.model.Operation;
 
@@ -38,14 +41,13 @@ import de.openflorian.data.model.Operation;
  * 
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
-public abstract class AlarmFaxParserPatternMatcherResponsable implements InitializingBean {
+public abstract class AlarmFaxParserPatternMatcherResponsable {
 
+	protected final Logger log = LoggerFactory.getLogger(getClass());
+	
 	protected AlarmFaxParserPatternMatcherResponsable next = null;
 	
 	protected Pattern parserPattern = null;
-	
-	@Autowired(required=true)
-	protected ConfigurationProvider config = null;
 	
 	/**
 	 * Gets the next {@link AlarmFaxParserPatternMatcherResponsable} in chain
@@ -60,9 +62,10 @@ public abstract class AlarmFaxParserPatternMatcherResponsable implements Initial
 	
 	public abstract String getConfigurationProperty();
 	
-	@Override
-	public void afterPropertiesSet() {
-		this.parserPattern = Pattern.compile(config.getProperty(getConfigurationProperty()), Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.UNICODE_CASE);
+	public AlarmFaxParserPatternMatcherResponsable() {
+		this.parserPattern = Pattern.compile(
+				OpenflorianContext.getConfig().getProperty(getConfigurationProperty()), 
+				Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.UNICODE_CASE);
 	}
 	
 	/**

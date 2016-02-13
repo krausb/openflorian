@@ -19,10 +19,18 @@ package de.openflorian.alarm.parser;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jfree.util.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import de.openflorian.OpenflorianContext;
 import de.openflorian.data.model.Operation;
+import de.openflorian.data.model.OperationResource;
+import de.openflorian.service.OperationResourceService;
+import de.openflorian.util.StringUtils;
 
 /**
  * Street Parser Responsable
@@ -32,6 +40,35 @@ import de.openflorian.data.model.Operation;
 class ResourcesParserResponsable extends AlarmFaxParserPatternMatcherResponsable {
 
 	public static final String CONFIG_PATTERN = "alarm.parser.pattern.resources";
+	public static final String CONFIG_STATION_RESOURCE_PATTERN = "alarm.parser.pattern.stationresource";
+	public static final String CONFIG_RESOURCE_CALLNAME_PATTERN = "alarm.parser.pattern.resourcecallname";
+	
+	protected Pattern callNamePattern = null;
+	protected String stationresourcePattern = null;
+	
+	@Autowired(required=true)
+	private OperationResourceService resourceService;
+	
+	public ResourcesParserResponsable() {
+		super();
+		
+		try {
+			String callNamePatternStr = OpenflorianContext.getConfig().getProperty(CONFIG_RESOURCE_CALLNAME_PATTERN);
+			if(!StringUtils.isEmpty(callNamePatternStr)) {
+				callNamePattern = Pattern.compile(callNamePatternStr);
+				log.info(CONFIG_RESOURCE_CALLNAME_PATTERN + ": " + callNamePatternStr);
+			}
+			
+			stationresourcePattern = OpenflorianContext.getConfig().getProperty(CONFIG_STATION_RESOURCE_PATTERN);
+			if(StringUtils.isEmpty(stationresourcePattern))
+				throw new IllegalStateException(CONFIG_STATION_RESOURCE_PATTERN + " not set in configuration file.");
+			else
+				log.info(CONFIG_STATION_RESOURCE_PATTERN + ": " + stationresourcePattern);
+		} catch (Exception e) {
+			Log.error(e.getMessage(), e);
+		}
+		
+	}
 	
 	@Override
 	public String getConfigurationProperty() {
@@ -50,6 +87,17 @@ class ResourcesParserResponsable extends AlarmFaxParserPatternMatcherResponsable
 		while(m.find()) {
 			sb.append(m.group(1));
 			sb.append(System.getProperty("line.separator"));
+			
+			if(resourceService != null) {
+				if(m.group(1).contains(stationresourcePattern)) {
+					Matcher callNameMatcher = callNamePattern.matcher(m.group(1));
+					if(callNameMatcher.find()) {
+						OperationResource resource = resourceService.getResourceByCallname(callNameMatcher.group(1));
+						if(operation.getResources() == null) operation.setResources(new ArrayList<OperationResource>());
+						operation.getResources().add(resource);
+					}
+				}
+			}
 		}
 		operation.setResourcesRaw(sb.toString());
 		

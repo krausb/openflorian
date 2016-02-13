@@ -33,6 +33,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * {@link Department} Station DTO<br/>
  * 
@@ -61,7 +63,7 @@ public class Station implements Serializable {
 	protected String street;
 	
 	@Column
-	protected Integer zip;
+	protected Integer zip = 0;
 	
 	@Column
 	protected String city;
@@ -187,6 +189,30 @@ public class Station implements Serializable {
 		} else if (!zip.equals(other.zip))
 			return false;
 		return true;
+	}
+
+	/**
+	 * Deserialize from json
+	 * 
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	public static Station fromJson(String json) throws Exception {
+		ObjectMapper om = new ObjectMapper();
+		Station s = om.readValue(json, Station.class);
+	    return s;
+	}
+	
+	/**
+	 * Serialize to json
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String toJson() throws Exception {
+		ObjectMapper om = new ObjectMapper();
+		return om.writerWithDefaultPrettyPrinter().writeValueAsString(this);
 	}
 	
 }

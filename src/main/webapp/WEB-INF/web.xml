@@ -36,6 +36,9 @@
 		<filter-name>cookie-state-filter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	<listener>
+		<listener-class>de.openflorian.OpenflorianContext</listener-class>
+	</listener>
 	
 	<!-- 
 		Spring.io Framework Bootstrap
@@ -49,17 +52,6 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	<servlet>
-		<description>Media Manager File Server Servlet</description>
-		<servlet-name>media-manager-fileserver</servlet-name>
-		<servlet-class>de.openflorian.media.MediaItemFileServerServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-		<async-supported>true</async-supported>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>media-manager-fileserver</servlet-name>
-		<url-pattern>/media/*</url-pattern>
-	</servlet-mapping>
 	
 	<!-- 
 		ZK Framework Bootstrap

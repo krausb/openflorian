@@ -1,4 +1,4 @@
-package de.openflorian.alarm.transform;
+package de.openflorian.data.dao;
 
 /*
  * This file is part of Openflorian.
@@ -19,22 +19,31 @@ package de.openflorian.alarm.transform;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import io.vertx.core.eventbus.Message;
+import javax.persistence.Query;
+
+import de.openflorian.data.jpa.GenericDao;
+import de.openflorian.data.model.OperationResource;
 
 /**
- * Alarm Fax Transformator<br/>
- * <br/>
- * Processes the given alarm fax with an OCR binary like
- * tesseract.
+ * {@link OperationResourceDao}
  * 
  * @author Bastian Kraus <me@bastian-kraus.me>
  */
-public class BindingAlarmFaxTransformator extends AbstractAlarmFaxTransformator {
+public class OperationResourceDao extends GenericDao<OperationResource, Long> {
 
-	@Override
-	public void transform(Message<Object> msg) {
-		// TODO: Implement as fallback or alternative for {@link BinaryAlarmFaxTransformator
-		// Use DLL / LIB Binding to OCR capi
+	/**
+	 * Get an {@link OperationResource} by <code>callname</code>
+	 * 
+	 * @param callname
+	 * @return
+	 * 		{@link OperationResource} or null
+	 */
+	public OperationResource getResourceByCallname(String callname) {
+    	Query query = getEntityManager().createQuery(
+    			"from " + OperationResource.class.getCanonicalName() + " o " + 
+    			"WHERE o.callName = :callName");
+    	query.setParameter("callName", callname);
+    	return (OperationResource)query.getSingleResult();
 	}
 	
 }
