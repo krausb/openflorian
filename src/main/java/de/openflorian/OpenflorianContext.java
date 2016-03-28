@@ -1,5 +1,20 @@
 package de.openflorian;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.openflorian.alarm.*;
+import de.openflorian.alarm.archive.AlarmFaxArchiver;
+import de.openflorian.alarm.parser.AlarmFaxParserVerticle;
+import de.openflorian.alarm.transform.BinaryAlarmFaxTransformator;
+import de.openflorian.data.model.Operation;
+import de.openflorian.weather.WeatherProvisioningVerticle;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+
 /*
  * This file is part of Openflorian.
  * 
@@ -23,89 +38,70 @@ import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageCodec;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.openflorian.alarm.AlarmContextVerticle;
-import de.openflorian.alarm.AlarmFaxEvent;
-import de.openflorian.alarm.AlarmFaxEventMessageCodec;
-import de.openflorian.alarm.FaxDirectoryObserverVerticle;
-import de.openflorian.alarm.OperationMessageCodec;
-import de.openflorian.alarm.archive.AlarmFaxArchiver;
-import de.openflorian.alarm.parser.AlarmFaxParserVerticle;
-import de.openflorian.alarm.transform.BinaryAlarmFaxTransformator;
-import de.openflorian.config.ConfigurationProvider;
-import de.openflorian.config.DefaultConfigurationProvider;
-import de.openflorian.data.model.Operation;
-
 /**
  * Openflorian Context<br/>
  * <br/>
  * Responsable for bootstrapping the whole application context.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class OpenflorianContext implements ServletContextListener {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
-	
-	private static ConfigurationProvider config;
-	public static ConfigurationProvider getConfig() {
-		if(config == null) {
-			config = new DefaultConfigurationProvider();
-			((DefaultConfigurationProvider)config).setConfigurationFileName("openflorian.properties");
-			((DefaultConfigurationProvider)config).initialize();
-		}
-		if(config.isInitialized())
-			return config;
-		else
-			throw new IllegalStateException("ConfigurationProvider instance is not initialized.");
-	}
-	
+
 	private static Vertx vertx;
+
 	public static Vertx vertx() {
 		return vertx;
 	}
-	
+
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		log.info("Initializing OpenFlorian Context...");
-		
+
 		log.info("Creating Vert.X context...");
 		vertx = Vertx.vertx();
-		
+
 		registerMessageCodecs();
 		deployVerticles();
-		
+
 		log.info("... Context initialized!");
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		log.info("Shutting down OpenFlorian Context...");
-		
+
 		log.info("Releasing Vert.X resources...");
 		vertx.close();
-		
-		log.info("Shutdown complete. Bye :-)");
+
+		vertx.close(new Handler<AsyncResult<Void>>() {
+
+			@Override
+			public void handle(AsyncResult<Void> event) {
+				if (event.succeeded())
+					log.info("Shutdown complete. Bye :-)");
+				else
+					log.error(event.cause().getMessage(), event.cause());
+			}
+		});
+
 	}
-	
+
 	/**
 	 * Helper: Deploy Verticles to VertX Context
 	 */
 	private void deployVerticles() {
 		log.info("Deploying Verticles...");
-		
+
 		vertx.deployVerticle(new AlarmContextVerticle());
 		vertx.deployVerticle(new FaxDirectoryObserverVerticle());
 		vertx.deployVerticle(new BinaryAlarmFaxTransformator());
 		vertx.deployVerticle(new AlarmFaxParserVerticle());
 		vertx.deployVerticle(new AlarmFaxArchiver());
+		vertx.deployVerticle(new WeatherProvisioningVerticle());
 	}
-	
+
 	/**
 	 * Helper: Register {@link MessageCodec}s to the {@link EventBus} for
 	 * decoding and encoding custom message objects

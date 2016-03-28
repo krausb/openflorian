@@ -20,7 +20,7 @@
 	<developers>
 		<developer>
 			<name>Bastian Kraus</name>
-			<email>me@bastian-kraus.me</email>
+			<email>bofh@k-hive.de</email>
 		</developer>
 	</developers>
 
@@ -32,13 +32,13 @@
 
 	<repositories>
 		<repository>
-			<id>ZK EE</id>
-			<url>https://maven.zkoss.org/repo/zk/ee/</url>
+			<id>vaadin-addons</id>
+			<url>http://maven.vaadin.com/vaadin-addons</url>
 		</repository>
-		<repository>
-			<id>ZK CE</id>
-			<url>http://mavensync.zkoss.org/maven2/</url>
-		</repository>
+	    <repository>
+	        <id>ossrh</id>
+	        <url>https://oss.sonatype.org/content/groups/public/</url>
+	    </repository>
 	</repositories>
 
 	<dependencies>
@@ -66,12 +66,6 @@
 			<version>${powermock.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- Framework -->
 		<dependency>
@@ -85,7 +79,7 @@
 			<artifactId>jsr311-api</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		
+
 		<!-- Jackson -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -97,7 +91,6 @@
 			<artifactId>jackson-annotations</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
-
 
 		<!-- Logging -->
 		<dependency>
@@ -122,46 +115,41 @@
 			<version>3.2.0</version>
 		</dependency>
 
-		<!-- Spring Framework -->
+		<!-- Vaadin -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${spring.version}</version>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-server</artifactId>
+			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-			<version>${spring.version}</version>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-client-compiled</artifactId>
+			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-expression</artifactId>
-			<version>${spring.version}</version>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-themes</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-push</artifactId>
+            <version>${vaadin.version}</version>
+        </dependency>
+		<dependency>
+			<groupId>org.vaadin.addon</groupId>
+			<artifactId>v-leaflet</artifactId>
+			<version>1.0.0-b6</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${spring.version}</version>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-			<version>${spring.version}</version>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-tools</artifactId>
+			<version>2.0</version>
 		</dependency>
 
 		<!-- Hibernate -->
@@ -198,72 +186,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
-		<!-- ZK CE -->
+		
+		<!-- CGLIB for Proxying -->
 		<dependency>
-			<groupId>org.zkoss.zk</groupId>
-			<artifactId>zkbind</artifactId>
-			<version>${zk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.zk</groupId>
-			<artifactId>zul</artifactId>
-			<version>${zk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.zk</groupId>
-			<artifactId>zkplus</artifactId>
-			<version>${zk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.zk</groupId>
-			<artifactId>zhtml</artifactId>
-			<version>${zk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.common</groupId>
-			<artifactId>zweb</artifactId>
-			<version>${zk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.common</groupId>
-			<artifactId>zcommon</artifactId>
-			<version>${zk.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-jdk14</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.common</groupId>
-			<artifactId>zel</artifactId>
-			<version>${zk.version}</version>
-		</dependency>
-
-		<!-- ZK PE / EE -->
-		<dependency>
-			<groupId>org.zkoss.zk</groupId>
-			<artifactId>zkex</artifactId>
-			<version>${zk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.zk</groupId>
-			<artifactId>zkmax</artifactId>
-			<version>${zk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.zkforge</groupId>
-			<artifactId>gmapsz</artifactId>
-			<version>3.0.3</version>
-		</dependency>
-
-		<!-- ZK Theme -->
-		<dependency>
-			<groupId>org.zkoss.theme</groupId>
-			<artifactId>atlantic</artifactId>
-			<version>${zk.theme.version}</version>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>3.2.1</version>
 		</dependency>
 
 
@@ -285,14 +213,14 @@
 			<artifactId>reflections</artifactId>
 			<version>${reflection.version}</version>
 		</dependency>
-		
+
 		<!-- ESAPI -->
 		<dependency>
 			<groupId>org.owasp.esapi</groupId>
 			<artifactId>esapi</artifactId>
 			<version>${esapi.version}</version>
 		</dependency>
-		
+
 		<!-- Weather API -->
 		<dependency>
 			<groupId>com.github.fedy2</groupId>
@@ -305,6 +233,23 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160212</version>
+		</dependency>
+				
+		<dependency>
+		    <groupId>org.bitpipeline.lib</groupId>
+		    <artifactId>owm-lib</artifactId>
+		    <version>${openweathermap.version}</version>
+		</dependency>
 
 		<!-- Proj4J Geo Transformation -->
 		<dependency>
@@ -312,7 +257,7 @@
 			<artifactId>proj4j</artifactId>
 			<version>${proj4j.version}</version>
 		</dependency>
-		
+
 		<!-- Super CSV -->
 		<dependency>
 			<groupId>net.sf.supercsv</groupId>
@@ -345,6 +290,27 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
+				<version>7.6.4</version>
+				<executions>
+					<execution>
+						<configuration>
+							<!-- if you don't specify any modules, the plugin will find them -->
+						    <webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
+						</configuration>
+						<goals>
+							<goal>clean</goal>
+							<goal>resources</goal>
+							<goal>update-theme</goal>
+							<goal>update-widgetset</goal>
+							<goal>compile-theme</goal>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<!-- Ignore/Execute plugin execution -->
 			<plugin>
 				<groupId>org.eclipse.m2e</groupId>
@@ -376,6 +342,7 @@
 
 	<properties>
 		<!-- General properties -->
+		<maven.test.skip>true</maven.test.skip>
 		<target.jdk.version>1.8</target.jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -393,17 +360,18 @@
 
 		<hibernate.version>4.3.8.Final</hibernate.version>
 		<hibernate.validator>5.1.3.Final</hibernate.validator>
-		<zk.version>7.0.4</zk.version>
-		<zk.theme.version>1.1.0</zk.theme.version>
+
+		<vaadin.version>7.6.3</vaadin.version>
+
 		<sl4j.version>1.7.12</sl4j.version>
 		<log4j.version>1.2.17</log4j.version>
-		<spring.version>4.1.6.RELEASE</spring.version>
-		<resteasy.version>3.0.11.Final</resteasy.version>
+
 		<reflection.version>[0.1-DEV,)</reflection.version>
 		<esapi.version>2.1.0</esapi.version>
 		<!-- used in case of a transient dependency problem and java8 -->
 		<javassist.version>3.20.0-GA</javassist.version>
 		<weatherapi.version>1.2.0</weatherapi.version>
+		<openweathermap.version>2.1.3-SNAPSHOT</openweathermap.version>
 		<jtesseract.version>0.0.4</jtesseract.version>
 		<proj4j.version>0.1.0</proj4j.version>
 		<supercsv.version>2.4.0</supercsv.version>

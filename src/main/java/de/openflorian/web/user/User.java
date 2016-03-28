@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * 
  * For backend login purposes only!
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 @Entity
 @Table(name="of_user")

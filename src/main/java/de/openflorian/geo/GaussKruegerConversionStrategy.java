@@ -28,7 +28,7 @@ import org.osgeo.proj4j.ProjCoordinate;
 /**
  * Gauss-Krueger to Lat/Long Mapping Strategy
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class GaussKruegerConversionStrategy implements ConversionStrategy {
 

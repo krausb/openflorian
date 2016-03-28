@@ -1,5 +1,19 @@
 package de.openflorian.alarm.parser;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.openflorian.EventBusAddresses;
+import de.openflorian.OpenflorianContext;
+import de.openflorian.alarm.AlarmFaxEvent;
+import de.openflorian.data.model.Operation;
+
 /*
  * This file is part of Openflorian.
  * 
@@ -23,29 +37,13 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Date;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.openflorian.EventBusAdresses;
-import de.openflorian.OpenflorianContext;
-import de.openflorian.alarm.AlarmContextVerticle;
-import de.openflorian.alarm.AlarmFaxEvent;
-import de.openflorian.config.ConfigurationProvider;
-import de.openflorian.data.model.Operation;
-
 /**
  * Alarm Fax Parser<br/>
  * <br/>
  * Processes the given alarm fax with regex patterns and transforms it into
  * tesseract.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class AlarmFaxParserVerticle extends AbstractVerticle {
 
@@ -53,7 +51,26 @@ public class AlarmFaxParserVerticle extends AbstractVerticle {
 
 	private OperationNrParserResponsable firstParserResponsable;
 
-	public AlarmFaxParserVerticle() {
+	@Override
+	public void start(Future<Void> startFuture) {
+		log.info("Starting " + getClass().getSimpleName() + " ...");
+
+		initResponsables();
+
+		if (firstParserResponsable == null)
+			throw new IllegalStateException("No firstParserResponsable present/injected.");
+		log.info(getClass().getSimpleName() + " started.");
+
+		log.info("Registering EventBus consumer...");
+		vertx.eventBus().consumer(EventBusAddresses.ALARMFAX_TRANSFORMED, msg -> parse(msg));
+
+		startFuture.complete();
+	}
+
+	/**
+	 * Helper: Init parser chain of responsibility
+	 */
+	private void initResponsables() {
 		firstParserResponsable = new OperationNrParserResponsable();
 
 		CityParserResponsable cityParser = new CityParserResponsable();
@@ -82,25 +99,6 @@ public class AlarmFaxParserVerticle extends AbstractVerticle {
 
 		ResourcesParserResponsable resourcesParser = new ResourcesParserResponsable();
 		coordinateParser.setNext(resourcesParser);
-
-	}
-
-	@Override
-	public void start(Future<Void> startFuture) {
-		ConfigurationProvider config = OpenflorianContext.getConfig();
-		if (config == null)
-			throw new IllegalStateException(
-					"No ConfigurationProvider present/injected.");
-		if (firstParserResponsable == null)
-			throw new IllegalStateException(
-					"No firstParserResponsable present/injected.");
-		log.info(getClass().getSimpleName() + " started.");
-
-		log.info("Registering EventBus consumer...");
-		vertx.eventBus().consumer(EventBusAdresses.ALARMFAX_TRANSFORMED,
-				msg -> parse(msg));
-		
-		startFuture.complete();
 	}
 
 	/**
@@ -111,11 +109,10 @@ public class AlarmFaxParserVerticle extends AbstractVerticle {
 	 * @returns {@link Operation}
 	 */
 	public void parse(Message<Object> msg) {
-		AlarmFaxEvent event = (AlarmFaxEvent)msg.body();
-		
+		AlarmFaxEvent event = (AlarmFaxEvent) msg.body();
+
 		if (firstParserResponsable == null)
-			throw new IllegalStateException(
-					"No alarm fax parser responsable chain available.");
+			throw new IllegalStateException("No alarm fax parser responsable chain available.");
 
 		File inputFile = event.getResultFile();
 		if (inputFile.exists() && inputFile.canRead()) {
@@ -125,24 +122,33 @@ public class AlarmFaxParserVerticle extends AbstractVerticle {
 
 				byte[] encoded = Files.readAllBytes(event.getResultFile().toPath());
 				String fax = new String(encoded, "UTF-8");
+				parseFax(fax, op);
 
-				firstParserResponsable.parse(fax, op);
-				log.debug("Parsed operation: " + op);
+				OpenflorianContext.vertx().eventBus().send(EventBusAddresses.ARCHIVE_FILE, inputFile.getAbsolutePath());
 
-				op.setIncurredAt(new Date());
-
-				AlarmContextVerticle.getInstance().alarmOperation(op);
-				OpenflorianContext.vertx().eventBus().publish(EventBusAdresses.ALARM_INCURRED, op);
+				OpenflorianContext.vertx().eventBus().publish(EventBusAddresses.ALARM_INCURRED, op);
 			} catch (IOException e) {
 				log.error(e.getMessage(), e);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
 		} else {
-			log.error("Given file '"
-					+ inputFile.getAbsolutePath()
-					+ "' is not readable or does not exist!");
+			log.error("Given file '" + inputFile.getAbsolutePath() + "' is not readable or does not exist!");
 		}
+	}
+
+	/**
+	 * Helper: Parse given <code>fax</code> into <code>op</code>
+	 * 
+	 * @param fax
+	 * @param op
+	 */
+	protected void parseFax(String fax, Operation op) {
+		firstParserResponsable.parse(fax, op);
+		log.debug("Parsed operation: " + op);
+
+		op.setIncurredAt(new Date());
+
 	}
 
 }

@@ -20,6 +20,7 @@ package de.openflorian.data.dao;
  */
 
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 
 import de.openflorian.data.jpa.GenericDao;
 import de.openflorian.data.model.OperationResource;
@@ -27,7 +28,7 @@ import de.openflorian.data.model.OperationResource;
 /**
  * {@link OperationResourceDao}
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class OperationResourceDao extends GenericDao<OperationResource, Long> {
 
@@ -35,15 +36,14 @@ public class OperationResourceDao extends GenericDao<OperationResource, Long> {
 	 * Get an {@link OperationResource} by <code>callname</code>
 	 * 
 	 * @param callname
-	 * @return
-	 * 		{@link OperationResource} or null
+	 * @return {@link OperationResource} or null
 	 */
+	@Transactional
 	public OperationResource getResourceByCallname(String callname) {
-    	Query query = getEntityManager().createQuery(
-    			"from " + OperationResource.class.getCanonicalName() + " o " + 
-    			"WHERE o.callName = :callName");
-    	query.setParameter("callName", callname);
-    	return (OperationResource)query.getSingleResult();
+		Query query = getEntityManager().createQuery(
+				"from " + OperationResource.class.getCanonicalName() + " o " + "WHERE o.callName = :callName");
+		query.setParameter("callName", callname);
+		return (OperationResource) query.getSingleResult();
 	}
-	
+
 }

@@ -1,0 +1,176 @@
+/* OpenFlorian Viewport Theme */
+
+@import "weather-icons.min.css";
+@import "weather-icons-wind.min.css";
+
+.ofviewport {
+    font-family: Arial, Verdana;
+
+	text-align: center;
+	.weather-box {
+		margin-top: 5vw;
+		display: inline-block;
+				
+		.condition-box, .temp-humidity-box,
+		.pressure-box, .wind-speed-box,
+		.temperature-box div,
+		.humidity-box div,
+		.pressure-box div,
+		.wind-speed-box div {
+			display: inline-block;
+		}
+	
+		.weather-icon {
+			font-size: 24.0vw;
+			margin-top: -50px;
+			margin-right: 20vw;
+			line-height: normal;
+		}
+		
+		.temperature-box {
+			margin-bottom: 100px;
+		}
+		
+		.wi.wi-thermometer,
+		.temperature {
+			font-size: 12.0vw;
+			line-height: 1vw;
+		}
+		
+		.wi.wi-humidity,
+		.humidity {
+			font-size: 10.0vw;
+			line-height: 1vw;
+		}
+		
+		.wi.wi-barometer,
+		.pressure {
+			font-size: 6.0vw;
+			line-height: 1vw;
+		}
+		
+		.wi.wi-strong-wind,
+		.windspeed {
+			font-size: 6.0vw;
+			line-height: 1vw;
+		}
+		
+		.pressure-box {
+			margin-right: 2vw;
+		}
+		
+		.wind-speed-box {
+			margin-left: 2vw;
+		}
+		
+		.current-time {
+			font-weight: bold;
+			font-size: 1.0vw;
+		}
+		
+		.weather-box-footer {
+			margin-top: 2vw;
+		}
+	}
+	
+	.alarm-box {
+        height: 100vh;
+        width: 100vw;
+        background-color: #c0c0c0;
+        
+        .head-info {
+            font-size: 2.3vw;
+            height: 1.4vw;
+            padding: 10px 25px;
+            border-bottom: 3px solid #FFF;
+            
+            * {
+                font-size: 1.2vw;
+                color: #FFF;
+            }
+            
+            div {
+                div {
+                    display: inline-block;
+                }
+            }
+        } 
+        
+        .buzzword {
+            width: 100%;
+            height: auto;
+            font-size: 5.7vw;
+            padding: 10px 25px;
+            text-align: center;
+            border-bottom: 3px solid #FFF;
+            
+            * {
+                color: #FFF;
+            }
+        }
+		
+		.map-resources {
+		    border-top: 3px solid #FFF;
+		    width: 100vw;
+		    height: 60vh;
+		    
+		    .map {
+		      height: 100%;
+		      width: 60vw;
+		    }
+		    
+		    .resources {
+              height: 100%;
+              width: 40vw;
+              
+              * {
+                  color: #FFF;
+              }
+		    }
+		}
+		
+		.details {
+		    display: inline-block;
+		    padding: 10px 25px;
+		    
+		    * {
+		        font-size: 1.5vw;
+		        color: #FFF;
+		    }
+		    
+		    div {
+		        text-align: left;
+                width: 70vw;
+                
+                .label {
+                    width: 15%;
+                }
+                
+                .data {
+                    width: 83%;
+                }
+                                
+                div {
+                    display: inline-block;
+                }
+            }
+		}
+		
+		.operation-resource {
+			border: 4px solid #FFF;
+			margin: 10px;
+			padding: 10px;
+			font-size: 1.0vw;
+		}
+	}
+	
+	       
+    .operation-ta .alarm-box {
+        background-color: #3399ff !important;
+    }
+
+    .operation-fire .alarm-box {
+        background-color: #ff3300 !important;
+    }
+    
+}

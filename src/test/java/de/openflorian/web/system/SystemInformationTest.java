@@ -24,7 +24,7 @@ import org.junit.Test;
 /**
  * TestCase for Testing {@link SystemInformation}
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class SystemInformationTest {
 

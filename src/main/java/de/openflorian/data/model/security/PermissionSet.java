@@ -30,7 +30,7 @@ import java.util.LinkedList;
  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br/>
  * Child classes MUST override {@link PermissionSet#PERMISSON_TYPES()}. 
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public interface PermissionSet {
 

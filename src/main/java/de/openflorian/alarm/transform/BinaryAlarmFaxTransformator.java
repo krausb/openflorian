@@ -1,5 +1,13 @@
 package de.openflorian.alarm.transform;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.IOUtils;
+
+import de.openflorian.EventBusAddresses;
+import de.openflorian.alarm.AlarmFaxEvent;
+
 /*
  * This file is part of Openflorian.
  * 
@@ -21,63 +29,48 @@ package de.openflorian.alarm.transform;
 
 import io.vertx.core.eventbus.Message;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.IOUtils;
-
-import de.openflorian.EventBusAdresses;
-import de.openflorian.OpenflorianContext;
-import de.openflorian.alarm.AlarmFaxEvent;
-
 /**
  * Binary Alarm Fax Transformator Verticle<br/>
  * <br/>
- * Processes the given alarm fax with an OCR binary like
- * tesseract.
+ * Processes the given alarm fax with an OCR binary like tesseract.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class BinaryAlarmFaxTransformator extends AbstractAlarmFaxTransformator {
-		
+
 	@Override
 	public void transform(Message<Object> msg) {
 		log.debug("Start transforming an alarm fax TIF file...");
-		
+
 		Process ps = null;
 		try {
 			AlarmFaxEvent event = (AlarmFaxEvent) msg.body();
-			
+
 			Runtime rt = Runtime.getRuntime();
-			
-			String resultTextFile = String.format("%s/%s",
-					faxObervationDirectory,
-					event.getResultFile().getName());
-			
+
+			String resultTextFile = String.format("%s/%s", faxObervationDirectory, event.getResultFile().getName());
+
 			String cmd = "";
-			cmd = transformationCmd.replaceAll(
-					transformationCmdVarInput, 
+			cmd = transformationCmd.replaceAll(transformationCmdVarInput,
 					event.getResultFile().getAbsolutePath().replace("\\", "/"));
-			cmd = cmd.replaceAll(
-					transformationCmdVarOutput, 
-					resultTextFile);
+			cmd = cmd.replaceAll(transformationCmdVarOutput, resultTextFile);
 
 			log.debug("Running cmd: " + cmd);
-			
+
 			ps = rt.exec(cmd);
-			
+
 			int exitCode = ps.waitFor();
-			if(exitCode == 0) {
+			if (exitCode == 0) {
 				log.debug(String.format("Successful transformed '%s' to '%s'. Exit code: %d",
-						event.getResultFile().getAbsolutePath(),
-						resultTextFile,
-						exitCode));
-				
-				vertx.eventBus().send(EventBusAdresses.ALARMFAX_TRANSFORMED, new AlarmFaxEvent(new File(resultTextFile + ".txt")));
+						event.getResultFile().getAbsolutePath(), resultTextFile, exitCode));
+
+				vertx.eventBus().send(EventBusAddresses.ARCHIVE_FILE, event.getResultFile().getAbsolutePath());
+
+				vertx.eventBus().send(EventBusAddresses.ALARMFAX_TRANSFORMED,
+						new AlarmFaxEvent(new File(resultTextFile + ".txt")));
 			} else {
 				log.error(String.format("An error occured transforming '%s'. Exit code: %d",
-						event.getResultFile().getAbsolutePath(),
-						exitCode));
+						event.getResultFile().getAbsolutePath(), exitCode));
 				log.error(IOUtils.toString(ps.getErrorStream(), "UTF-8"));
 			}
 			ps.destroy();
@@ -86,9 +79,9 @@ public class BinaryAlarmFaxTransformator extends AbstractAlarmFaxTransformator {
 		} catch (InterruptedException e) {
 			log.error(e.getMessage(), e);
 		} finally {
-			if(ps != null)
+			if (ps != null)
 				ps.destroy();
 		}
 	}
-	
+
 }

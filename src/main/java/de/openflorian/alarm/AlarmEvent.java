@@ -27,7 +27,7 @@ import de.openflorian.event.Event;
  * <br/>
  * Indicates that an {@link Operation} is triggered by an alarm fax.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class AlarmEvent extends Event {
 

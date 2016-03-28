@@ -43,7 +43,7 @@ import de.openflorian.util.StringUtils;
 /**
  * {@link OperationResource} DTO
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 @Entity
 @Table(name="of_operation_resource")

@@ -28,7 +28,7 @@ import org.apache.commons.lang.NotImplementedException;
  * <br/>
  * Creates a MD5 Hex Hash from given data.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class Md5Cipher extends AbstractCipher{
 

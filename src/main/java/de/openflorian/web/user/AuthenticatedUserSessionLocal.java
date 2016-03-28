@@ -30,7 +30,7 @@ import de.openflorian.web.core.RequestDataProvider;
  * <br/>
  * User entity: {@link User}
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class AuthenticatedUserSessionLocal {
 

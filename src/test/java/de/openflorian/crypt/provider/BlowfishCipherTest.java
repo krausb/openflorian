@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * TestCase for Testing Blowfish Cipher
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class BlowfishCipherTest {
 

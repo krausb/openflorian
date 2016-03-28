@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * {@link Department} DTO
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 @Entity
 @Table(name="of_coredata_department")

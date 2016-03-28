@@ -22,7 +22,7 @@ package de.openflorian.web.user;
 /**
  * {@link ThreadLocal} to store the current {@link User} user object
  *  
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class AuthenticatedUserThreadLocal {
 

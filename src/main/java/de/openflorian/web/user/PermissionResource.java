@@ -31,7 +31,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * REST Resource for {@link Permission}
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 @Path("/user/permission")
 public interface PermissionResource {

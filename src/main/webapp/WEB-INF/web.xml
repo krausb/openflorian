@@ -6,6 +6,15 @@
 	
 	<display-name>Open Florian</display-name>
 	
+	<context-param>
+	  <param-name>productionMode</param-name>
+	  <param-value>false</param-value>
+	</context-param>
+	
+	<listener>
+	   <listener-class>de.openflorian.web.core.BootstrapManager</listener-class>
+	</listener>
+	
 	<!-- 
 		Open Florian Bootstrap
 	 -->
@@ -19,12 +28,12 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter>
-		<filter-name>i18n-locale-provider</filter-name>
-		<filter-class>de.openflorian.web.core.I18nLocaleProvider</filter-class>
+		<filter-name>locale-provider</filter-name>
+		<filter-class>de.openflorian.web.core.LocaleProvider</filter-class>
 		<async-supported>true</async-supported>
 	</filter>
 	<filter-mapping>
-		<filter-name>i18n-locale-provider</filter-name>
+		<filter-name>locale-provider</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter>
@@ -39,51 +48,45 @@
 	<listener>
 		<listener-class>de.openflorian.OpenflorianContext</listener-class>
 	</listener>
-	
-	<!-- 
-		Spring.io Framework Bootstrap
-	 -->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>
-            classpath*:/*Context.xml
-        </param-value>
-	</context-param>
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-	
-	<!-- 
-		ZK Framework Bootstrap
-	 -->
+
 	<servlet>
-		<description>The ZK loader for ZUML pages</description>
-		<servlet-name>zkLoader</servlet-name>
-		<servlet-class>org.zkoss.zk.ui.http.DHtmlLayoutServlet</servlet-class>
+	    <servlet-name>viewport-ui</servlet-name>
+	    <servlet-class>
+	        com.vaadin.server.VaadinServlet
+	    </servlet-class>
+	    <init-param>
+	      <param-name>UI</param-name>
+	      <param-value>de.openflorian.web.ViewportUI</param-value>
+	    </init-param>
 		<init-param>
-			<param-name>update-uri</param-name>
-			<param-value>/zkau</param-value>
+		  <param-name>pushmode</param-name>
+		  <param-value>long-polling</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
+		<init-param>
+		    <param-name>widgetset</param-name>
+		    <param-value>de.openflorian.web.widgetset.OpenFlorianWidgetSet</param-value>
+		</init-param>
 		<async-supported>true</async-supported>
 	</servlet>
+	<servlet-mapping>
+		<servlet-name>viewport-ui</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	
 	<servlet>
-		<description>The asynchronous update engine for ZK</description>
-		<servlet-name>auEngine</servlet-name>
-		<servlet-class>org.zkoss.zk.au.http.DHtmlUpdateServlet</servlet-class>
+	    <servlet-name>admin-ui</servlet-name>
+	    <servlet-class>
+	        com.vaadin.server.VaadinServlet
+	    </servlet-class>
+	    <init-param>
+	      <param-name>UI</param-name>
+	      <param-value>de.openflorian.web.AdminUI</param-value>
+	    </init-param>
 		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>zkLoader</servlet-name>
-		<url-pattern>*.zul</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>zkLoader</servlet-name>
-		<url-pattern>*.zhtml</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>auEngine</servlet-name>
-		<url-pattern>/zkau/*</url-pattern>
+		<servlet-name>admin-ui</servlet-name>
+		<url-pattern>/admin/*</url-pattern>
 	</servlet-mapping>
 	
 	<filter>
@@ -97,6 +100,6 @@
 	</filter-mapping>
 	
 	<welcome-file-list>
-		<welcome-file>index.zul</welcome-file>
+		<welcome-file>/</welcome-file>
 	</welcome-file-list>
 </web-app>

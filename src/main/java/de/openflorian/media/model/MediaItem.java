@@ -41,7 +41,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * The DTO automaticaly generates a public identifier to stream it<br/>
  * out to a web client.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 @Entity
 @Access(AccessType.FIELD)

@@ -1,0 +1,2 @@
+# Module de.openflorian.web.widgetset.OpenFlorianWidgetSet
+# RPC service class, partial path of RPC policy file

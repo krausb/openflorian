@@ -38,7 +38,7 @@ import de.openflorian.util.StringUtils;
  * The codec is responsible for {@link AlarmFaxEvent} message delivery object
  * encoding and decoding for the {@link EventBus}
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class OperationMessageCodec implements
 		MessageCodec<Operation, Operation> {

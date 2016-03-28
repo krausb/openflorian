@@ -22,7 +22,7 @@ package de.openflorian.zk;
 /**
  * ZK Globals<br/>
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class ZkGlobals {
 

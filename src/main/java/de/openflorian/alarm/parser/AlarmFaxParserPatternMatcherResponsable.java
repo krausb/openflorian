@@ -23,75 +23,62 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import de.openflorian.OpenflorianContext;
-import de.openflorian.config.ConfigurationProvider;
 import de.openflorian.data.model.Operation;
 
 /**
- * A pattern matcher responsable for realizing a chain of 
- * responsibility to match the elements of the alarm fax text.<br/>
+ * A pattern matcher responsable for realizing a chain of responsibility to
+ * match the elements of the alarm fax text.<br/>
  * <br/>
- * Each {@link AlarmFaxParserPatternMatcherResponsable} matches a 
- * single Alarm Fax attribute, puts the result into the passed
- * {@link Operation} and plays the ball to the 
- * in chain.
+ * Each {@link AlarmFaxParserPatternMatcherResponsable} matches a single Alarm
+ * Fax attribute, puts the result into the passed {@link Operation} and plays
+ * the ball to the in chain.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public abstract class AlarmFaxParserPatternMatcherResponsable {
 
 	protected final Logger log = LoggerFactory.getLogger(getClass());
-	
+
 	protected AlarmFaxParserPatternMatcherResponsable next = null;
-	
+
 	protected Pattern parserPattern = null;
-	
+
 	/**
-	 * Gets the next {@link AlarmFaxParserPatternMatcherResponsable} in chain
-	 * or null if the end of the chain is reached.
+	 * Gets the next {@link AlarmFaxParserPatternMatcherResponsable} in chain or
+	 * null if the end of the chain is reached.
 	 * 
-	 * @return
-	 * 		{@link AlarmFaxParserPatternMatcherResponsable}
+	 * @return {@link AlarmFaxParserPatternMatcherResponsable}
 	 */
 	public AlarmFaxParserPatternMatcherResponsable getNext() {
 		return next;
 	}
-	
-	public abstract String getConfigurationProperty();
-	
-	public AlarmFaxParserPatternMatcherResponsable() {
-		this.parserPattern = Pattern.compile(
-				OpenflorianContext.getConfig().getProperty(getConfigurationProperty()), 
-				Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.UNICODE_CASE);
-	}
-	
+
 	/**
 	 * Sets the next {@link AlarmFaxParserPatternMatcherResponsable} in chain
+	 * 
 	 * @param next
 	 */
 	public void setNext(AlarmFaxParserPatternMatcherResponsable next) {
 		this.next = next;
 	}
-	
+
 	/**
 	 * Getter for the parsing pattern.
 	 * 
 	 * @return
 	 */
 	public abstract Pattern getPattern();
-	
+
 	/**
-	 * Processes the given <code>alarmfax</code> and stores the responsable 
+	 * Processes the given <code>alarmfax</code> and stores the responsable
 	 * attribute in the target <code>operation</code> entity.
 	 * 
 	 * @param alarmfax
-	 * 		{@link String}
+	 *            {@link String}
 	 * @param operation
-	 * 		{@link Operation}
+	 *            {@link Operation}
 	 */
 	public abstract void parse(String alarmfax, Operation operation);
-	
+
 }

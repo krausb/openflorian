@@ -25,7 +25,7 @@ import de.openflorian.web.user.User;
 /**
  * {@link UserDao}
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class UserDao extends GenericDao<User, Long> {
 

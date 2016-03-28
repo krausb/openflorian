@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
  * <br/>
  * This little helper serves classes and classpath resources.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 @SuppressWarnings("rawtypes")
 public class ClassLoaderUtils {

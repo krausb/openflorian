@@ -44,13 +44,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.openflorian.data.model.principal.Station;
-import de.openflorian.ui.ZkGlobals;
 import de.openflorian.util.StringUtils;
+import de.openflorian.web.WebGlobals;
 
 /**
  * {@link Operation} DTO
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 @Entity
 @Table(name="of_operation")
@@ -426,7 +426,7 @@ public class Operation implements Serializable {
 		StringBuffer sb = new StringBuffer();
 		sb.append(this.operationNr + " " + this.buzzword);
 		if(this.incurredAt != null) {
-			SimpleDateFormat format = new SimpleDateFormat(ZkGlobals.FORMAT_DATETIME);
+			SimpleDateFormat format = new SimpleDateFormat(WebGlobals.FORMAT_DATETIME);
 			sb.append(", " + format.format(incurredAt));
 		}
 		return sb.toString();

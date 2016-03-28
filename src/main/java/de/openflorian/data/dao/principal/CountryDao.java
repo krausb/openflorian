@@ -25,7 +25,7 @@ import de.openflorian.data.model.principal.Country;
 /**
  * {@link CountryDao}
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class CountryDao extends GenericDao<Country, Long>{
 	

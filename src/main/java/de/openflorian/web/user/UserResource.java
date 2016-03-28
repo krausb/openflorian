@@ -33,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * REST Resource for {@link User}
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 @Path("/user")
 public interface UserResource {

@@ -1,0 +1,51 @@
+{
+  "cipherKeys": {
+    "blowfish":    "=EfmRwcD8iVTQLoMaB'nbIf@jAC}EjFyBHUM<O5KJpBxuAGTq",
+    "xor":         "=xa6RlXknis@FwAvXzucctItJzrDBe$s`RQ6LvrhbUjSYF:HL"
+  },
+  "faxObserver": {
+    "observerDir": "C:/Arbeit/Server/openflorian/faxincoming",
+    "archiveDir": "C:/Arbeit/Server/openflorian/faxarchive"
+  },
+  "faxTransformer": {
+    "cmd":	"\"C:/Program Files (x86)/Tesseract-OCR/tesseract.exe\" -psm 6 \"###INPUT###\" \"###OUTPUT###\"",
+    "vars": {
+      "inputVar": "###INPUT###",
+      "outputVar":"###OUTPUT###"
+    }
+  },
+  "faxParser": {
+    "currentStation":	"Vohburg",
+    "patterns": {
+      "operationNrPattern":		"einsatz[^\\w]+nr\\s?['13=:]+\\s?([^\\v\\n]*)",
+      "objectPattern": 			"[od]?bjekt\\s?['13=:]+\\s?([^\\v\\n]*)",
+      "streetPattern": 			"strasse\\s?['13=:]+\\s?([^\\v\\n]*)",
+      "crosswayPattern": 		"kreuzung\\s?['13=:]+\\s?([^\\v\\n]*)",
+      "cityPattern": 			"\\b(?:[od]rt)\\b\\s?['13=:]+\\s?([^\\v\\n]*)",
+      "geocoordinatesPattern": 	"koordinate\\s?['13=:]+\\s?([0-9]+\\.[0-9]+)\\s?/\\s?([0-9]+\\.[0-9]+)([^\\v\\n]*)",
+      "priorityPattern":			"pri[od]?rit[aä]t\\s?['13=:]+\\s?(\\d{1})\\s?([^\\v\\n]*)",
+      "keywordPattern": 			"stichw[od]?rt\\s?['13=:]+\\s?([^\\v\\n]*)",
+      "buzzwordPattern": 		"schlagw[od]?rt\\s?['13=:]+\\s?([^\\v\\n]*)",
+      "resourcesPattern":		"\\d{1}[\\s.]{1}\\d{1}[\\s.]{1}\\d{1}\\s+([^\\v\\n]*)",
+      "stationresourcePattern":	"Vohburg",
+      "resourcecallnamePattern":	"([0-9]+/[0-9]+)"
+    },
+    "geocoordinates": {
+      "source": "epsg:31468",
+      "target": "WGS84",
+      "targetParams": "+title=long/lat:WGS84 +proj=longlat +datum=WGS84 +units=degrees"
+    }
+  },
+  "weather": {
+  	"loadPeriod": 300,
+    "yahooWeatherApi": {
+  	  "consumerKey": "dj0yJmk9dlNadDFjU1N0cHdDJmQ9WVdrOU9YVTFjVTF6TXpZbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD00MA--",
+  	  "consumerSecret": "eec926106abeeb02bafff732a15eb95bc6bbf90f",
+  	  "woeid": 12836980
+    },
+    "openWeatherMapApi": {
+  	  "apiKey": "652cba35006b451a1e035e0fdd83ba6b",
+  	  "cityId": 2816776
+    }
+  }
+}

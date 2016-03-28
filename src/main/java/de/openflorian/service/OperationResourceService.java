@@ -22,13 +22,13 @@ package de.openflorian.service;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.transaction.Transactional;
 import javax.xml.bind.ValidationException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import de.openflorian.data.TransactionalProxyFactory;
 import de.openflorian.data.dao.OperationResourceDao;
 import de.openflorian.data.model.Operation;
 import de.openflorian.data.model.OperationResource;
@@ -36,20 +36,35 @@ import de.openflorian.data.model.OperationResource;
 /**
  * {@link OperationResource} Data Service Bean
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
-@Service
-public class OperationResourceService{
 
-	@Autowired
-	private OperationResourceDao dao;
-	
+public class OperationResourceService {
+
+	private static final Logger log = LoggerFactory.getLogger(OperationResourceService.class);
+
+	private static OperationResourceService transactional = null;
+
+	public static OperationResourceService transactional() {
+		if (transactional == null) {
+			try {
+				transactional = TransactionalProxyFactory.proxy(new OperationResourceService());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		}
+		return transactional;
+	}
+
+	private OperationResourceDao dao = new OperationResourceDao();
+
 	/**
-	 * Get the amount of all available {@link OperationResource} in persistence context.
-	 * @return
-	 * 		{@link long}
+	 * Get the amount of all available {@link OperationResource} in persistence
+	 * context.
+	 * 
+	 * @return {@link long}
 	 */
-	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
+	@Transactional
 	public long count() {
 		return dao.sizeOf();
 	}
@@ -58,10 +73,9 @@ public class OperationResourceService{
 	 * Gets a specific {@link OperationResource} by <code>id</code>
 	 * 
 	 * @param id
-	 * @return
-	 * 		{@link OperationResource}
+	 * @return {@link OperationResource}
 	 */
-	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
+	@Transactional
 	public OperationResource getById(Long id) {
 		return dao.findById(id);
 	}
@@ -69,10 +83,9 @@ public class OperationResourceService{
 	/**
 	 * Lists all available {@link OperationResource}s
 	 * 
-	 * @return
-	 * 		{@link List}<{@link OperationResource}>
+	 * @return {@link List}<{@link OperationResource}>
 	 */
-	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
+	@Transactional
 	public List<OperationResource> list() {
 		return dao.findAll("name");
 	}
@@ -83,23 +96,22 @@ public class OperationResourceService{
 	 * @param order
 	 * @param activePage
 	 * @param pageSize
-	 * @return
-	 * 		{@link List}<{@link OperationResource}>
+	 * @return {@link List}<{@link OperationResource}>
 	 */
-	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
+	@Transactional
 	public List<OperationResource> listByPage(String order, int activePage, int pageSize) {
 		return dao.findAllByPage(order, pageSize, activePage);
 	}
 
 	/**
-	 * Persist given <code>o</code> {@link OperationResource} to persistence context
+	 * Persist given <code>o</code> {@link OperationResource} to persistence
+	 * context
 	 * 
 	 * @param object
-	 * @return
-	 * 		persisted <code>object</code>
+	 * @return persisted <code>object</code>
 	 */
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	public OperationResource persist(OperationResource o) throws ValidationException { 
+	@Transactional
+	public OperationResource persist(OperationResource o) throws ValidationException {
 		return dao.merge(o);
 	}
 
@@ -108,36 +120,37 @@ public class OperationResourceService{
 	 * 
 	 * @param id
 	 */
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
+	@Transactional
 	public void remove(long id) {
 		dao.remove(id);
 	}
 
 	/**
-	 * Search {@link OperationResource} entities whose <code>attribute</code> matches to <code>value</code>
+	 * Search {@link OperationResource} entities whose <code>attribute</code>
+	 * matches to <code>value</code>
 	 * 
 	 * @param attribute
 	 * @param value
-	 * @return
-	 * 		{@link List}<{@link Operation}>
+	 * @return {@link List}<{@link Operation}>
 	 */
-	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
+	@Transactional
 	public List<OperationResource> search(String attribute, String value) {
 		return dao.findAllByAttribute(attribute, value);
 	}
-	
+
 	/**
 	 * Get an {@link OperationResource} by <code>callname</code>
 	 * 
 	 * @param callname
-	 * @return
-	 * 		{@link OperationResource} or {@link NoResultException}
+	 * @return {@link OperationResource} or {@link NoResultException}
 	 */
+	@Transactional
 	public OperationResource getResourceByCallname(String callname) {
 		OperationResource resource = null;
 		try {
 			resource = dao.getResourceByCallname(callname);
-		} catch (NoResultException e) {}
+		} catch (NoResultException e) {
+		}
 		return resource;
 	}
 

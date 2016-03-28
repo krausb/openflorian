@@ -33,7 +33,7 @@ import de.openflorian.data.model.security.PermissionSet;
  * If you change or add permissions keep sure that 
  * you update {@link PermissionSet#PERMISSION_TYPES()} method.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class OperationPermission implements PermissionSet {
 

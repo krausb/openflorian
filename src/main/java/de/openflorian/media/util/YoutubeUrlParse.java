@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * <Br/>
  * Parses a given Link and matches out the video id
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class YoutubeUrlParse {
 

@@ -27,7 +27,7 @@ import io.vertx.core.eventbus.Message;
  * Processes the given alarm fax with an OCR binary like
  * tesseract.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class BindingAlarmFaxTransformator extends AbstractAlarmFaxTransformator {
 

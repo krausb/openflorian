@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * <br/>
  * Prefilled Entity Table with all available countries in the world.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 @Entity
 @Table(name="of_coredata_country")

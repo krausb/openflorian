@@ -25,7 +25,7 @@ import org.hibernate.validator.InvalidValue;
 /**
  * CoreException for the hibernate validator
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class ValidationException extends ZkException {
     private static final long serialVersionUID = 117458168015973951L;

@@ -29,7 +29,7 @@ package de.openflorian.media.model;
  * - YoutubeVideo<br/>
  * - VimeoVideo<br/>
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public enum MediaItemType {
 	LocalImage,

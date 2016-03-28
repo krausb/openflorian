@@ -31,7 +31,7 @@ import java.util.LinkedList;
  * If you change or add permissions keep sure that 
  * you update {@link PermissionSet#PERMISSION_TYPES()} method.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class GlobalPermission implements PermissionSet {
 

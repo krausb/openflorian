@@ -21,33 +21,46 @@ package de.openflorian.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
 import javax.xml.bind.ValidationException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import de.openflorian.data.TransactionalProxyFactory;
 import de.openflorian.data.dao.OperationDao;
 import de.openflorian.data.model.Operation;
 
 /**
- * {@link Operation} Data Service Bean
+ * {@link Operation} Data Service
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
-@Service
-public class OperationService{
+public class OperationService {
 
-	@Autowired
-	private OperationDao dao;
-	
+	private static final Logger log = LoggerFactory.getLogger(OperationService.class);
+
+	private static OperationService transactional = null;
+
+	public static OperationService transactional() {
+		if (transactional == null) {
+			try {
+				transactional = TransactionalProxyFactory.proxy(new OperationService());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		}
+		return transactional;
+	}
+
+	private OperationDao dao = new OperationDao();
+
 	/**
 	 * Get the amount of all available {@link Operation} in persistence context.
-	 * @return
-	 * 		{@link long}
+	 * 
+	 * @return {@link long}
 	 */
-	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
+	@Transactional
 	public long count() {
 		return dao.sizeOf();
 	}
@@ -56,10 +69,9 @@ public class OperationService{
 	 * Gets a specific {@link Operation} by <code>id</code>
 	 * 
 	 * @param id
-	 * @return
-	 * 		{@link Operation}
+	 * @return {@link Operation}
 	 */
-	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
+	@Transactional
 	public Operation getById(Long id) {
 		return dao.findById(id);
 	}
@@ -67,10 +79,9 @@ public class OperationService{
 	/**
 	 * Lists all available {@link Operation}s
 	 * 
-	 * @return
-	 * 		{@link List}<{@link Operation}>
+	 * @return {@link List}<{@link Operation}>
 	 */
-	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
+	@Transactional
 	public List<Operation> list() {
 		return dao.findAll("name");
 	}
@@ -81,10 +92,9 @@ public class OperationService{
 	 * @param order
 	 * @param activePage
 	 * @param pageSize
-	 * @return
-	 * 		{@link List}<{@link Operation}>
+	 * @return {@link List}<{@link Operation}>
 	 */
-	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
+	@Transactional
 	public List<Operation> listByPage(String order, int activePage, int pageSize) {
 		return dao.findAllByPage(order, pageSize, activePage);
 	}
@@ -93,11 +103,10 @@ public class OperationService{
 	 * Persist given <code>o</code> {@link Operation} to persistence context
 	 * 
 	 * @param object
-	 * @return
-	 * 		persisted <code>object</code>
+	 * @return persisted <code>object</code>
 	 */
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	public Operation persist(Operation o) throws ValidationException { 
+	@Transactional
+	public Operation persist(Operation o) throws ValidationException {
 		return dao.merge(o);
 	}
 
@@ -106,20 +115,20 @@ public class OperationService{
 	 * 
 	 * @param id
 	 */
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
+	@Transactional
 	public void remove(long id) {
 		dao.remove(id);
 	}
 
 	/**
-	 * Search {@link Operation} entities whose <code>attribute</code> matches to <code>value</code>
+	 * Search {@link Operation} entities whose <code>attribute</code> matches to
+	 * <code>value</code>
 	 * 
 	 * @param attribute
 	 * @param value
-	 * @return
-	 * 		{@link List}<{@link Operation}>
+	 * @return {@link List}<{@link Operation}>
 	 */
-	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
+	@Transactional
 	public List<Operation> search(String attribute, String value) {
 		return dao.findAllByAttribute(attribute, value);
 	}

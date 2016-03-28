@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import org.osgeo.proj4j.ProjCoordinate;
 
+import de.openflorian.config.OpenflorianConfig;
 import de.openflorian.data.model.Operation;
 import de.openflorian.geo.GaussKruegerConversionStrategy;
 import de.openflorian.geo.GeoCoordinateConverter;
@@ -31,38 +32,33 @@ import de.openflorian.geo.GeoCoordinateConverter;
 /**
  * Geo Coordinate Parser Responsable
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 class GeoCoordinateParserResponsable extends AlarmFaxParserPatternMatcherResponsable {
 
-	public static final String CONFIG_PATTERN = "alarm.parser.pattern.geocoordinates";
-	
-	@Override
-	public String getConfigurationProperty() {
-		return CONFIG_PATTERN;
-	}
-
 	@Override
 	public Pattern getPattern() {
-		return this.parserPattern;
+		return Pattern.compile(OpenflorianConfig.config().faxParser.patterns.geocoordinatesPattern,
+				Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.UNICODE_CASE);
 	}
 
 	@Override
 	public void parse(String alarmfax, Operation operation) {
 		Matcher m = getPattern().matcher(alarmfax);
-		if(m.find()) {
+		if (m.find()) {
 			Double y = Double.valueOf(m.group(2));
 			Double x = Double.valueOf(m.group(1));
-			
-			GeoCoordinateConverter converter = GeoCoordinateConverter.converterForStrategy(new GaussKruegerConversionStrategy()); 
+
+			GeoCoordinateConverter converter = GeoCoordinateConverter
+					.converterForStrategy(new GaussKruegerConversionStrategy());
 			ProjCoordinate p = converter.convert(new ProjCoordinate(x, y));
-			
+
 			operation.setPositionLongitude(p.x);
 			operation.setPositionLatitude(p.y);
 		}
-		
-		if(getNext() != null)
+
+		if (getNext() != null)
 			getNext().parse(alarmfax, operation);
 	}
-	
+
 }

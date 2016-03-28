@@ -33,7 +33,7 @@ import javax.servlet.ServletResponse;
  * <Br/>
  * Filter enforces UTF-8 Encoding on all IN
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class CharacterEncodingFilter implements Filter {
 

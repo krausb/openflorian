@@ -26,7 +26,7 @@ import de.openflorian.event.Event;
 /**
  * Alarm Fax Event
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class AlarmFaxEvent extends Event {
 	

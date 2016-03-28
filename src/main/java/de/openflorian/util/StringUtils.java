@@ -3,7 +3,7 @@ package de.openflorian.util;
 /**
  * Utility Class for handling Strings
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class StringUtils {
 

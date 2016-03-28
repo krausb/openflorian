@@ -45,7 +45,7 @@ import de.openflorian.media.model.MediaItem;
 /**
  * {@link OperationStaff} DTO
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 @Entity
 @Table(name="of_coredata_operationstaff")

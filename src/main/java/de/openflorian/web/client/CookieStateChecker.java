@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Determines wether the session cookie is present or not
  *  
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class CookieStateChecker implements Filter {
 

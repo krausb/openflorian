@@ -29,7 +29,7 @@ import org.osgeo.proj4j.ProjCoordinate;
 /**
  * Gauss Krueger 2 LatLong Conversion Strategy Test
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class GaussKruegerConversionStrategyTest {
 

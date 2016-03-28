@@ -32,7 +32,7 @@ import org.junit.Test;
 /**
  * Testcase for {@link VimeoUrlParser}
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class VimeoUrlParserTest {
 

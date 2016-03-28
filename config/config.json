@@ -1,0 +1,39 @@
+{
+	"cipherkeys": {
+		"blowfish":    "=EfmRwcD8iVTQLoMaB'nbIf@jAC}EjFyBHUM<O5KJpBxuAGTq",
+		"xor":         "=xa6RlXknis@FwAvXzucctItJzrDBe$s`RQ6LvrhbUjSYF:HL"
+	},
+	"faxobserver": {
+		"observedir": "C:/Arbeit/Server/openflorian/faxincoming",
+		"archivedir": "C:/Arbeit/Server/openflorian/faxarchive"
+	},
+	"faxtransformer": {
+		"cmd":	"\"C:/Program Files (x86)/Tesseract-OCR/tesseract.exe\" -psm 6 \"###INPUT###\" \"###OUTPUT###\"",
+		"vars": {
+			"input": "###INPUT###",
+			"output":"###OUTPUT###"
+		}
+	},
+	"faxparser": {
+		"currentstation":	"Vohburg",
+		"patterns": {
+			"operationnr":		"einsatz[^\\w]+nr\\s?['13=:]+\\s?([^\\v\\n]*)",
+			"object": 			"[od]?bjekt\\s?['13=:]+\\s?([^\\v\\n]*)",
+			"street": 			"strasse\\s?['13=:]+\\s?([^\\v\\n]*)",
+			"crossway": 		"kreuzung\\s?['13=:]+\\s?([^\\v\\n]*)",
+			"city": 			"\\b(?:[od]rt)\\b\\s?['13=:]+\\s?([^\\v\\n]*)",
+			"geocoordinates": 	"koordinate\\s?['13=:]+\\s?([0-9]+\\.[0-9]+)\\s?/\\s?([0-9]+\\.[0-9]+)([^\\v\\n]*)",
+			"priority":			"pri[od]?rit[aä]t\\s?['13=:]+\\s?(\\d{1})\\s?([^\\v\\n]*)",
+			"keyword": 			"stichw[od]?rt\\s?['13=:]+\\s?([^\\v\\n]*)",
+			"buzzword": 		"schlagw[od]?rt\\s?['13=:]+\\s?([^\\v\\n]*)",
+			"resources":		"\\d{1}[\\s.]{1}\\d{1}[\\s.]{1}\\d{1}\\s+([^\\v\\n]*)",
+			"stationresource":	"Vohburg",
+			"resourcecallname":	"([0-9]+/[0-9]+)"
+		},
+		"geocoordinates": {
+			"source": "epsg:31468",
+			"target": "WGS84",
+			"targetparams": "+title=long/lat:WGS84 +proj=longlat +datum=WGS84 +units=degrees"
+		}
+	}
+}

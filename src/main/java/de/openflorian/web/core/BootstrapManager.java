@@ -19,53 +19,67 @@ package de.openflorian.web.core;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * Bootstrap Manager for handling everything related to Apache Tomcat and Environment.
+ * Bean: Bootstrap Manager
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * Provides basic configuration, e.g. Context Path, Configuration Path, ...
+ * 
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
-public interface BootstrapManager {
+public class BootstrapManager implements ServletContextListener {
 
-	/**
-	 * Configuration path in $CATALINA_HOME/conf/CONFIG
-	 * 
-	 * @return {@link String}
-	 */
-	public abstract String getConfigurationPath();
+	private static final Logger log = LoggerFactory.getLogger(BootstrapManager.class);
 
-	/**
-	 * Application data work directory $CATALINA_HOME/data
-	 * 
-	 * @return {@link String}
-	 */
-	public abstract String getApplicationDataWorkPath();
+	private static BootstrapManager instance;
 
-	/**
-	 * Plugin data store path
-	 * @return {@link String}
-	 */
-	public abstract String getPluginDatastore();
-	
-	/**
-	 * Web Context Path - http://serveraddress:8080/CONTEXTPATH/
-	 * 
-	 * @return String Web Context Path
-	 */
-	public abstract String getContextPath();
+	public static BootstrapManager manager() {
+		if (instance == null)
+			throw new IllegalStateException(
+					"Missplacement of BootstrapManager Servlet Context Listener. No instance available.");
+		return instance;
+	}
 
-	/**
-	 * Real Path for "/"
-	 * 
-	 * @return {@link String}
-	 */
-	public abstract String getRealPath();
+	private ServletContext context;
 
-	/**
-	 * Real Path for given String
-	 * 
-	 * @param virtualPath {@link String} virtual path
-	 * @return
-	 */
-	public abstract String getRealPathForVirtual(String virtualPath);
+	public ServletContext getCurrentContext() {
+		return context;
+	}
+
+	public String getContextPath() {
+		return context.getContextPath();
+	}
+
+	public String getRealPath() {
+		return getRealPathForVirtual("/");
+	}
+
+	public String getRealPathForVirtual(String virtualPath) {
+		return context.getRealPath(virtualPath);
+	}
+
+	@Override
+	public void contextInitialized(ServletContextEvent sce) {
+		log.info("Bootstrap Manager initializing...");
+
+		instance = this;
+		this.context = sce.getServletContext();
+
+		log.info("Webapp context path: " + getContextPath());
+		log.info("Real path for '/': " + getRealPath());
+
+		log.info("... intialization finished");
+	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+		// nothing to do here
+	}
 
 }

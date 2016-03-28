@@ -26,7 +26,7 @@ import org.osgeo.proj4j.ProjCoordinate;
  * <br/>
  * X is mapped by a given {@link ConversionStrategy} to Lat/Long for Google Maps API.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class GeoCoordinateConverter {
 

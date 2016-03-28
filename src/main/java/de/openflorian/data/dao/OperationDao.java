@@ -25,7 +25,7 @@ import de.openflorian.data.model.Operation;
 /**
  * {@link OperationDao}
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class OperationDao extends GenericDao<Operation, Long> {
 

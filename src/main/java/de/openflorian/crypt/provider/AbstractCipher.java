@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * Abstract Cipher<br/>
  * <br/>
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public abstract class AbstractCipher {
 

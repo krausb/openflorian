@@ -22,7 +22,7 @@ package de.openflorian.zk;
 /**
  * Core Exception
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class ZkException extends Throwable {
 	private static final long serialVersionUID = 1204651587653118739L;

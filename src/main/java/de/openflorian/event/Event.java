@@ -24,7 +24,7 @@ package de.openflorian.event;
  * <br/>
  * An event for OpenFlorian Platform.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class Event {
 

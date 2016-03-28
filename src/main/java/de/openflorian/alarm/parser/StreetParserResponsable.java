@@ -22,35 +22,30 @@ package de.openflorian.alarm.parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.openflorian.config.OpenflorianConfig;
 import de.openflorian.data.model.Operation;
 
 /**
  * Street Parser Responsable
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 class StreetParserResponsable extends AlarmFaxParserPatternMatcherResponsable {
 
-	public static final String CONFIG_PATTERN = "alarm.parser.pattern.street";
-		
-	@Override
-	public String getConfigurationProperty() {
-		return CONFIG_PATTERN;
-	}
-
 	@Override
 	public Pattern getPattern() {
-		return this.parserPattern;
+		return Pattern.compile(OpenflorianConfig.config().faxParser.patterns.streetPattern,
+				Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.UNICODE_CASE);
 	}
 
 	@Override
 	public void parse(String alarmfax, Operation operation) {
 		Matcher m = getPattern().matcher(alarmfax);
-		if(m.find()) {
+		if (m.find()) {
 			operation.setStreet(m.group(1));
 		}
-		
-		if(getNext() != null)
+
+		if (getNext() != null)
 			getNext().parse(alarmfax, operation);
 	}
 

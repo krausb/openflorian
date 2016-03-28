@@ -46,24 +46,19 @@
 		</layout>
 	</appender>
 	
-	<logger name="org.springframework.web">
-		<level value="error" />
-	</logger>
-    <logger name="org.zkoss">
-        <level value="error" />
-    </logger>
     <logger name="io.vertx">
     	<level value="TRACE"/>
     </logger>
 	<logger name="de.openflorian">
 		<level value="TRACE" />
 	</logger>
-	<logger name="net.sf.jasperreports">
-		<level value="error" />
-	</logger>
+	
+	<!-- <logger name="org.hibernate.SQL">
+		<level value="DEBUG" />
+	</logger> -->
 
 	<root>
-		<level value="INFO" />
+		<level value="WARN" />
 		<appender-ref ref="fileAppender" />
 	</root>
 

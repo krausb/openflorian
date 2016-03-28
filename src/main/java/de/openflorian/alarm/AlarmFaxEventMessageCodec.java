@@ -32,7 +32,7 @@ import java.io.File;
  * The codec is responsible for {@link AlarmFaxEvent} message delivery object
  * encoding and decoding for the {@link EventBus}
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class AlarmFaxEventMessageCodec implements
 		MessageCodec<AlarmFaxEvent, AlarmFaxEvent> {

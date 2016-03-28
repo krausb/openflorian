@@ -1,0 +1,62 @@
+
+
+# US-Robotiks FAX Conf
+ModemAnswerCmd:                 ATA     # string, command for answering phone
+ModemAnswerDataBeginCmd:        ""      # string, command for start of answered data call
+ModemAnswerDataCmd:             ATA     # string, command for answering data call
+ModemAnswerFaxBeginCmd:         ""      # string, command for start of answered fax call
+ModemAnswerFaxCmd:              ATA     # string, command for answering fax call
+ModemAnswerResponseTimeout:     180000  # integer, answer command timeout (ms)
+ModemAnswerVoiceBeginCmd:       ""      # string, command for start of answered voice call
+ModemAnswerVoiceCmd:            ATA     # string, command for answering voice call
+ModemATCmdDelay:                0       # integer, delay before sending modem an AT cmd (ms)
+ModemBaudRateDelay:             0       # integer, delay (ms) after setting baud rate
+ModemClassQueryCmd:             AT+FCLASS=?     # string, command for querying modem services
+ModemCommaPauseTimeCmd:         ATS8=2  # string, command for setting time to pause for comma in dialing string
+ModemDialCmd:                   ATDT%s  # string, command for dialing (%s for number to dial)
+ModemDialResponseTimeout:       180000  # integer, dialing command timeout (ms)
+ModemEchoOffCmd:                ATE0    # string, command for disabling command echo
+ModemFlowControl:               None    # string, DTE-DCE flow control scheme
+ModemFrameFillOrder:            LSB2MSB # string, bit order for HDLC frames
+ModemHardFlowCmd:               ""      # string, command for setting hardware flow control between DTE and DCE
+ModemMinSpeed:                  2400    # string, minimum acceptable transmit speed
+ModemMfrQueryCmd:               ""      # string, command for querying modem manufacturer
+ModemModelQueryCmd:             ""      # string, command for querying modem model
+ModemNoAutoAnswerCmd:           ATS0=0  # string, command for disabling auto-answer
+ModemNoFlowCmd:                 ""      # string, command for disabling hardware flow control between DTE and DCE
+ModemOnHookCmd:                 ATH0    # string, command for placing phone ``on hook''
+ModemPageDoneTimeout:           180000  # integer, page send/receive timeout (ms)
+ModemPageStartTimeout:          180000  # integer, page send/receive timeout (ms)
+ModemRate:                      19200   # integer, baud rate to use for DCE-DTE communication
+ModemRecvFillOrder:             LSB2MSB # string, bit order for received facsimile data
+ModemResetCmds:                 ""      # string, additional commands when resetting modem
+ModemResetDelay:                2600    # integer, delay (ms) after sending modem reset commands
+ModemResultCodesCmd:            ATQ0    # string, command for enabling result codes
+ModemRevQueryCmd:               ""      # string, command for querying modem firmware revision
+ModemSendBeginCmd:              ""      # string, command to send on establishing carrier
+ModemSendFillOrder:             LSB2MSB # string, bit order for sending facsimile data
+ModemSetVolumeCmd:              "ATM0 ATL0M1 ATL8C1 ATL2M1 ATL3M1"      # string, commands for setting modem speaker volume level
+ModemSetupAACmd:                ""      # string, command for setting up adaptive answer
+ModemSetupDCDCmd:               ""      # string, command for setting up DCD handling
+ModemSetupDTRCmd:               ""      # string, command for setting up DTR handling
+ModemSoftFlowCmd:               ""      # string, command for setting software flow control between DTE and DCE
+ModemSoftResetCmd:              ATZ     # string, command for doing a soft reset
+ModemType:                      Class1  # string, modem type
+ModemVerboseResultsCmd:         ATV1    # string, command for enabling verbose result codes
+ModemWaitForConnect:            No      # boolean, force server to wait for ``CONNECT'' response on answer
+ModemWaitTimeCmd:               ATS7=60 # string, command for setting time to wait for carrier when dialing
+
+Class1Cmd:                      AT+FCLASS=1     # string, command to enter class 1
+Class1HFLOCmd:                  ""      # string, command to set hardware flow control
+Class1FrameOverhead:            4       # integer, extra bytes in a received HDLC frame
+Class1NFLOCmd:                  ""      # string, command to set no flow control
+Class1RecvAbortOK:              100     # integer, max wait (ms) for ``OK'' after recv abort
+Class1RecvIdentTimer:           35000   # integer, max wait (ms) for initial ident frame
+Class1SFLOCmd:                  ""      # string, command to set software flow control
+Class1TCFMaxNonZero:            10      # integer, max% of non-zero data in good TCF
+Class1TCFMinRun:                1000    # integer, minimum zero run in good TCF
+Class1TCFRecvTimeout:           4500    # integer, max wait (ms) for TCF
+Class1TCFResponseDelay:         75      # integer, delay between TCF and ack/nak
+Class1SendPPMDelay:             75      # integer, delay before sending post-page message
+Class1SendTCFDelay:             75      # integer, delay between sending DCS and TCF
+Class1TrainingRecovery:         1500    # integer, delay after failed training

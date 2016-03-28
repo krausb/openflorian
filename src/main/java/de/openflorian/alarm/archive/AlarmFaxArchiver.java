@@ -1,5 +1,21 @@
 package de.openflorian.alarm.archive;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.openflorian.EventBusAddresses;
+import de.openflorian.alarm.parser.AlarmFaxParsedEvent;
+import de.openflorian.config.OpenflorianConfig;
+import de.openflorian.util.StringUtils;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.eventbus.Message;
+
 /*
  * This file is part of Openflorian.
  * 
@@ -19,71 +35,72 @@ package de.openflorian.alarm.archive;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
-import io.vertx.core.eventbus.Message;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-
-import de.openflorian.EventBusAdresses;
-import de.openflorian.OpenflorianContext;
-import de.openflorian.alarm.FaxDirectoryObserverVerticle;
-import de.openflorian.alarm.parser.AlarmFaxParsedEvent;
-import de.openflorian.config.ConfigurationProvider;
-import de.openflorian.util.StringUtils;
-
 /**
  * Alarm Fax Archiver<br/>
  * <br/>
  * Puts the transformed and parsed Alarm Fax after {@link AlarmFaxParsedEvent}
  * into {@link AlarmFaxArchiver#CONFIG_ARCHIVATION_DIRECTORY}.
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public class AlarmFaxArchiver extends AbstractVerticle {
 
-	protected final Logger log = LoggerFactory.getLogger(getClass());
-	
-	public static final String CONFIG_ARCHIVATION_DIRECTORY = "alarm.observer.archivedir";
-	
+	private static final Logger log = LoggerFactory.getLogger(AlarmFaxArchiver.class);
+
 	private String faxObervationDirectory;
 	private String faxArchivationDirectory;
-	
+
 	@Override
 	public void start(Future<Void> startFuture) {
-		ConfigurationProvider config = OpenflorianContext.getConfig();
-		if(config == null)
-			throw new IllegalStateException("No ConfigurationProvider present/injected.");
-		
 		log.info("Setting up AlarmFaxArchiver...");
- 
-		faxArchivationDirectory = config.getProperty(CONFIG_ARCHIVATION_DIRECTORY);
-		faxObervationDirectory = config.getProperty(FaxDirectoryObserverVerticle.CONFIG_OBSERVING_DIRECTORY);
-		
-		if(StringUtils.isEmpty(faxArchivationDirectory))
-			throw new IllegalStateException("faxArchivationDirectory faxArchivationDirectory '" + CONFIG_ARCHIVATION_DIRECTORY + "' is missing.");
-		else if(StringUtils.isEmpty(faxObervationDirectory)) 
-			throw new IllegalStateException("Fax observing directory '" + FaxDirectoryObserverVerticle.CONFIG_OBSERVING_DIRECTORY + "' is missing.");
+
+		faxArchivationDirectory = OpenflorianConfig.config().faxObserver.archiveDir;
+		faxObervationDirectory = OpenflorianConfig.config().faxObserver.observerDir;
+
+		if (StringUtils.isEmpty(faxArchivationDirectory))
+			throw new IllegalStateException("faxArchivationDirectory faxArchivationDirectory is missing/empty.");
+		else if (StringUtils.isEmpty(faxObervationDirectory))
+			throw new IllegalStateException("Fax observing directory is missing.");
 		else {
-			log.info(CONFIG_ARCHIVATION_DIRECTORY + ": " + faxArchivationDirectory);
-			log.info(FaxDirectoryObserverVerticle.CONFIG_OBSERVING_DIRECTORY + ": " + faxObervationDirectory);
+			log.info("Fax Archive Directory: " + faxArchivationDirectory);
+			log.info("Fax Observation Directory: " + faxObervationDirectory);
 		}
-		
+
 		log.info("Registering EventBus consumers...");
-		vertx.eventBus().consumer(EventBusAdresses.ALARMFAX_PARSED, msg -> archive(msg));
-		
+		vertx.eventBus().consumer(EventBusAddresses.ARCHIVE_FILE, msg -> archive(msg));
+
 		startFuture.complete();
 	}
 
 	/**
-	 * Takes given <code>event</code> and moves the parsed and transformed
-	 * Alarm Fax TIF and TXT files to the {@link AlarmFaxArchiver#CONFIG_ARCHIVATION_DIRECTORY}
-	 *  
+	 * Takes given <code>event</code> and moves the parsed and transformed Alarm
+	 * Fax TIF and TXT files to the
+	 * {@link AlarmFaxArchiver#CONFIG_ARCHIVATION_DIRECTORY}
+	 * 
 	 * @param event
 	 */
-	public void archive(Message<Object> msg) {
-		
+	private void archive(Message<Object> msg) {
+		final String toArchive = msg.body().toString();
+
+		if (log.isDebugEnabled())
+			log.debug("Archiving file: " + toArchive);
+
+		final File toArchiveFile = new File(toArchive);
+
+		if (toArchiveFile.exists()) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");
+			try {
+				final String archiveTarget = String.format("%s%s%s_%s", faxArchivationDirectory, File.separator,
+						format.format(new Date()), toArchiveFile.getName());
+				if (log.isDebugEnabled())
+					log.debug("Archiving target: " + archiveTarget);
+
+				FileUtils.moveFile(toArchiveFile, new File(archiveTarget));
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		} else {
+			log.error("File does not exist: " + toArchive);
+		}
 	}
 }

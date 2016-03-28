@@ -25,7 +25,7 @@ import org.osgeo.proj4j.ProjCoordinate;
  * Abstract Geo coordinate conversion strategy interface<br/>
  * <br/>
  * 
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  */
 public interface ConversionStrategy {
 

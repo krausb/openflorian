@@ -27,7 +27,7 @@ import de.openflorian.alarm.AlarmFaxEvent;
  * Alarm Fax Parsed Event<Br/>
  * <br/>
  * Event will be triggered if an alarm fax file is successfuly parsed in the observed directory
- * @author Bastian Kraus <me@bastian-kraus.me>
+ * @author Bastian Kraus <bofh@k-hive.de>
  *
  */
 public class AlarmFaxTransformedEvent extends AlarmFaxEvent {
