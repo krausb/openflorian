@@ -23,12 +23,12 @@
       "crosswayPattern": 		"kreuzung\\s?['13=:]+\\s?([^\\v\\n]*)",
       "cityPattern": 			"\\b(?:[od]rt)\\b\\s?['13=:]+\\s?([^\\v\\n]*)",
       "geocoordinatesPattern": 	"koordinate\\s?['13=:]+\\s?([0-9]+\\.[0-9]+)\\s?/\\s?([0-9]+\\.[0-9]+)([^\\v\\n]*)",
-      "priorityPattern":			"pri[od]?rit[aä]t\\s?['13=:]+\\s?(\\d{1})\\s?([^\\v\\n]*)",
-      "keywordPattern": 			"stichw[od]?rt\\s?['13=:]+\\s?([^\\v\\n]*)",
+      "priorityPattern":		"pri[od]?rit[aä]t\\s?['13=:]+\\s?(\\d{1})\\s?([^\\v\\n]*)",
+      "keywordPattern": 		"stichw[od]?rt\\s?['13=:]+\\s?([^\\v\\n]*)",
       "buzzwordPattern": 		"schlagw[od]?rt\\s?['13=:]+\\s?([^\\v\\n]*)",
       "resourcesPattern":		"\\d{1}[\\s.]{1}\\d{1}[\\s.]{1}\\d{1}\\s+([^\\v\\n]*)",
       "stationresourcePattern":	"Vohburg",
-      "resourcecallnamePattern":	"([0-9]+/[0-9]+)"
+      "resourcecallnamePattern":"([0-9]+/[0-9]+)"
     },
     "geocoordinates": {
       "source": "epsg:31468",

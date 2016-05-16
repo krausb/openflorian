@@ -51,12 +51,16 @@ public class ViewportUI extends UI {
 		alarmDispatchedMessageConsumer = OpenflorianContext.vertx().eventBus()
 				.consumer(EventBusAddresses.ALARM_DISPATCHED, message -> alarmDispatched(message));
 
+		refresh(request);
+	}
+
+	@Override
+	protected void refresh(VaadinRequest request) {
 		Operation currentOperation = AlarmContextVerticle.getInstance().getCurrentOperation();
 		if (currentOperation != null)
 			showView(new AlarmViewBrowser(this, currentOperation));
 		else
 			showView(new WeatherViewBrowser(this));
-
 	}
 
 	@Override
@@ -94,14 +98,7 @@ public class ViewportUI extends UI {
 
 		if (log.isTraceEnabled())
 			log.trace("Switching View to AlarmViewBrowser. Incurred: " + o);
-		this.access(new Runnable() {
-
-			@Override
-			public void run() {
-				showView(new AlarmViewBrowser(ViewportUI.this, o));
-			}
-
-		});
+		this.access(() -> showView(new AlarmViewBrowser(ViewportUI.this, o)));
 
 	}
 
@@ -114,13 +111,6 @@ public class ViewportUI extends UI {
 		if (log.isTraceEnabled())
 			log.trace("Switching View to WeatherViewBrowser. Dispatched...");
 
-		this.access(new Runnable() {
-
-			@Override
-			public void run() {
-				showView(new WeatherViewBrowser(ViewportUI.this));
-			}
-
-		});
+		this.access(() -> showView(new WeatherViewBrowser(ViewportUI.this)));
 	}
 }

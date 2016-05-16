@@ -60,7 +60,7 @@
 	    </init-param>
 		<init-param>
 		  <param-name>pushmode</param-name>
-		  <param-value>long-polling</param-value>
+		  <param-value>automatic</param-value>
 		</init-param>
 		<init-param>
 		    <param-name>widgetset</param-name>

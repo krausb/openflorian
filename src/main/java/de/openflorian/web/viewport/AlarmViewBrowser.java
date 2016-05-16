@@ -13,6 +13,7 @@ import com.vaadin.ui.*;
 
 import de.openflorian.alarm.AlarmContextVerticle;
 import de.openflorian.data.model.Operation;
+import de.openflorian.data.model.OperationResource;
 import de.openflorian.util.StringUtils;
 import de.openflorian.web.AbstractBrowser;
 import de.openflorian.web.WebGlobals;
@@ -49,7 +50,7 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 	private LMap map = new LMap();
 	private LeafletLayer mapLayer = new LOpenStreetMapLayer();
 
-	private VerticalLayout resourcesBox;
+	private CssLayout resourcesBox = new CssLayout();
 
 	private CustomLayout layout;
 
@@ -82,6 +83,7 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 			layout.addComponent(object, "object");
 			layout.addComponent(city, "city");
 			layout.addComponent(resourcesRaw, "resourcesRaw");
+			layout.addComponent(resourcesBox, "resources");
 			layout.addComponent(map, "map");
 
 			map.addLayer(mapLayer);
@@ -160,6 +162,15 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 
 		if (currentOperation.getResourcesRaw() != null)
 			resourcesRaw.setValue(currentOperation.getResourcesRaw());
+
+		for (OperationResource resource : currentOperation.getResources()) {
+			if (log.isDebugEnabled())
+				log.debug("Alarmed resource: " + resource.getCallName());
+
+			Label resourceLabel = new Label(resource.getCallName());
+			resourceLabel.setStyleName("operation-resource");
+			resourcesBox.addComponent(resourceLabel);
+		}
 
 		SimpleDateFormat format = new SimpleDateFormat(WebGlobals.FORMAT_DATETIME);
 		if (currentOperation.getIncurredAt() != null)
