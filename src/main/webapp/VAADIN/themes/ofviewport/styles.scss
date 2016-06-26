@@ -3,12 +3,21 @@
 @import "weather-icons.min.css";
 @import "weather-icons-wind.min.css";
 
+* {
+    color: #FFF;
+    outline: none;
+}
+
+html, body {
+    background-color: #000;
+}
+
 .ofviewport {
     font-family: Arial, Verdana;
 
 	text-align: center;
 	.weather-box {
-		margin-top: 5vw;
+		margin-top: 8vw;
 		display: inline-block;
 				
 		.condition-box, .temp-humidity-box,
@@ -20,10 +29,18 @@
 			display: inline-block;
 		}
 	
+	    .condition-box {
+	       width: 30vw;
+	    }
+	    
+	    .temp-humidity-box {
+	       width: 60vw;
+	    }
+	
 		.weather-icon {
-			font-size: 24.0vw;
+			font-size: 20.0vw;
 			margin-top: -50px;
-			margin-right: 20vw;
+			margin-right: 10vw;
 			line-height: normal;
 		}
 		
@@ -33,7 +50,7 @@
 		
 		.wi.wi-thermometer,
 		.temperature {
-			font-size: 12.0vw;
+			font-size: 10.0vw;
 			line-height: 1vw;
 		}
 		
@@ -118,6 +135,10 @@
 		      height: 100%;
 		      width: 59vw;
 		      display: inline-block;
+		    }
+		    
+		    .leaflet-popup-content {
+		      color: #000;
 		    }
 		    
 		    .resources {

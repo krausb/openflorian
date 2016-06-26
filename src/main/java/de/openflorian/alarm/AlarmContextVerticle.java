@@ -93,7 +93,7 @@ public final class AlarmContextVerticle extends AbstractVerticle {
 		if (currentOperation.getId() == 0) {
 			try {
 				currentOperation.setIncurredAt(new Date());
-				operationService.persist(currentOperation);
+				currentOperation = operationService.persist(currentOperation);
 			} catch (ValidationException e) {
 				log.error(e.getMessage(), e);
 			}
@@ -111,7 +111,7 @@ public final class AlarmContextVerticle extends AbstractVerticle {
 		if (currentOperation.equals(o)) {
 			try {
 				currentOperation.setTakenOverAt(new Date());
-				operationService.persist(currentOperation);
+				currentOperation = operationService.persist(currentOperation);
 
 				this.currentOperation = null;
 				log.info("Current operation successfuly resetted.");

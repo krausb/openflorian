@@ -19,7 +19,26 @@ apt-get install vim nginx-full php5-fpm php5-mysql apache2-utils libapr1-dev lib
 3. Setup Apache Tomcat
 ======================   
 
-
+- Download von: http://tomcat.apache.org/download-80.cgi
+Tomcat Hardening
+http://www.mulesoft.com/tcat/tomcat-security
+https://www.owasp.org/index.php/Securing_tomcat
+System Benutzer für die Tomcat Instanz anlegen[Bearbeiten]
+Homedirectory == CATALINA_BASE: /srv/app/<INSTANZ>
+&> chown <user>:<usergrp> /srv/app/<INSTANZ>
+&> chmod 750 /srv/app/<INSTANZ>
+&> chmod 300 /srv/app/<INSTANZ>/logs
+&> chmod 400 /srv/app/<INSTANZ>/conf
+UTF-8[Bearbeiten]
+CATALINA_BASE/bin/setenv.sh: JAVA_OPTS="-Dfile.encoding=UTF-8" export JAVA_OPTS
+CATALINA_BASE/conf/server.xml:
+...
+  <Service name="Catalina">
+...
+    <Connector port="..." protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="..." URIEncoding="UTF-8"/>
+...
 
 4. Setup Tesseract
 ==================

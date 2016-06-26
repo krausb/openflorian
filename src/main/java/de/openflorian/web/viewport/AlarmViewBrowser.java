@@ -164,8 +164,11 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 			resourcesRaw.setValue(currentOperation.getResourcesRaw());
 
 		for (OperationResource resource : currentOperation.getResources()) {
+			if (resource == null)
+				continue;
+
 			if (log.isDebugEnabled())
-				log.debug("Alarmed resource: " + resource.getCallName());
+				log.debug("Alarmed resource: " + resource);
 
 			Label resourceLabel = new Label(resource.getCallName());
 			resourceLabel.setStyleName("operation-resource");

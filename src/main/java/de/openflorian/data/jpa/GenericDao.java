@@ -24,14 +24,13 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import javax.xml.bind.ValidationException;
 
-import org.hibernate.validator.InvalidStateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.openflorian.data.TransactionFilter;
+import de.openflorian.data.Transactional;
 
 /**
  * Generic data access object for JPA persistence layer<br/>
@@ -240,7 +239,7 @@ public abstract class GenericDao<T, ID extends Serializable> {
 		// want to get validation exceptions at once
 		try {
 			getEntityManager().flush();
-		} catch (InvalidStateException e) {
+		} catch (Exception e) {
 			getEntityManager().getTransaction().setRollbackOnly();
 			throw new ValidationException(e);
 		}
@@ -263,7 +262,7 @@ public abstract class GenericDao<T, ID extends Serializable> {
 			getEntityManager().flush();
 
 			return entity;
-		} catch (InvalidStateException e) {
+		} catch (Exception e) {
 			getEntityManager().getTransaction().setRollbackOnly();
 			throw new ValidationException(e);
 		}

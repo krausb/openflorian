@@ -3,34 +3,18 @@ Howto install Chromium Kiosk Mode on Raspbian Jessie:
 
 1. Install relevant Packages
 &> sudo apt-get update && sudo apt-get upgrade -y
-&> sudo raspi-config
-
-1. Download and install Chromium
-wget https://dl.dropboxusercontent.com/u/87113035/chromium-browser-l10n_48.0.2564.82-0ubuntu0.15.04.1.1193_all.deb
-wget https://dl.dropboxusercontent.com/u/87113035/chromium-browser_48.0.2564.82-0ubuntu0.15.04.1.1193_armhf.deb
-wget https://dl.dropboxusercontent.com/u/87113035/chromium-codecs-ffmpeg-extra_48.0.2564.82-0ubuntu0.15.04.1.1193_armhf.deb
-sudo dpkg -i chromium-codecs-ffmpeg-extra_48.0.2564.82-0ubuntu0.15.04.1.1193_armhf.deb
-sudo dpkg -i chromium-browser-l10n_48.0.2564.82-0ubuntu0.15.04.1.1193_all.deb chromium-browser_48.0.2564.82-0ubuntu0.15.04.1.1193_armhf.deb
 
 Ggf. muss man Dependencies fixen:
-&> sudo apt-get install -f
+&> sudo apt-get install iceweasel
 
-2. Install LXDE Desktop Manager
-apt-get install -y \
-xserver-xorg \
-xinit \
-xserver-xorg-video-fbdev \
-lxde \
-lxde-common \
-x11-xserver-utils \
-unclutter
-
-3. Set LXDE as default Desktop Manager
-&> vim /etc/X11/default-display-manager
--> /usr/sbin/lxde
+Install R-Kiosk Addon for Iceweasel/Firefox:
+https://addons.mozilla.org/de/firefox/addon/r-kiosk/
 
 4. Configure autostart with chromium kiosk mode:
 &> vi /etc/xdg/lxsession/LXDE-pi/autostart
+AND
+&> vi ~/.config/lxsession/autostart
+
 # Disable xscreensaver by commenting following line out
 #@xscreensaver -no-splash
 
@@ -39,11 +23,8 @@ unclutter
 @xset -dpms
 @xset s noblank
 
-# Tell chromium after unclean shutdown that everything is ok
-@sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' ~/.config/chromium/Default/Preferences
-
 # start chromium in kiosk mode
-@chromium --noerrdialogs --kiosk http://<openflorianserver>/openflorian/operation/viewport.zul
+@iceweasel http://<openflorianserver>/openflorian/
 
 5. Set Default Screensize to 1080p:
 
@@ -55,3 +36,70 @@ hdmi_group=1
 hdmi_mode=31
 # enfernt die Overscan Ränder an allen Seiten
 disable_overscan=1
+
+== TV Steuerung ueber CEC ==
+
+=== Quellen ===
+
+http://constey.de/2014/10/fernseher-ueber-hdmi-per-raspberry-pi-steuern-cec/
+
+=== Installation CEC unter Raspbian ===
+
+Installation Build Essentials:
+<syntaxhighlight lang="dos">
+&> apt-get install cmake liblockdev1-dev libudev-dev libxrandr-dev python-dev swig
+</syntaxhighlight>
+
+libCEC download und compile:
+<syntaxhighlight lang="dos">
+&> cd ~/; git clone https://github.com/Pulse-Eight/platform.git
+&> cd platform
+&> cmake .
+&> make
+&> sudo make install
+&> cd ~/; git clone git://github.com/Pulse-Eight/libcec.git
+&> cd libcec/
+&> cmake -DRPI_INCLUDE_DIR=/opt/vc/include -DRPI_LIB_DIR=/opt/vc/lib .
+&> make -j4
+&> sudo make install
+&> sudo ldconfig
+</syntaxhighlight>
+
+Testen:
+<syntaxhighlight lang="dos">
+$> cec-client -l
+  Found devices: 1
+
+  device: 1
+  com port: RPI
+  vendor id: 2708
+  product id: 1001
+  firmware version: 1
+  type: Raspberry Pi
+</syntaxhighlight>
+
+== TV einsnchalten ==
+
+<syntaxhighlight lang="dos">
+&> echo "on 0" | sudo cec-client -s -d 1
+</syntaxhighlight>
+
+== TV ausschalten==
+
+<syntaxhighlight lang="dos">
+&> echo "standby 0" | sudo cec-client -s -d 1
+</syntaxhighlight>
+
+== Aktive Source auf HDMI stellen ==
+
+<syntaxhighlight lang="dos">
+&> echo "as" | cec-client -s
+</syntaxhighlight>
+
+== CRON Eintrag fuer Power On und Active Source setzen ==
+
+&> sudo crontab -e
+
+*/3 * * * * echo "as" | /usr/local/bin/cec-client -s
+*/5 * * * * echo "on 0" | sudo /usr/local/bin/cec-client -s -d 1
+

@@ -2,13 +2,22 @@
 
 @import "weather-icons-wind.min.css";
 
+* {
+	color: #FFF;
+	outline: none;
+}
+
+html, body {
+	background-color: #000;
+}
+
 .ofviewport {
 	font-family: Arial, Verdana;
 	text-align: center;
 }
 
 .ofviewport .weather-box {
-	margin-top: 5vw;
+	margin-top: 8vw;
 	display: inline-block;
 }
 
@@ -16,10 +25,18 @@
 	display: inline-block;
 }
 
+.ofviewport .weather-box .condition-box {
+	width: 30vw;
+}
+
+.ofviewport .weather-box .temp-humidity-box {
+	width: 60vw;
+}
+
 .ofviewport .weather-box .weather-icon {
-	font-size: 24vw;
+	font-size: 20vw;
 	margin-top: -50px;
-	margin-right: 20vw;
+	margin-right: 10vw;
 	line-height: normal;
 }
 
@@ -28,7 +45,7 @@
 }
 
 .ofviewport .weather-box .wi.wi-thermometer, .ofviewport .weather-box .temperature {
-	font-size: 12vw;
+	font-size: 10vw;
 	line-height: 1vw;
 }
 
@@ -109,6 +126,10 @@
 	height: 100%;
 	width: 59vw;
 	display: inline-block;
+}
+
+.ofviewport .alarm-box .map-resources .leaflet-popup-content {
+	color: #000;
 }
 
 .ofviewport .alarm-box .map-resources .resources {

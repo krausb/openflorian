@@ -1,5 +1,176 @@
 CREATE SCHEMA `openflorian` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin ;
 
+CREATE TABLE `of_coredata_country` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `callingCode` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `cctld` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `iso2` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `iso3` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `longName` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `numcode` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `shortName` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `unMember` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `of_coredata_department` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `city` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `contactFirstname` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `contactLastname` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `fax` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `geoLatitude` double DEFAULT NULL,
+  `geoLongitude` double DEFAULT NULL,
+  `isActive` bit(1) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `phone` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `street` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `token` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `tokenSecret` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `url` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `vatid` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `zip` int(11) DEFAULT NULL,
+  `countryId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKsjghfwk9tyt3ow1fnhxpp1rju` (`countryId`),
+  CONSTRAINT `FKsjghfwk9tyt3ow1fnhxpp1rju` FOREIGN KEY (`countryId`) REFERENCES `of_coredata_country` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `of_coredata_operationstaff` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `birthdate` date DEFAULT NULL,
+  `birthplace` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `city` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `faxBusiness` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `faxPrivate` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `firstname` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `lastname` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `middlename` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `mobileBusiness` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `mobilePrivate` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `note` longtext COLLATE utf8_bin,
+  `phoneBusiness` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `phonePrivate` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `staffNr` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `street` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `zip` int(11) DEFAULT NULL,
+  `citizenshipCountryId` bigint(20) NOT NULL,
+  `countryId` bigint(20) NOT NULL,
+  `departmentId` bigint(20) NOT NULL,
+  `photoId` bigint(20) DEFAULT NULL,
+  `stationId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK7dtyi3qr0bhkh6mpbk0extlqp` (`citizenshipCountryId`),
+  KEY `FKlxngvujqbj4rt5yoe069obt3d` (`countryId`),
+  KEY `FKcp66nva9sxjo3c5dbb7affqub` (`departmentId`),
+  KEY `FKh4gfhx4kg6rtni4yder72o649` (`photoId`),
+  KEY `FK8p0wyply9ub96t5lh9xs96c2f` (`stationId`),
+  CONSTRAINT `FK7dtyi3qr0bhkh6mpbk0extlqp` FOREIGN KEY (`citizenshipCountryId`) REFERENCES `of_coredata_country` (`id`),
+  CONSTRAINT `FK8p0wyply9ub96t5lh9xs96c2f` FOREIGN KEY (`stationId`) REFERENCES `of_coredata_station` (`id`),
+  CONSTRAINT `FKcp66nva9sxjo3c5dbb7affqub` FOREIGN KEY (`departmentId`) REFERENCES `of_coredata_department` (`id`),
+  CONSTRAINT `FKh4gfhx4kg6rtni4yder72o649` FOREIGN KEY (`photoId`) REFERENCES `of_media_item` (`mediaItemId`),
+  CONSTRAINT `FKlxngvujqbj4rt5yoe069obt3d` FOREIGN KEY (`countryId`) REFERENCES `of_coredata_country` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `of_coredata_station` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `city` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `station_name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `street` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `zip` int(11) DEFAULT NULL,
+  `countryId` bigint(20) NOT NULL,
+  `departmentId` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKleitoon0rudy4io9d4o8k2a98` (`countryId`),
+  KEY `FKd5e5xbgrixr7yk7qxpig1y3ku` (`departmentId`),
+  CONSTRAINT `FKd5e5xbgrixr7yk7qxpig1y3ku` FOREIGN KEY (`departmentId`) REFERENCES `of_coredata_department` (`id`),
+  CONSTRAINT `FKleitoon0rudy4io9d4o8k2a98` FOREIGN KEY (`countryId`) REFERENCES `of_coredata_country` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `of_media_item` (
+  `mediaItemId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `contentType` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `extension` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `identifier` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `isLocal` bit(1) DEFAULT NULL,
+  `isPublic` bit(1) DEFAULT NULL,
+  `itemName` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `note` longtext COLLATE utf8_bin,
+  `path` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `type` int(11) DEFAULT NULL,
+  PRIMARY KEY (`mediaItemId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `of_operation` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `buzzword` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `city` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `crossway` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `dispatchedAt` datetime DEFAULT NULL,
+  `incurredAt` datetime DEFAULT NULL,
+  `keyword` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `object` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `operationNr` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `positionLatitude` double DEFAULT NULL,
+  `positionLongitude` double DEFAULT NULL,
+  `priority` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `resourcesRaw` longtext COLLATE utf8_bin,
+  `street` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `takenOverAt` datetime DEFAULT NULL,
+  `stationId` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKtbw1gf81e0f0knnai2f1ahuas` (`stationId`),
+  CONSTRAINT `FKtbw1gf81e0f0knnai2f1ahuas` FOREIGN KEY (`stationId`) REFERENCES `of_coredata_station` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `of_operation_of_operation_resource` (
+  `operation_id` bigint(20) NOT NULL,
+  `operation_resource_id` bigint(20) NOT NULL,
+  KEY `FK7jny2h7elb4kwnhh8rbc6ir6o` (`operation_resource_id`),
+  KEY `FK49ap70vjapykhdbkxp8bub0ob` (`operation_id`),
+  CONSTRAINT `FK49ap70vjapykhdbkxp8bub0ob` FOREIGN KEY (`operation_id`) REFERENCES `of_operation` (`id`),
+  CONSTRAINT `FK7jny2h7elb4kwnhh8rbc6ir6o` FOREIGN KEY (`operation_resource_id`) REFERENCES `of_operation_resource` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `of_operation_resource` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `callName` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `crew` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `licensePlate` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `stationId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKcnft3ge8nv8h7dnexcqamiycn` (`stationId`),
+  CONSTRAINT `FKcnft3ge8nv8h7dnexcqamiycn` FOREIGN KEY (`stationId`) REFERENCES `of_coredata_station` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `of_user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `createdAt` datetime DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `firstname` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `isActive` bit(1) DEFAULT NULL,
+  `isDeleted` bit(1) DEFAULT NULL,
+  `lastname` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `passwordSalt` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `user_permission` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `permission` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK6gp4hkp0olya0a4bksrgcqjsp` (`user_id`),
+  CONSTRAINT `FK6gp4hkp0olya0a4bksrgcqjsp` FOREIGN KEY (`user_id`) REFERENCES `of_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 INSERT INTO openflorian.`of_coredata_country` (`id`, `iso2`, `shortName`, `longName`, `iso3`, `numcode`, `unMember`, `callingCode`, `cctld`) VALUES
 (1, 'AF', 'Afghanistan', 'Islamic Republic of Afghanistan', 'AFG', '004', 'yes', '93', '.af'),
 (2, 'AX', 'Aland Islands', '&Aring;land Islands', 'ALA', '248', 'no', '358', '.ax'),

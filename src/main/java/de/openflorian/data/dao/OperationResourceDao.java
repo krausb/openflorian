@@ -20,8 +20,8 @@ package de.openflorian.data.dao;
  */
 
 import javax.persistence.Query;
-import javax.transaction.Transactional;
 
+import de.openflorian.data.Transactional;
 import de.openflorian.data.jpa.GenericDao;
 import de.openflorian.data.model.OperationResource;
 

@@ -57,6 +57,10 @@ public class ViewportUI extends UI {
 	@Override
 	protected void refresh(VaadinRequest request) {
 		Operation currentOperation = AlarmContextVerticle.getInstance().getCurrentOperation();
+
+		if (log.isDebugEnabled())
+			log.debug("Current operation: " + currentOperation);
+
 		if (currentOperation != null)
 			showView(new AlarmViewBrowser(this, currentOperation));
 		else

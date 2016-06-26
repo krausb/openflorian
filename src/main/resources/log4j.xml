@@ -45,20 +45,12 @@
 			<param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss,SSS} %-4r %-5p %c %x - %m%n" />
 		</layout>
 	</appender>
-	
-    <logger name="io.vertx">
-    	<level value="TRACE"/>
-    </logger>
 	<logger name="de.openflorian">
 		<level value="TRACE" />
 	</logger>
-	
-	<!-- <logger name="org.hibernate.SQL">
-		<level value="DEBUG" />
-	</logger> -->
 
 	<root>
-		<level value="WARN" />
+		<level value="INFO" />
 		<appender-ref ref="fileAppender" />
 	</root>
 

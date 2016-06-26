@@ -9,6 +9,13 @@
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="hibernate.query.substitutions">true 1, false 0</property>
 
+		<property name="c3p0.min_size">3</property>
+		<property name="c3p0.max_size">25</property>
+		<property name="c3p0.acquire_increment">1</property>
+		<property name="c3p0.max_statements">50</property>
+		<property name="c3p0.timeout">14400</property>
+		<property name="c3p0.idle_test_period">3600</property>
+
 		<!-- User domain models -->
 		<mapping class="de.openflorian.data.model.Operation" />
 		<mapping class="de.openflorian.data.model.OperationResource" />

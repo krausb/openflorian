@@ -48,31 +48,10 @@
 	<listener>
 		<listener-class>de.openflorian.OpenflorianContext</listener-class>
 	</listener>
-
-	<servlet>
-	    <servlet-name>viewport-ui</servlet-name>
-	    <servlet-class>
-	        com.vaadin.server.VaadinServlet
-	    </servlet-class>
-	    <init-param>
-	      <param-name>UI</param-name>
-	      <param-value>de.openflorian.web.ViewportUI</param-value>
-	    </init-param>
-		<init-param>
-		  <param-name>pushmode</param-name>
-		  <param-value>automatic</param-value>
-		</init-param>
-		<init-param>
-		    <param-name>widgetset</param-name>
-		    <param-value>de.openflorian.web.widgetset.OpenFlorianWidgetSet</param-value>
-		</init-param>
-		<async-supported>true</async-supported>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>viewport-ui</servlet-name>
-		<url-pattern>/*</url-pattern>
-	</servlet-mapping>
-	
+ 
+	<!-- 
+	   VAADIN: ADMIN UI
+	 -->
 	<servlet>
 	    <servlet-name>admin-ui</servlet-name>
 	    <servlet-class>
@@ -88,7 +67,39 @@
 		<servlet-name>admin-ui</servlet-name>
 		<url-pattern>/admin/*</url-pattern>
 	</servlet-mapping>
+
+
+    <!-- 
+       VAADIN: Viewport UI
+     -->
+    <servlet>
+        <servlet-name>viewport-ui</servlet-name>
+        <servlet-class>
+            com.vaadin.server.VaadinServlet
+        </servlet-class>
+        <init-param>
+          <param-name>UI</param-name>
+          <param-value>de.openflorian.web.ViewportUI</param-value>
+        </init-param>
+        <init-param>
+          <param-name>pushmode</param-name>
+          <param-value>automatic</param-value>
+        </init-param>
+        <init-param>
+            <param-name>widgetset</param-name>
+            <param-value>de.openflorian.web.widgetset.OpenFlorianWidgetSet</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>viewport-ui</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
 	
+	<!-- 
+	   Force everything return in UTF-8
+	 -->
 	<filter>
 		<filter-name>UTF8EncodingSetter</filter-name>
 		<filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>

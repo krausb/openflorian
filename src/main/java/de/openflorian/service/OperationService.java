@@ -21,12 +21,12 @@ package de.openflorian.service;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
 import javax.xml.bind.ValidationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.openflorian.data.Transactional;
 import de.openflorian.data.TransactionalProxyFactory;
 import de.openflorian.data.dao.OperationDao;
 import de.openflorian.data.model.Operation;

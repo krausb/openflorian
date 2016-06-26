@@ -3,8 +3,6 @@ package de.openflorian.data;
 import java.lang.reflect.Method;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import javax.transaction.TransactionalException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

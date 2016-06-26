@@ -1,9 +1,7 @@
 package de.openflorian.alarm.transform;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.IOUtils;
+import java.io.*;
+import java.util.stream.Collectors;
 
 import de.openflorian.EventBusAddresses;
 import de.openflorian.alarm.AlarmFaxEvent;
@@ -71,7 +69,9 @@ public class BinaryAlarmFaxTransformator extends AbstractAlarmFaxTransformator {
 			} else {
 				log.error(String.format("An error occured transforming '%s'. Exit code: %d",
 						event.getResultFile().getAbsolutePath(), exitCode));
-				log.error(IOUtils.toString(ps.getErrorStream(), "UTF-8"));
+				String errorMsg = new BufferedReader(new InputStreamReader(ps.getErrorStream())).lines()
+						.collect(Collectors.joining(System.getProperty("line.separator")));
+				log.error(errorMsg);
 			}
 			ps.destroy();
 		} catch (IOException e) {
