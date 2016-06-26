@@ -1,17 +1,5 @@
 package de.openflorian.alarm;
 
-import java.util.Date;
-
-import javax.servlet.ServletContextListener;
-import javax.xml.bind.ValidationException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.openflorian.EventBusAddresses;
-import de.openflorian.data.model.Operation;
-import de.openflorian.service.OperationService;
-
 /*
  * This file is part of Openflorian.
  * 
@@ -31,6 +19,17 @@ import de.openflorian.service.OperationService;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.Date;
+
+import javax.servlet.ServletContextListener;
+import javax.xml.bind.ValidationException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.openflorian.EventBusAddresses;
+import de.openflorian.data.model.Operation;
+import de.openflorian.service.OperationService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 
