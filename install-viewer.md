@@ -1,20 +1,21 @@
-Howto install Iceweasel in Kiosk Mode on Raspbian Jessie:
-=====================================================
+#Howto install Iceweasel in Kiosk Mode on Raspbian Jessie:
 
-1. Install relevant Packages
-----------------------------
+##1. Install relevant Packages
+
+```shell
 &> sudo apt-get update && sudo apt-get upgrade -y
 &> sudo apt-get install iceweasel
+```
 
 Install R-Kiosk Addon for Iceweasel/Firefox:
 https://addons.mozilla.org/de/firefox/addon/r-kiosk/
 
-2. Configure autostart with iceweasel kiosk mode:
--------------------------------------------------
+##2. Configure autostart with iceweasel kiosk mode:
+
 &> vi /etc/xdg/lxsession/LXDE-pi/autostart
 AND
 &> vi ~/.config/lxsession/autostart
-
+```shell
 # Disable xscreensaver by commenting following line out
 #@xscreensaver -no-splash
 
@@ -25,18 +26,18 @@ AND
 
 # start iceweasel in kiosk mode
 @iceweasel http://<openflorianserver>/openflorian/
+```
 
+##4. Install CEC Library for Raspbian
 
-4. Install CEC Library for Raspbian
------------------------------------
 Source: <http://constey.de/2014/10/fernseher-ueber-hdmi-per-raspberry-pi-steuern-cec/>
 
-Installation of Build Essentials:
+###Installation of Build Essentials:
 ```shell
 &> apt-get install cmake liblockdev1-dev libudev-dev libxrandr-dev python-dev swig
 ```
 
-libCEC download and compile:
+###libCEC download and compile:
 ```shell
 &> cd ~/; git clone https://github.com/Pulse-Eight/platform.git
 &> cd platform
@@ -51,7 +52,7 @@ libCEC download and compile:
 &> sudo ldconfig
 ```
 
-Testing the client:
+###Testing the client:
 ```shell
 $> cec-client -l
   Found devices: 1
@@ -65,19 +66,16 @@ $> cec-client -l
 ```
 
 ### power on TV
-
 ```shell
 &> echo "on 0" | sudo cec-client -s -d 1
 ```
 
 ### power off TV (not working on every TV)
-
 ```shell
 &> echo "standby 0" | sudo cec-client -s -d 1
 ```
 
 ### set active source
-
 ```shell
 &> echo "as" | cec-client -s
 ```
