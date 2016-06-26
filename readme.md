@@ -43,5 +43,5 @@ Openflorian is a Java based Servlet 3.0 Web Application with a Vert.X Reactive C
 
 ## Installation Manuals
 
-* Server Installation: (install-server.md)
-* Viewer Installation: (install-viewer.md)
+* [Server Installation](install-server.md)
+* [Viewer Installation](install-viewer.md)
