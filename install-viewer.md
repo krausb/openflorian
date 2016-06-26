@@ -1,16 +1,16 @@
-Howto install Chromium Kiosk Mode on Raspbian Jessie:
+Howto install Iceweasel in Kiosk Mode on Raspbian Jessie:
 =====================================================
 
 1. Install relevant Packages
+----------------------------
 &> sudo apt-get update && sudo apt-get upgrade -y
-
-Ggf. muss man Dependencies fixen:
 &> sudo apt-get install iceweasel
 
 Install R-Kiosk Addon for Iceweasel/Firefox:
 https://addons.mozilla.org/de/firefox/addon/r-kiosk/
 
-4. Configure autostart with chromium kiosk mode:
+2. Configure autostart with iceweasel kiosk mode:
+-------------------------------------------------
 &> vi /etc/xdg/lxsession/LXDE-pi/autostart
 AND
 &> vi ~/.config/lxsession/autostart
@@ -23,35 +23,21 @@ AND
 @xset -dpms
 @xset s noblank
 
-# start chromium in kiosk mode
+# start iceweasel in kiosk mode
 @iceweasel http://<openflorianserver>/openflorian/
 
-5. Set Default Screensize to 1080p:
 
-&> vi /boot/config.txt
+4. Install CEC Library for Raspbian
+-----------------------------------
+Source: <http://constey.de/2014/10/fernseher-ueber-hdmi-per-raspberry-pi-steuern-cec/>
 
-# Definiert die Auflösungsbeschreibung (CEA)
-hdmi_group=1
-# setzt die Auflösung auf 1080p  50 Hz
-hdmi_mode=31
-# enfernt die Overscan Ränder an allen Seiten
-disable_overscan=1
-
-== TV Steuerung ueber CEC ==
-
-=== Quellen ===
-
-http://constey.de/2014/10/fernseher-ueber-hdmi-per-raspberry-pi-steuern-cec/
-
-=== Installation CEC unter Raspbian ===
-
-Installation Build Essentials:
-<syntaxhighlight lang="dos">
+Installation of Build Essentials:
+```shell
 &> apt-get install cmake liblockdev1-dev libudev-dev libxrandr-dev python-dev swig
-</syntaxhighlight>
+```
 
-libCEC download und compile:
-<syntaxhighlight lang="dos">
+libCEC download and compile:
+```shell
 &> cd ~/; git clone https://github.com/Pulse-Eight/platform.git
 &> cd platform
 &> cmake .
@@ -63,10 +49,10 @@ libCEC download und compile:
 &> make -j4
 &> sudo make install
 &> sudo ldconfig
-</syntaxhighlight>
+```
 
-Testen:
-<syntaxhighlight lang="dos">
+Testing the client:
+```shell
 $> cec-client -l
   Found devices: 1
 
@@ -76,30 +62,31 @@ $> cec-client -l
   product id: 1001
   firmware version: 1
   type: Raspberry Pi
-</syntaxhighlight>
+```
 
-== TV einsnchalten ==
+### power on TV
 
-<syntaxhighlight lang="dos">
+```shell
 &> echo "on 0" | sudo cec-client -s -d 1
-</syntaxhighlight>
+```
 
-== TV ausschalten==
+### power off TV (not working on every TV)
 
-<syntaxhighlight lang="dos">
+```shell
 &> echo "standby 0" | sudo cec-client -s -d 1
-</syntaxhighlight>
+```
 
-== Aktive Source auf HDMI stellen ==
+### set active source
 
-<syntaxhighlight lang="dos">
+```shell
 &> echo "as" | cec-client -s
-</syntaxhighlight>
+```
 
-== CRON Eintrag fuer Power On und Active Source setzen ==
+### Create Cron-Job for automatic TV poweron and setting active source
 
+```shell
 &> sudo crontab -e
 
 */3 * * * * echo "as" | /usr/local/bin/cec-client -s
 */5 * * * * echo "on 0" | sudo /usr/local/bin/cec-client -s -d 1
-
+```
