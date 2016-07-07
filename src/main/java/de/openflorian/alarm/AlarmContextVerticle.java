@@ -22,22 +22,21 @@ package de.openflorian.alarm;
 import java.util.Date;
 
 import javax.servlet.ServletContextListener;
-import javax.xml.bind.ValidationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.openflorian.EventBusAddresses;
+import de.openflorian.data.dao.OperationDao;
 import de.openflorian.data.model.Operation;
-import de.openflorian.service.OperationService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 
 /**
  * Open Florian Alarm Context {@link ServletContextListener} (Singleton)<br/>
  * <br/>
- * {@link InitializingBean} bootstraps the alarming context by starting a
- * listener for monitoring a given directory for new alarming files.
+ * {@link InitializingBean} bootstraps the alarming context by starting a listener for monitoring a given directory for
+ * new alarming files.
  * 
  * @author Bastian Kraus <bofh@k-hive.de>
  */
@@ -58,8 +57,6 @@ public final class AlarmContextVerticle extends AbstractVerticle {
 	}
 
 	private Operation currentOperation = null;
-
-	private OperationService operationService = OperationService.transactional();
 
 	@Override
 	public void start() {
@@ -92,8 +89,9 @@ public final class AlarmContextVerticle extends AbstractVerticle {
 		if (currentOperation.getId() == 0) {
 			try {
 				currentOperation.setIncurredAt(new Date());
-				currentOperation = operationService.persist(currentOperation);
-			} catch (ValidationException e) {
+				currentOperation = new OperationDao().insert(currentOperation);
+			}
+			catch (final Exception e) {
 				log.error(e.getMessage(), e);
 			}
 		}
@@ -106,18 +104,19 @@ public final class AlarmContextVerticle extends AbstractVerticle {
 	 * @param msg
 	 */
 	private void handleTakenOver(Message<Object> msg) {
-		Operation o = (Operation) msg.body();
+		final Operation o = (Operation) msg.body();
 		if (currentOperation.equals(o)) {
 			try {
 				currentOperation.setTakenOverAt(new Date());
-				currentOperation = operationService.persist(currentOperation);
+				new OperationDao().update(currentOperation);
 
-				this.currentOperation = null;
 				log.info("Current operation successfuly resetted.");
-			} catch (ValidationException e) {
+			}
+			catch (final Exception e) {
 				log.error(e.getMessage(), e);
 			}
-		} else {
+		}
+		else {
 			if (currentOperation == null)
 				log.error("Operation recieved does not match the currently alarmed operation");
 			else
@@ -131,18 +130,20 @@ public final class AlarmContextVerticle extends AbstractVerticle {
 	 * @param msg
 	 */
 	private void handleDispatched(Message<Object> msg) {
-		Operation o = (Operation) msg.body();
+		final Operation o = (Operation) msg.body();
 		if (currentOperation.equals(o)) {
 			try {
 				currentOperation.setDispatchedAt(new Date());
-				operationService.persist(currentOperation);
+				new OperationDao().update(currentOperation);
 
 				this.currentOperation = null;
 				log.info("Current operation successfuly resetted.");
-			} catch (ValidationException e) {
+			}
+			catch (final Exception e) {
 				log.error(e.getMessage(), e);
 			}
-		} else {
+		}
+		else {
 			if (currentOperation == null)
 				log.error("Operation recieved does not match the currently alarmed operation");
 			else

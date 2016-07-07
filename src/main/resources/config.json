@@ -4,11 +4,11 @@
     "xor":         "=xa6RlXknis@FwAvXzucctItJzrDBe$s`RQ6LvrhbUjSYF:HL"
   },
   "faxObserver": {
-    "observerDir": "C:/Arbeit/Server/openflorian/faxincoming",
-    "archiveDir": "C:/Arbeit/Server/openflorian/faxarchive"
+    "observerDir": "/srv/openflorian/faxincoming",
+    "archiveDir": "/srv/openflorian/faxarchive"
   },
   "faxTransformer": {
-    "cmd":	"\"C:/Program Files (x86)/Tesseract-OCR/tesseract.exe\" -psm 6 \"###INPUT###\" \"###OUTPUT###\"",
+    "cmd":	"/usr/bin/tesseract -psm 6 ###INPUT### ###OUTPUT###",
     "vars": {
       "inputVar": "###INPUT###",
       "outputVar":"###OUTPUT###"

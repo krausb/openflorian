@@ -5,15 +5,22 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.addon.leaflet.*;
+import org.vaadin.addon.leaflet.LMap;
+import org.vaadin.addon.leaflet.LMarker;
+import org.vaadin.addon.leaflet.LOpenStreetMapLayer;
+import org.vaadin.addon.leaflet.LeafletLayer;
 
 import com.vaadin.event.UIEvents.PollEvent;
 import com.vaadin.event.UIEvents.PollListener;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Audio;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.CustomLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 
 import de.openflorian.alarm.AlarmContextVerticle;
 import de.openflorian.data.model.Operation;
-import de.openflorian.data.model.OperationResource;
 import de.openflorian.util.StringUtils;
 import de.openflorian.web.AbstractBrowser;
 import de.openflorian.web.WebGlobals;
@@ -31,26 +38,26 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 
 	private static final Logger log = LoggerFactory.getLogger(AlarmViewBrowser.class);
 
-	private Audio alarmsound = new Audio();
-	private Label alarmTime = new Label();
+	private final Audio alarmsound = new Audio();
+	private final Label alarmTime = new Label();
 
-	private Label keyword = new Label();
-	private Label buzzword = new Label();
-	private Label currentTime = new Label();
-	private Label operationNr = new Label();
-	private Label positionLongitude = new Label();
-	private Label positionLatitude = new Label();
-	private Label object = new Label();
-	private Label street = new Label();
-	private Label crossway = new Label();
-	private Label city = new Label();
-	private Label priority = new Label();
-	private Label resourcesRaw = new Label();
+	private final Label keyword = new Label();
+	private final Label buzzword = new Label();
+	private final Label currentTime = new Label();
+	private final Label operationNr = new Label();
+	private final Label positionLongitude = new Label();
+	private final Label positionLatitude = new Label();
+	private final Label object = new Label();
+	private final Label street = new Label();
+	private final Label crossway = new Label();
+	private final Label city = new Label();
+	private final Label priority = new Label();
+	private final Label resourcesRaw = new Label();
 
-	private LMap map = new LMap();
-	private LeafletLayer mapLayer = new LOpenStreetMapLayer();
+	private final LMap map = new LMap();
+	private final LeafletLayer mapLayer = new LOpenStreetMapLayer();
 
-	private CssLayout resourcesBox = new CssLayout();
+	private final CssLayout resourcesBox = new CssLayout();
 
 	private CustomLayout layout;
 
@@ -90,7 +97,8 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 
 			this.addComponent(layout);
 			printAlarm(currentOperation);
-		} catch (Exception e) {
+		}
+		catch (final Exception e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
@@ -103,7 +111,7 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 
 		// operationMap.setVisible(true);
 
-		Operation currentOperation = AlarmContextVerticle.getInstance().getCurrentOperation();
+		final Operation currentOperation = AlarmContextVerticle.getInstance().getCurrentOperation();
 
 		if (currentOperation.isFireOperation())
 			layout.setStyleName(Operation.FIRE_ZCLASS);
@@ -127,7 +135,8 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 		if (!StringUtils.isEmpty(currentOperation.getObject())) {
 			object.setValue(currentOperation.getObject());
 			// objectBox.setVisible(true);
-		} else {
+		}
+		else {
 			// objectBox.setVisible(false);
 		}
 
@@ -140,7 +149,7 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 		if (currentOperation.getPositionLatitude() != 0 && currentOperation.getPositionLongitude() != 0) {
 
 			map.setCenter(currentOperation.getPositionLatitude(), currentOperation.getPositionLongitude());
-			LMarker marker = new LMarker(currentOperation.getPositionLatitude(),
+			final LMarker marker = new LMarker(currentOperation.getPositionLatitude(),
 					currentOperation.getPositionLongitude());
 			marker.setPopup("Einsatzort");
 			marker.openPopup();
@@ -148,7 +157,8 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 			map.setWidth("100%");
 			map.setHeight("100%");
 			map.setZoomLevel(16);
-		} else {
+		}
+		else {
 			map.setVisible(false);
 		}
 
@@ -163,19 +173,20 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 		if (currentOperation.getResourcesRaw() != null)
 			resourcesRaw.setValue(currentOperation.getResourcesRaw());
 
-		for (OperationResource resource : currentOperation.getResources()) {
-			if (resource == null)
-				continue;
+		// TODO: do resources
+		// for (OperationResource resource : currentOperation.getResources()) {
+		// if (resource == null)
+		// continue;
+		//
+		// if (log.isDebugEnabled())
+		// log.debug("Alarmed resource: " + resource);
+		//
+		// Label resourceLabel = new Label(resource.getCallName());
+		// resourceLabel.setStyleName("operation-resource");
+		// resourcesBox.addComponent(resourceLabel);
+		// }
 
-			if (log.isDebugEnabled())
-				log.debug("Alarmed resource: " + resource);
-
-			Label resourceLabel = new Label(resource.getCallName());
-			resourceLabel.setStyleName("operation-resource");
-			resourcesBox.addComponent(resourceLabel);
-		}
-
-		SimpleDateFormat format = new SimpleDateFormat(WebGlobals.FORMAT_DATETIME);
+		final SimpleDateFormat format = new SimpleDateFormat(WebGlobals.FORMAT_DATETIME);
 		if (currentOperation.getIncurredAt() != null)
 			alarmTime.setValue(format.format(currentOperation.getIncurredAt()));
 

@@ -3,7 +3,7 @@ package de.openflorian.data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.openflorian.service.OperationService;
+import de.openflorian.data.dao.OperationDao;
 
 /*
  * This file is part of Openflorian.
@@ -39,9 +39,15 @@ public class DatabaseConnectionKeepaliveVerticle extends AbstractVerticle {
 	public void start() throws Exception {
 
 		vertx.setPeriodic(60000, id -> {
-			OperationService service = OperationService.transactional();
-			if (log.isTraceEnabled())
-				log.trace("Current operations: " + service.count());
+			long count;
+			try {
+				count = new OperationDao().count();
+				if (log.isTraceEnabled())
+					log.trace("Current operations: " + count);
+			}
+			catch (final Exception e) {
+				log.error(e.getMessage(), e);
+			}
 		});
 
 	}
