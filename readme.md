@@ -45,3 +45,11 @@ Openflorian is a Java based Servlet 3.0 Web Application with a Vert.X Reactive C
 
 * [Server Installation](install-server.md)
 * [Viewer Installation](install-viewer.md)
+
+## Additional Projects and Tools
+To give you additional experience and tooling for OpenFlorian, I'm developing additional software tools you may find here:
+
+### OpenFlorian Trigger
+Using the f-pro.de USB Buzzer and a little peace of java software to access the Operation Reset REST API Resource of OpenFlorian (http://www.f-pro.de/buzzer/). The Buzzer is attached as USB Keyboard and available as linux device under /dev. OpenFlorian-Trigger is a Java and Vert.X based daemon watching the device and in case of someones pushing the button an event is triggered and fires a call to a defined REST resource endpoint.
+
+See: [OpenFlorian-Trigger](https://bitbucket.org/ceth/openflorian-trigger)
