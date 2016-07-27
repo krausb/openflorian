@@ -14,7 +14,7 @@ https://addons.mozilla.org/de/firefox/addon/r-kiosk/
 
 &> vi /etc/xdg/lxsession/LXDE-pi/autostart
 AND
-&> vi ~/.config/lxsession/autostart
+&> vi ~/.config/lxsession/LXDE-pi/autostart
 ```shell
 # Disable xscreensaver by commenting following line out
 #@xscreensaver -no-splash

@@ -62,31 +62,38 @@ html, body {
 		
 		.wi.wi-barometer,
 		.pressure {
-			font-size: 6.0vw;
+			font-size: 7.0vw;
 			line-height: 1vw;
 		}
 		
 		.wi.wi-strong-wind,
 		.windspeed {
-			font-size: 6.0vw;
+			font-size: 7.0vw;
 			line-height: 1vw;
 		}
 		
 		.pressure-box {
+			margin-top: 5vw;
 			margin-right: 2vw;
 		}
 		
 		.wind-speed-box {
+			margin-top: 5vw;
 			margin-left: 2vw;
 		}
 		
 		.current-time {
-			font-weight: bold;
-			font-size: 1.0vw;
+			font-size: 2vw;
 		}
 		
 		.weather-box-footer {
-			margin-top: 2vw;
+			margin-top: 3vw;
+		}
+		
+		.claim {
+			margin-top: 3vw;
+			font-size: 1vw;
+			font-style: italic;
 		}
 	}
 	

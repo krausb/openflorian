@@ -1,5 +1,24 @@
 package de.openflorian.web.viewport;
 
+/*
+ * This file is part of Openflorian.
+ * 
+ * Copyright (C) 2015  Bastian Kraus
+ * 
+ * Openflorian is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version)
+ *     
+ * Openflorian is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *     
+ * You should have received a copy of the GNU General Public License
+ * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -20,7 +39,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 import de.openflorian.alarm.AlarmContextVerticle;
+import de.openflorian.data.dao.OperationResourceDao;
 import de.openflorian.data.model.Operation;
+import de.openflorian.data.model.OperationResource;
 import de.openflorian.util.StringUtils;
 import de.openflorian.web.AbstractBrowser;
 import de.openflorian.web.WebGlobals;
@@ -174,17 +195,24 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 			resourcesRaw.setValue(currentOperation.getResourcesRaw());
 
 		// TODO: do resources
-		// for (OperationResource resource : currentOperation.getResources()) {
-		// if (resource == null)
-		// continue;
-		//
-		// if (log.isDebugEnabled())
-		// log.debug("Alarmed resource: " + resource);
-		//
-		// Label resourceLabel = new Label(resource.getCallName());
-		// resourceLabel.setStyleName("operation-resource");
-		// resourcesBox.addComponent(resourceLabel);
-		// }
+
+		try {
+			final OperationResourceDao rdao = new OperationResourceDao();
+			for (final OperationResource resource : rdao.getByOperationId(currentOperation.getId())) {
+				if (resource == null)
+					continue;
+
+				if (log.isDebugEnabled())
+					log.debug("Alarmed resource: " + resource);
+
+				final Label resourceLabel = new Label(resource.getCallName());
+				resourceLabel.setStyleName("operation-resource");
+				resourcesBox.addComponent(resourceLabel);
+			}
+		}
+		catch (final Exception e) {
+			log.error(e.getMessage(), e);
+		}
 
 		final SimpleDateFormat format = new SimpleDateFormat(WebGlobals.FORMAT_DATETIME);
 		if (currentOperation.getIncurredAt() != null)

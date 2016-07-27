@@ -1,10 +1,13 @@
 package de.openflorian.alarm.parser;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.openflorian.config.OpenflorianConfig;
+import de.openflorian.data.dao.OperationResourceDao;
 import de.openflorian.data.model.Operation;
+import de.openflorian.data.model.OperationResource;
 import de.openflorian.util.StringUtils;
 
 /**
@@ -58,13 +61,30 @@ class ResourcesParserResponsable extends AlarmFaxParserPatternMatcherResponsable
 
 			if (m.group(1).contains(stationresourcePattern)) {
 				final Matcher callNameMatcher = callNamePattern.matcher(m.group(1));
-				// if (callNameMatcher.find()) {
-				// OperationResource resource = OperationResourceService.transactional()
-				// .getResourceByCallname(callNameMatcher.group(1));
-				// if (operation.getResources() == null)
-				// operation.setResources(new ArrayList<OperationResource>());
-				// operation.getResources().add(resource);
-				// }
+				if (callNameMatcher.find()) {
+					if (operation.getResources() == null)
+						operation.setResources(new ArrayList<OperationResource>());
+					try {
+						final OperationResourceDao rdao = new OperationResourceDao();
+						OperationResource resource = rdao.getResourceByCallname(callNameMatcher.group(1));
+
+						if (resource == null) {
+							// create new adhoc resource
+							resource = new OperationResource();
+							resource.setCallName(callNameMatcher.group(1));
+							resource.setCrew("tbd.");
+							resource.setDescription("tbd.");
+							resource.setLicensePlate("tbd.");
+							resource.setType("tbd.");
+							resource = rdao.insert(resource);
+						}
+
+						operation.getResources().add(resource);
+					}
+					catch (final Exception e) {
+						log.error(e.getMessage(), e);
+					}
+				}
 			}
 		}
 		operation.setResourcesRaw(sb.toString());

@@ -1,5 +1,24 @@
 package de.openflorian.weather.impl;
 
+/*
+ * This file is part of Openflorian.
+ * 
+ * Copyright (C) 2016  Bastian Kraus
+ * 
+ * Openflorian is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version)
+ *     
+ * Openflorian is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *     
+ * You should have received a copy of the GNU General Public License
+ * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import org.bitpipeline.lib.owm.OwmClient;
 import org.bitpipeline.lib.owm.StatusWeatherData;
 import org.slf4j.Logger;
@@ -15,15 +34,15 @@ public class OpenWeatherMapSource implements WeatherSource {
 
 	private static final Logger log = LoggerFactory.getLogger(OpenWeatherMapSource.class);
 
-	private OwmClient owm = new OwmClient();
+	private final OwmClient owm = new OwmClient();
 
 	@Override
 	public Weather getCurrentWeather() throws Exception {
 		owm.setAPPID(OpenflorianConfig.config().weather.openWeatherMapApi.apiKey);
 
-		Weather w = new Weather();
+		final Weather w = new Weather();
 
-		StatusWeatherData currentWeather = owm
+		final StatusWeatherData currentWeather = owm
 				.currentWeatherAtCity(OpenflorianConfig.config().weather.openWeatherMapApi.cityId);
 
 		// temperature from kelvin to celsius

@@ -1,5 +1,24 @@
 package de.openflorian.data.dao;
 
+/*
+ * This file is part of Openflorian.
+ * 
+ * Copyright (C) 2015  Bastian Kraus
+ * 
+ * Openflorian is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version)
+ *     
+ * Openflorian is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *     
+ * You should have received a copy of the GNU General Public License
+ * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import de.openflorian.data.jdbc.DatabaseConnector;
 import de.openflorian.data.model.Operation;
+import de.openflorian.data.model.OperationResource;
 
 /**
  * {@link OperationDao}
@@ -44,6 +64,10 @@ public class OperationDao extends DatabaseConnector {
 
 			// execute select SQL stetement
 			final ResultSet rs = preparedStatement.executeQuery();
+
+			if (log.isDebugEnabled()) {
+				log.debug(rs.getStatement().toString());
+			}
 
 			if (rs.next()) {
 				return rs.getLong("oc");
@@ -91,6 +115,10 @@ public class OperationDao extends DatabaseConnector {
 			// execute select SQL stetement
 			final ResultSet rs = preparedStatement.executeQuery();
 
+			if (log.isDebugEnabled()) {
+				log.debug(rs.getStatement().toString());
+			}
+
 			if (rs.next()) {
 				return getOperationFromResultSet(rs);
 			}
@@ -134,6 +162,10 @@ public class OperationDao extends DatabaseConnector {
 
 			// execute select SQL stetement
 			final ResultSet rs = preparedStatement.executeQuery();
+
+			if (log.isDebugEnabled()) {
+				log.debug(rs.getStatement().toString());
+			}
 
 			final List<Operation> ops = new ArrayList<>();
 			while (rs.next()) {
@@ -180,6 +212,10 @@ public class OperationDao extends DatabaseConnector {
 
 			// execute select SQL stetement
 			final ResultSet rs = preparedStatement.executeQuery();
+
+			if (log.isDebugEnabled()) {
+				log.debug(rs.getStatement().toString());
+			}
 
 			final List<Operation> ops = new ArrayList<>();
 			while (rs.next()) {
@@ -242,6 +278,11 @@ public class OperationDao extends DatabaseConnector {
 
 			preparedStatement.executeUpdate();
 
+			if (log.isDebugEnabled()) {
+				log.debug(stmt);
+				log.debug(o.toString());
+			}
+
 			final ResultSet rs = preparedStatement.getGeneratedKeys();
 			if (rs.next()) {
 				o.setId(rs.getLong(1));
@@ -250,7 +291,60 @@ public class OperationDao extends DatabaseConnector {
 				throw new Exception("Insert failed - no generated key: " + stmt);
 			}
 
+			if (o.getResources() != null)
+				o.getResources().forEach(res -> {
+					try {
+						addResourceToOperation(o, res);
+					}
+					catch (final Exception e) {
+						log.error(e.getMessage(), e);
+					}
+				});
+
 			return o;
+		}
+		catch (final SQLException e) {
+			log.error("Error while executing SQL Query: " + stmt + " - " + e.getMessage(), e);
+			throw e;
+		}
+		finally {
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (dbConnection != null) {
+				dbConnection.close();
+			}
+		}
+	}
+
+	/**
+	 * Persist given <code>o</code> {@link Operation} to persistence context
+	 * 
+	 * @param object
+	 * @return persisted <code>object</code>
+	 */
+	public void addResourceToOperation(Operation o, OperationResource res) throws Exception {
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+
+		final String stmt = "INSERT INTO of_operation_of_operation_resource (operation_id, operation_resource_id) VALUES(?,?)";
+
+		try {
+			dbConnection = getDataSource().getConnection();
+			preparedStatement = dbConnection.prepareStatement(stmt);
+
+			preparedStatement.setLong(1, o.getId());
+			preparedStatement.setLong(2, res.getId());
+
+			preparedStatement.executeUpdate();
+
+			if (log.isDebugEnabled()) {
+				log.debug(stmt);
+				log.debug(o.toString());
+				log.debug(res.toString());
+			}
 		}
 		catch (final SQLException e) {
 			log.error("Error while executing SQL Query: " + stmt + " - " + e.getMessage(), e);
@@ -296,11 +390,22 @@ public class OperationDao extends DatabaseConnector {
 			preparedStatement.setDouble(10, o.getPositionLongitude());
 			preparedStatement.setString(11, o.getResourcesRaw());
 			preparedStatement.setDate(12, new java.sql.Date(o.getIncurredAt().getTime()));
-			preparedStatement.setDate(13, new java.sql.Date(o.getDispatchedAt().getTime()));
-			preparedStatement.setDate(14, new java.sql.Date(o.getTakenOverAt().getTime()));
+			if (o.getDispatchedAt() != null)
+				preparedStatement.setDate(13, new java.sql.Date(o.getDispatchedAt().getTime()));
+			else
+				preparedStatement.setDate(13, null);
+			if (o.getTakenOverAt() != null)
+				preparedStatement.setDate(14, new java.sql.Date(o.getTakenOverAt().getTime()));
+			else
+				preparedStatement.setDate(14, null);
 			preparedStatement.setLong(15, o.getId());
 
 			preparedStatement.executeUpdate();
+
+			if (log.isDebugEnabled()) {
+				log.debug(stmt);
+				log.debug(o.toString());
+			}
 		}
 		catch (final SQLException e) {
 			log.error("Error while executing SQL Query: " + stmt + " - " + e.getMessage(), e);
@@ -336,6 +441,11 @@ public class OperationDao extends DatabaseConnector {
 			preparedStatement.setLong(1, id);
 
 			preparedStatement.executeUpdate();
+
+			if (log.isDebugEnabled()) {
+				log.debug(stmt);
+				log.debug("ID: " + id);
+			}
 		}
 		catch (final SQLException e) {
 			log.error("Error while executing SQL Query: " + stmt + " - " + e.getMessage(), e);
