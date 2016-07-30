@@ -46,12 +46,13 @@
 		</layout>
 	</appender>
 	<logger name="de.openflorian">
-		<level value="TRACE" />
+		<level value="DEBUG" />
 	</logger>
 
 	<root>
 		<level value="INFO" />
 		<appender-ref ref="fileAppender" />
 	</root>
+
 
 </log4j:configuration>

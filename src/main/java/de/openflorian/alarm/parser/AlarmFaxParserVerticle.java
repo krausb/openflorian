@@ -34,14 +34,12 @@ import de.openflorian.data.model.Operation;
  */
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 
 /**
  * Alarm Fax Parser<br/>
  * <br/>
- * Processes the given alarm fax with regex patterns and transforms it into
- * tesseract.
+ * Processes the given alarm fax with regex patterns and transforms it into tesseract.
  * 
  * @author Bastian Kraus <bofh@k-hive.de>
  */
@@ -52,7 +50,7 @@ public class AlarmFaxParserVerticle extends AbstractVerticle {
 	private OperationNrParserResponsable firstParserResponsable;
 
 	@Override
-	public void start(Future<Void> startFuture) {
+	public void start() {
 		log.info("Starting " + getClass().getSimpleName() + " ...");
 
 		initResponsables();
@@ -63,8 +61,6 @@ public class AlarmFaxParserVerticle extends AbstractVerticle {
 
 		log.info("Registering EventBus consumer...");
 		vertx.eventBus().consumer(EventBusAddresses.ALARMFAX_TRANSFORMED, msg -> parse(msg));
-
-		startFuture.complete();
 	}
 
 	/**
@@ -73,31 +69,31 @@ public class AlarmFaxParserVerticle extends AbstractVerticle {
 	private void initResponsables() {
 		firstParserResponsable = new OperationNrParserResponsable();
 
-		CityParserResponsable cityParser = new CityParserResponsable();
+		final CityParserResponsable cityParser = new CityParserResponsable();
 		firstParserResponsable.setNext(cityParser);
 
-		StreetParserResponsable streetParser = new StreetParserResponsable();
+		final StreetParserResponsable streetParser = new StreetParserResponsable();
 		cityParser.setNext(streetParser);
 
-		CrosswayParserResponsable crosswayParser = new CrosswayParserResponsable();
+		final CrosswayParserResponsable crosswayParser = new CrosswayParserResponsable();
 		streetParser.setNext(crosswayParser);
 
-		PriorityParserResponsable priorityParser = new PriorityParserResponsable();
+		final PriorityParserResponsable priorityParser = new PriorityParserResponsable();
 		crosswayParser.setNext(priorityParser);
 
-		ObjectParserResponsable objectParser = new ObjectParserResponsable();
+		final ObjectParserResponsable objectParser = new ObjectParserResponsable();
 		priorityParser.setNext(objectParser);
 
-		BuzzwordParserResponsable buzzwordParser = new BuzzwordParserResponsable();
+		final BuzzwordParserResponsable buzzwordParser = new BuzzwordParserResponsable();
 		objectParser.setNext(buzzwordParser);
 
-		KeywordParserResponsable keywordParser = new KeywordParserResponsable();
+		final KeywordParserResponsable keywordParser = new KeywordParserResponsable();
 		buzzwordParser.setNext(keywordParser);
 
-		GeoCoordinateParserResponsable coordinateParser = new GeoCoordinateParserResponsable();
+		final GeoCoordinateParserResponsable coordinateParser = new GeoCoordinateParserResponsable();
 		keywordParser.setNext(coordinateParser);
 
-		ResourcesParserResponsable resourcesParser = new ResourcesParserResponsable();
+		final ResourcesParserResponsable resourcesParser = new ResourcesParserResponsable();
 		coordinateParser.setNext(resourcesParser);
 	}
 
@@ -109,30 +105,33 @@ public class AlarmFaxParserVerticle extends AbstractVerticle {
 	 * @returns {@link Operation}
 	 */
 	public void parse(Message<Object> msg) {
-		AlarmFaxEvent event = (AlarmFaxEvent) msg.body();
+		final AlarmFaxEvent event = (AlarmFaxEvent) msg.body();
 
 		if (firstParserResponsable == null)
 			throw new IllegalStateException("No alarm fax parser responsable chain available.");
 
-		File inputFile = event.getResultFile();
+		final File inputFile = event.getResultFile();
 		if (inputFile.exists() && inputFile.canRead()) {
 			try {
 				log.debug("Parsing file: " + inputFile.getAbsolutePath());
-				Operation op = new Operation();
+				final Operation op = new Operation();
 
-				byte[] encoded = Files.readAllBytes(event.getResultFile().toPath());
-				String fax = new String(encoded, "UTF-8");
+				final byte[] encoded = Files.readAllBytes(event.getResultFile().toPath());
+				final String fax = new String(encoded, "UTF-8");
 				parseFax(fax, op);
 
 				OpenflorianContext.vertx().eventBus().send(EventBusAddresses.ARCHIVE_FILE, inputFile.getAbsolutePath());
 
 				OpenflorianContext.vertx().eventBus().publish(EventBusAddresses.ALARM_INCURRED, op);
-			} catch (IOException e) {
-				log.error(e.getMessage(), e);
-			} catch (Exception e) {
+			}
+			catch (final IOException e) {
 				log.error(e.getMessage(), e);
 			}
-		} else {
+			catch (final Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		}
+		else {
 			log.error("Given file '" + inputFile.getAbsolutePath() + "' is not readable or does not exist!");
 		}
 	}

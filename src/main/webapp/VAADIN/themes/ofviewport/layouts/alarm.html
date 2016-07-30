@@ -2,18 +2,6 @@
 #set( $bootstrapManager = $tool.getBootstrapManager() )
 #set( $i18n = $tool.getTranslationProvider() )
 <div id="alarm-box" class="alarm-box">
-    <div class="head-info">
-		<div style="float: left;">
-			<div>${i18n.getText('operation.model.operationNr')}:</div>
-			<div location="operationNr"></div>          		
-			<div>${i18n.getText('operation.model.priority')}:</div>
-        	<div location="priority"></div>
-		</div>
-		<div style="float: right">
-			<div>${i18n.getText('operation.model.incurredAt')}:</div>
-			<div location="alarmTime"></div>
-		</div>
-    </div>
     <div class="buzzword" location="buzzword"></div>
 	<div class="details">
 		<div class="objectBox">
@@ -30,17 +18,6 @@
 		<div location="map" class="map"></div>
 		<div location="resources" class="resources"></div>
 	</div>
-	<div>
-		<div location="resourcesRaw"/>
-    	<div class="smaller-heading">
-            <div>${i18n.getText('operation.model.positionLongitude')}>/div>
-            <div location="positionLongitude"></div>
-            <div>${i18n.getText('operation.model.positionLatitude')}</div>
-            <div location="positionLatitude"></div>
-		</div>
-		<div style="float: right">
-            <div>${i18n.getText('operation.weather.currentTime')}</div><div location="currentTime"></div>
-		</div>
-    </div>
+	<div location="externalResources" class="externalResources"></div>
 </div>
 <div location="alarmsound"></div>

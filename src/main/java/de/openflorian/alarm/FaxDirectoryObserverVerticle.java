@@ -2,7 +2,13 @@ package de.openflorian.alarm;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -32,7 +38,6 @@ import de.openflorian.config.OpenflorianConfig;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
-import io.vertx.core.Handler;
 
 /**
  * Alarm Telefax Directory Observer<br/>
@@ -49,11 +54,13 @@ public class FaxDirectoryObserverVerticle extends AbstractVerticle {
 
 	private final File observingDirectory;
 
+	private final long incurreDelay;
+
 	private WatchService watcher;
 	private WatchKey key;
 
 	public FaxDirectoryObserverVerticle() {
-		String dir = OpenflorianConfig.config().faxObserver.observerDir;
+		final String dir = OpenflorianConfig.config().faxObserver.observerDir;
 		log.debug(CONFIG_OBSERVING_DIRECTORY + ": " + dir);
 		this.observingDirectory = new File(dir);
 
@@ -61,6 +68,16 @@ public class FaxDirectoryObserverVerticle extends AbstractVerticle {
 			throw new IllegalStateException("Configuration does not contain '" + CONFIG_OBSERVING_DIRECTORY + "'");
 		else
 			log.info("Observing directory: " + this.observingDirectory.getAbsolutePath());
+
+		incurreDelay = OpenflorianConfig.config().faxObserver.incurreDelay;
+
+		if (this.incurreDelay == 0) {
+			throw new IllegalStateException(
+					"Malformed configuration: faxObserver.incurreDelay must be set and may not be 0.");
+		}
+		else {
+			log.info("Fax incurre delay: " + this.incurreDelay);
+		}
 	}
 
 	@Override
@@ -73,26 +90,24 @@ public class FaxDirectoryObserverVerticle extends AbstractVerticle {
 		try {
 			watcher = FileSystems.getDefault().newWatchService();
 			this.observingDirectory.toPath().register(watcher, StandardWatchEventKinds.ENTRY_CREATE);
-		} catch (IOException e) {
+		}
+		catch (final IOException e) {
 			log.error(e.getMessage(), e);
 		}
 
 		if (watcher == null)
 			throw new IllegalStateException("No FileSystem WatcherService could be created.");
 
-		vertx.setPeriodic(500, new Handler<Long>() {
-
-			@Override
-			public void handle(Long arg0) {
-				try {
-					processEvents();
-				} catch (IOException e) {
-					log.error(e.getMessage(), e);
-				} catch (Exception e) {
-					log.error(e.getMessage(), e);
-				}
+		vertx.setPeriodic(500, arg0 -> {
+			try {
+				processEvents();
 			}
-
+			catch (final IOException e1) {
+				log.error(e1.getMessage(), e1);
+			}
+			catch (final Exception e2) {
+				log.error(e2.getMessage(), e2);
+			}
 		});
 
 		startFuture.complete();
@@ -107,7 +122,8 @@ public class FaxDirectoryObserverVerticle extends AbstractVerticle {
 				key.pollEvents();
 			}
 			watcher.close();
-		} catch (IOException e) {
+		}
+		catch (final IOException e) {
 			log.error(e.getMessage(), e);
 		}
 	}
@@ -123,33 +139,36 @@ public class FaxDirectoryObserverVerticle extends AbstractVerticle {
 			if (key == null)
 				break;
 
-			List<WatchEvent<?>> events = key.pollEvents();
-			for (WatchEvent<?> event : events) {
-				WatchEvent.Kind<?> kind = event.kind();
+			final List<WatchEvent<?>> events = key.pollEvents();
+			for (final WatchEvent<?> event : events) {
+				final WatchEvent.Kind<?> kind = event.kind();
 
 				if (kind == StandardWatchEventKinds.OVERFLOW) {
 					continue;
-				} else if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+				}
+				else if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
 					log.debug("ENTRY_CREATE event triggered...");
 					@SuppressWarnings("unchecked")
-					WatchEvent<Path> ev = (WatchEvent<Path>) event;
-					Path filename = ev.context();
+					final WatchEvent<Path> ev = (WatchEvent<Path>) event;
+					final Path filename = ev.context();
 
-					Path child = this.observingDirectory.toPath().resolve(filename);
+					final Path child = this.observingDirectory.toPath().resolve(filename);
 					log.debug("File: " + child.toFile().getAbsolutePath());
 
 					final String contentType = Files.probeContentType(child);
 					if (contentType != null && contentType.startsWith("image/")) {
-						AlarmFaxEvent alarmFaxEvent = new AlarmFaxEvent(child.toFile());
-						vertx.eventBus().send(EventBusAddresses.ALARMFAX_NEWFAX, alarmFaxEvent);
-						log.debug("Successfuly published to " + EventBusAddresses.ALARMFAX_NEWFAX + ".");
+						vertx.setTimer(this.incurreDelay, timerId -> {
+							final AlarmFaxEvent alarmFaxEvent = new AlarmFaxEvent(child.toFile());
+							vertx.eventBus().send(EventBusAddresses.ALARMFAX_NEWFAX, alarmFaxEvent);
+							log.debug("Successfuly published to " + EventBusAddresses.ALARMFAX_NEWFAX + ".");
+						});
 						break;
 					}
 				}
 			}
 
 			if (key != null) {
-				boolean valid = key.reset();
+				final boolean valid = key.reset();
 				key.pollEvents();
 				if (!valid) {
 					break;

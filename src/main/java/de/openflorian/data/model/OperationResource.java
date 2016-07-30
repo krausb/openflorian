@@ -29,6 +29,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -46,40 +47,46 @@ import de.openflorian.util.StringUtils;
  * @author Bastian Kraus <bofh@k-hive.de>
  */
 @Entity
-@Table(name="of_operation_resource")
+@Table(name = "of_operation_resource")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class OperationResource implements Serializable {
 	private static final long serialVersionUID = -878705966123966091L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-    
-    @OneToOne
-    @JoinColumn(name = "stationId", nullable = false, insertable=true, updatable=true)
+
+	@OneToOne
+	@JoinColumn(name = "stationId", nullable = false, insertable = true, updatable = true)
 	protected Station station;
-	
+
 	@Column
 	private String callName;
-	
+
 	@Column
 	private String licensePlate;
-	
+
 	@Column
 	private String type;
-	
+
 	@Column
 	private String description;
-	
+
 	@Column
 	private String crew;
-	
+
+	@Column
+	private boolean isExternal;
+
+	@Transient
+	private String purpose;
+
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		if(this.station != null && StringUtils.isEmpty(this.station.getName()))
-				sb.append(this.station.getName() + " ");
+		final StringBuffer sb = new StringBuffer();
+		if (this.station != null && StringUtils.isEmpty(this.station.getName()))
+			sb.append(this.station.getName() + " ");
 		sb.append(this.callName);
 		return this.callName;
 	}
@@ -139,36 +146,49 @@ public class OperationResource implements Serializable {
 	public void setCrew(String crew) {
 		this.crew = crew;
 	}
-	
+
+	public void setExternal(boolean val) {
+		this.isExternal = val;
+	}
+
+	public boolean isExternal() {
+		return this.isExternal;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+
+	public String getPurpose() {
+		return this.purpose;
+	}
+
 	/**
 	 * {@link OperationResource} super {@link CellProcessor}[]
 	 * 
 	 * @return the cell processors
 	 */
 	public static CellProcessor[] getProcessors() {
-	        final CellProcessor[] processors = new CellProcessor[] { 
-	                new NotNull(), // callname
-	                new NotNull(), // licence plate
-	                new NotNull(), // type
-	                new Optional(new NotNull()), // description
-	                new Optional(new NotNull()) // crew
-	        };
-	        
-	        return processors;
+		final CellProcessor[] processors = new CellProcessor[] { new NotNull(), // callname
+				new NotNull(), // licence plate
+				new NotNull(), // type
+				new Optional(new NotNull()), // description
+				new Optional(new NotNull()) // crew
+		};
+
+		return processors;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((callName == null) ? 0 : callName.hashCode());
+		result = prime * result + ((callName == null) ? 0 : callName.hashCode());
 		result = prime * result + ((crew == null) ? 0 : crew.hashCode());
-		result = prime * result
-				+ ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result
-				+ ((licensePlate == null) ? 0 : licensePlate.hashCode());
+		result = prime * result + (isExternal ? 1231 : 1237);
+		result = prime * result + ((licensePlate == null) ? 0 : licensePlate.hashCode());
 		result = prime * result + ((station == null) ? 0 : station.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
@@ -180,42 +200,50 @@ public class OperationResource implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof OperationResource))
+		if (getClass() != obj.getClass())
 			return false;
-		OperationResource other = (OperationResource) obj;
+		final OperationResource other = (OperationResource) obj;
 		if (callName == null) {
 			if (other.callName != null)
 				return false;
-		} else if (!callName.equals(other.callName))
+		}
+		else if (!callName.equals(other.callName))
 			return false;
 		if (crew == null) {
 			if (other.crew != null)
 				return false;
-		} else if (!crew.equals(other.crew))
+		}
+		else if (!crew.equals(other.crew))
 			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
-		} else if (!description.equals(other.description))
+		}
+		else if (!description.equals(other.description))
 			return false;
 		if (id != other.id)
+			return false;
+		if (isExternal != other.isExternal)
 			return false;
 		if (licensePlate == null) {
 			if (other.licensePlate != null)
 				return false;
-		} else if (!licensePlate.equals(other.licensePlate))
+		}
+		else if (!licensePlate.equals(other.licensePlate))
 			return false;
 		if (station == null) {
 			if (other.station != null)
 				return false;
-		} else if (!station.equals(other.station))
+		}
+		else if (!station.equals(other.station))
 			return false;
 		if (type == null) {
 			if (other.type != null)
 				return false;
-		} else if (!type.equals(other.type))
+		}
+		else if (!type.equals(other.type))
 			return false;
 		return true;
 	}
-	
+
 }

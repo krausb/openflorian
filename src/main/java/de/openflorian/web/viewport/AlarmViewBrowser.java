@@ -39,7 +39,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 import de.openflorian.alarm.AlarmContextVerticle;
-import de.openflorian.data.dao.OperationResourceDao;
 import de.openflorian.data.model.Operation;
 import de.openflorian.data.model.OperationResource;
 import de.openflorian.util.StringUtils;
@@ -79,6 +78,7 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 	private final LeafletLayer mapLayer = new LOpenStreetMapLayer();
 
 	private final CssLayout resourcesBox = new CssLayout();
+	private final CssLayout externalResourcesBox = new CssLayout();
 
 	private CustomLayout layout;
 
@@ -100,18 +100,16 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 			layout = new CustomLayout(
 					VelocityUtils.getRenderedTemplate("VAADIN/themes/" + view.getTheme() + "/layouts/alarm.html"));
 
-			// init layout
-			layout.addComponent(alarmTime, "alarmTime");
-			layout.addComponent(priority, "priority");
-
 			layout.addComponent(keyword, "keyword");
 			layout.addComponent(buzzword, "buzzword");
 			layout.addComponent(currentTime, "currentTime");
 			layout.addComponent(operationNr, "operationNr");
 			layout.addComponent(object, "object");
 			layout.addComponent(city, "city");
-			layout.addComponent(resourcesRaw, "resourcesRaw");
+			layout.addComponent(street, "street");
+
 			layout.addComponent(resourcesBox, "resources");
+			layout.addComponent(externalResourcesBox, "externalResources");
 			layout.addComponent(map, "map");
 
 			map.addLayer(mapLayer);
@@ -194,11 +192,8 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 		if (currentOperation.getResourcesRaw() != null)
 			resourcesRaw.setValue(currentOperation.getResourcesRaw());
 
-		// TODO: do resources
-
 		try {
-			final OperationResourceDao rdao = new OperationResourceDao();
-			for (final OperationResource resource : rdao.getByOperationId(currentOperation.getId())) {
+			for (final OperationResource resource : currentOperation.getResources()) {
 				if (resource == null)
 					continue;
 
@@ -206,8 +201,15 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 					log.debug("Alarmed resource: " + resource);
 
 				final Label resourceLabel = new Label(resource.getCallName());
-				resourceLabel.setStyleName("operation-resource");
-				resourcesBox.addComponent(resourceLabel);
+
+				if (resource.isExternal()) {
+					externalResourcesBox.addComponent(resourceLabel);
+					resourceLabel.setStyleName("external-operation-resource");
+				}
+				else {
+					resourcesBox.addComponent(resourceLabel);
+					resourceLabel.setStyleName("operation-resource");
+				}
 			}
 		}
 		catch (final Exception e) {

@@ -40,9 +40,9 @@ class ObjectParserResponsable extends AlarmFaxParserPatternMatcherResponsable {
 
 	@Override
 	public void parse(String alarmfax, Operation operation) {
-		Matcher m = getPattern().matcher(alarmfax);
+		final Matcher m = getPattern().matcher(alarmfax);
 		if (m.find()) {
-			operation.setObject(m.group(1));
+			operation.setObject(m.group(1).trim());
 		}
 
 		if (getNext() != null)

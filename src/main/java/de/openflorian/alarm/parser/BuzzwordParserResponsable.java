@@ -40,9 +40,9 @@ class BuzzwordParserResponsable extends AlarmFaxParserPatternMatcherResponsable 
 
 	@Override
 	public void parse(String alarmfax, Operation operation) {
-		Matcher m = getPattern().matcher(alarmfax);
+		final Matcher m = getPattern().matcher(alarmfax);
 		if (m.find()) {
-			operation.setBuzzword(m.group(1));
+			operation.setBuzzword(m.group(1).trim());
 		}
 
 		if (getNext() != null)

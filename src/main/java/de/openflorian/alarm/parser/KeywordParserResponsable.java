@@ -40,9 +40,9 @@ class KeywordParserResponsable extends AlarmFaxParserPatternMatcherResponsable {
 
 	@Override
 	public void parse(String alarmfax, Operation operation) {
-		Matcher m = getPattern().matcher(alarmfax);
+		final Matcher m = getPattern().matcher(alarmfax);
 		if (m.find()) {
-			operation.setKeyword(m.group(1));
+			operation.setKeyword(m.group(1).trim());
 		}
 
 		if (getNext() != null)

@@ -5,7 +5,8 @@
   },
   "faxObserver": {
     "observerDir": "/srv/openflorian/faxincoming",
-    "archiveDir": "/srv/openflorian/faxarchive"
+    "archiveDir": "/srv/openflorian/faxarchive",
+    "incurreDelay": 1000
   },
   "faxTransformer": {
     "cmd":	"/usr/bin/tesseract -psm 6 ###INPUT### ###OUTPUT###",
@@ -17,16 +18,17 @@
   "faxParser": {
     "currentStation":	"Vohburg",
     "patterns": {
-      "operationNrPattern":		"einsatz[^\\w]+nr\\s?['13=:]+\\s?([^\\v\\n]*)",
-      "objectPattern": 			"[od]?bjekt\\s?['13=:]+\\s?([^\\v\\n]*)",
-      "streetPattern": 			"strasse\\s?['13=:]+\\s?([^\\v\\n]*)",
-      "crosswayPattern": 		"kreuzung\\s?['13=:]+\\s?([^\\v\\n]*)",
-      "cityPattern": 			"\\b(?:[od]rt)\\b\\s?['13=:]+\\s?([^\\v\\n]*)",
-      "geocoordinatesPattern": 	"koordinate\\s?['13=:]+\\s?([0-9]+\\.[0-9]+)\\s?/\\s?([0-9]+\\.[0-9]+)([^\\v\\n]*)",
-      "priorityPattern":		"pri[od]?rit[aä]t\\s?['13=:]+\\s?(\\d{1})\\s?([^\\v\\n]*)",
-      "keywordPattern": 		"stichw[od]?rt\\s?['13=:]+\\s?([^\\v\\n]*)",
-      "buzzwordPattern": 		"schlagw[od]?rt\\s?['13=:]+\\s?([^\\v\\n]*)",
-      "resourcesPattern":		"\\d{1}[\\s.]{1}\\d{1}[\\s.]{1}\\d{1}\\s+([^\\v\\n]*)",
+      "operationNrPattern":		"einsatz[^\\w]+nr\\s?['13=:]+([^\\n]*)",
+      "objectPattern": 			"[od]?bjekt\\s?['13=:]+([^\\n]*)",
+      "streetPattern": 			"strasse\\s?['13=:]+([^\\n]*)",
+      "crosswayPattern": 		"kreuzung\\s?['13=:]+([^\\n]*)",
+      "cityPattern": 			"\\b(?:[od]rt)\\b\\s?['13=:]+([^\\n]*)",
+      "geocoordinatesPattern": 	"koordinate\\s?['13=:]+\\s?([0-9]+\\.[0-9]+)\\s?/\\s?([0-9]+\\.[0-9]+)([^\\n]*)",
+      "priorityPattern":		"pri[od]?rit[aä]t\\s?['13=:]+(\\d{1})\\s?([^\\n]*)",
+      "keywordPattern": 		"stichw[od]?rt\\s?['13=:]+([^\\n]*)",
+      "buzzwordPattern": 		"schlagw[od]?rt\\s?['13=:]+([^\\n]*)",
+      "resourcesPattern":		"\\d{1}[\\s.]{1}\\d{1}[\\s.]{1}\\d{1}\\s+([^\\n]*)",
+      "resourcePurposeSplitPattern": ">> gefordert:",
       "stationresourcePattern":	"Vohburg",
       "resourcecallnamePattern":"([0-9]+/[0-9]+)"
     },

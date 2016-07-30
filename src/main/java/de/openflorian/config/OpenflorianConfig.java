@@ -52,16 +52,18 @@ public class OpenflorianConfig {
 			try {
 				final String externalConfig = System.getProperty(CONFIG_FILE_PARAM);
 				if (externalConfig != null && !externalConfig.isEmpty()) {
-					File externalConfigFile = new File(externalConfig);
+					final File externalConfigFile = new File(externalConfig);
 					log.info("Use external config: " + externalConfigFile.getAbsolutePath());
 					fis = new FileInputStream(externalConfigFile);
-				} else {
+				}
+				else {
 					log.info("Use internal config: " + CONFIG_FILE);
 					fis = OpenflorianConfig.class.getResourceAsStream(CONFIG_FILE);
 				}
-				ObjectMapper mapper = new ObjectMapper();
+				final ObjectMapper mapper = new ObjectMapper();
 				instance = mapper.readValue(fis, Config.class);
-			} catch (Exception e) {
+			}
+			catch (final Exception e) {
 				log.error(e.getMessage(), e);
 				throw new IllegalStateException(e);
 			}
@@ -128,7 +130,8 @@ public class OpenflorianConfig {
 		public String observerDir;
 		@JsonProperty("archiveDir")
 		public String archiveDir;
-
+		@JsonProperty("incurreDelay")
+		public long incurreDelay;
 	}
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
@@ -190,6 +193,8 @@ public class OpenflorianConfig {
 		public String resourcesPattern;
 		@JsonProperty("stationresourcePattern")
 		public String stationresourcePattern;
+		@JsonProperty("resourcePurposeSplitPattern")
+		public String resourcePurposeSplitPattern;
 		@JsonProperty("resourcecallnamePattern")
 		public String resourcecallnamePattern;
 

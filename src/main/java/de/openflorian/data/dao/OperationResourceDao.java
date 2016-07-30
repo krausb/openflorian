@@ -42,8 +42,8 @@ public class OperationResourceDao extends DatabaseConnector {
 
 	private static final Logger log = LoggerFactory.getLogger(OperationDao.class);
 
-	private static final String INSERT_FIELD_LIST = "callName, crew, description, licensePlate, type";
-	private static final String UPDATE_FIELD_LIST = "callName = ?, crew = ?, description = ?, licensePlate = ?, type = ?";
+	private static final String INSERT_FIELD_LIST = "callName, crew, description, licensePlate, type, isExternal";
+	private static final String UPDATE_FIELD_LIST = "callName = ?, crew = ?, description = ?, licensePlate = ?, type = ?, isExternal = ?";
 	private static final String FIELD_LIST = "id, " + INSERT_FIELD_LIST;
 
 	/**
@@ -197,7 +197,7 @@ public class OperationResourceDao extends DatabaseConnector {
 		Connection dbConnection = null;
 		PreparedStatement preparedStatement = null;
 
-		final String stmt = "SELECT " + FIELD_LIST + " FROM of_operation_resource AS res "
+		final String stmt = "SELECT " + FIELD_LIST + ", op_res.resource_purpose FROM of_operation_resource AS res "
 				+ "JOIN of_operation_of_operation_resource AS op_res ON res.id = op_res.operation_resource_id WHERE operation_id = ?";
 
 		try {
@@ -244,7 +244,7 @@ public class OperationResourceDao extends DatabaseConnector {
 		Connection dbConnection = null;
 		PreparedStatement preparedStatement = null;
 
-		final String stmt = "INSERT INTO of_operation_resource (" + INSERT_FIELD_LIST + ") VALUES(?,?,?,?,?)";
+		final String stmt = "INSERT INTO of_operation_resource (" + INSERT_FIELD_LIST + ") VALUES(?,?,?,?,?,?)";
 
 		try {
 			dbConnection = getDataSource().getConnection();
@@ -256,6 +256,7 @@ public class OperationResourceDao extends DatabaseConnector {
 			preparedStatement.setString(3, o.getDescription());
 			preparedStatement.setString(4, o.getLicensePlate());
 			preparedStatement.setString(5, o.getType());
+			preparedStatement.setInt(6, (o.isExternal() ? 1 : 0));
 
 			preparedStatement.executeUpdate();
 
@@ -312,7 +313,8 @@ public class OperationResourceDao extends DatabaseConnector {
 			preparedStatement.setString(3, o.getDescription());
 			preparedStatement.setString(4, o.getLicensePlate());
 			preparedStatement.setString(5, o.getType());
-			preparedStatement.setLong(6, o.getId());
+			preparedStatement.setInt(6, (o.isExternal() ? 1 : 0));
+			preparedStatement.setLong(7, o.getId());
 
 			preparedStatement.executeUpdate();
 
@@ -397,6 +399,12 @@ public class OperationResourceDao extends DatabaseConnector {
 		r.setDescription(rs.getString("description"));
 		r.setLicensePlate(rs.getString("licensePlate"));
 		r.setType(rs.getString("type"));
+		r.setExternal((rs.getInt("isExternal") == 1 ? true : false));
+		try {
+			r.setPurpose(rs.getString("resource_purpose"));
+		}
+		catch (final SQLException e) {
+		}
 
 		return r;
 	}

@@ -329,14 +329,21 @@ public class OperationDao extends DatabaseConnector {
 		Connection dbConnection = null;
 		PreparedStatement preparedStatement = null;
 
-		final String stmt = "INSERT INTO of_operation_of_operation_resource (operation_id, operation_resource_id) VALUES(?,?)";
+		final OperationResourceDao rdao = new OperationResourceDao();
+		OperationResource resource = rdao.getResourceByCallname(res.getCallName());
+
+		if (resource == null)
+			resource = rdao.insert(res);
+
+		final String stmt = "INSERT INTO of_operation_of_operation_resource (operation_id, operation_resource_id, resource_purpose) VALUES(?,?,?)";
 
 		try {
 			dbConnection = getDataSource().getConnection();
 			preparedStatement = dbConnection.prepareStatement(stmt);
 
 			preparedStatement.setLong(1, o.getId());
-			preparedStatement.setLong(2, res.getId());
+			preparedStatement.setLong(2, resource.getId());
+			preparedStatement.setString(3, res.getPurpose());
 
 			preparedStatement.executeUpdate();
 
@@ -344,6 +351,7 @@ public class OperationDao extends DatabaseConnector {
 				log.debug(stmt);
 				log.debug(o.toString());
 				log.debug(res.toString());
+				log.debug("params: " + o.getId() + ", " + resource.getId() + ", " + res.getPurpose());
 			}
 		}
 		catch (final SQLException e) {

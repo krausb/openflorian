@@ -37,16 +37,6 @@
 			<param name="ConversionPattern" value="%-4d [%t] %-5p %c %x - %m%n" />
 		</layout>
 	</appender>
-
-	<logger name="org.eclipse.jetty">
-		<level value="ERROR" />
-	</logger>
-	<logger name="org.springframework.web">
-		<level value="ERROR" />
-	</logger>
-    <logger name="org.zkoss">
-        <level value="ERROR" />
-    </logger>
 	<logger name="de.openflorian">
 		<level value="DEBUG" />
 	</logger>

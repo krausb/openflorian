@@ -40,9 +40,9 @@ class StreetParserResponsable extends AlarmFaxParserPatternMatcherResponsable {
 
 	@Override
 	public void parse(String alarmfax, Operation operation) {
-		Matcher m = getPattern().matcher(alarmfax);
+		final Matcher m = getPattern().matcher(alarmfax);
 		if (m.find()) {
-			operation.setStreet(m.group(1));
+			operation.setStreet(m.group(1).trim());
 		}
 
 		if (getNext() != null)

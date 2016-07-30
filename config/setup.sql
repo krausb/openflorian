@@ -25,12 +25,14 @@ CREATE TABLE `of_operation_resource` (
   `description` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `licensePlate` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `isExternal` varchar(255) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `of_operation_of_operation_resource` (
   `operation_id` bigint(20) NOT NULL,
   `operation_resource_id` bigint(20) NOT NULL,
+  `resource_purpose` varchar(255) DEFAULT NULL,
   KEY `FK7jny2h7elb4kwnhh8rbc6ir6o` (`operation_resource_id`),
   KEY `FK49ap70vjapykhdbkxp8bub0ob` (`operation_id`),
   FOREIGN KEY (`operation_id`) REFERENCES `of_operation` (`id`),

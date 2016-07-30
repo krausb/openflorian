@@ -5,7 +5,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.openflorian.config.OpenflorianConfig;
-import de.openflorian.data.dao.OperationResourceDao;
 import de.openflorian.data.model.Operation;
 import de.openflorian.data.model.OperationResource;
 import de.openflorian.util.StringUtils;
@@ -17,32 +16,31 @@ import de.openflorian.util.StringUtils;
  */
 class ResourcesParserResponsable extends AlarmFaxParserPatternMatcherResponsable {
 
-	protected Pattern callNamePattern = null;
-	protected String stationresourcePattern = null;
+	protected final Pattern callNamePattern;
+	protected final String stationresourcePattern;
+	protected final String resourcePurposeSplitPattern;
 
 	public ResourcesParserResponsable() {
-		super();
-
-		try {
-			final String callNamePatternStr = OpenflorianConfig.config().faxParser.patterns.resourcecallnamePattern;
-			if (!StringUtils.isEmpty(callNamePatternStr)) {
-				callNamePattern = Pattern.compile(callNamePatternStr);
-				log.info("Resource callName pattern: " + callNamePatternStr);
-			}
-			else {
-				throw new IllegalStateException("Resource callName pattern not set in configuration file.");
-			}
-
-			stationresourcePattern = OpenflorianConfig.config().faxParser.patterns.stationresourcePattern;
-			if (StringUtils.isEmpty(stationresourcePattern))
-				throw new IllegalStateException("Station resource pattern not set in configuration file.");
-			else
-				log.info("Station resource pattern: " + stationresourcePattern);
+		final String callNamePatternStr = OpenflorianConfig.config().faxParser.patterns.resourcecallnamePattern;
+		if (!StringUtils.isEmpty(callNamePatternStr)) {
+			callNamePattern = Pattern.compile(callNamePatternStr);
+			log.info("Resource callName pattern: " + callNamePatternStr);
 		}
-		catch (final Exception e) {
-			log.error(e.getMessage(), e);
+		else {
+			throw new IllegalStateException("Resource callName pattern not set in configuration file.");
 		}
 
+		stationresourcePattern = OpenflorianConfig.config().faxParser.patterns.stationresourcePattern;
+		if (StringUtils.isEmpty(stationresourcePattern))
+			throw new IllegalStateException("Station resource pattern not set in configuration file.");
+		else
+			log.info("Station resource pattern: " + stationresourcePattern);
+
+		resourcePurposeSplitPattern = OpenflorianConfig.config().faxParser.patterns.resourcePurposeSplitPattern;
+		if (StringUtils.isEmpty(resourcePurposeSplitPattern))
+			throw new IllegalStateException("Resource purpose split pattern not set in configuration file.");
+		else
+			log.info("Resource purpose split pattern: " + resourcePurposeSplitPattern);
 	}
 
 	@Override
@@ -59,32 +57,31 @@ class ResourcesParserResponsable extends AlarmFaxParserPatternMatcherResponsable
 			sb.append(m.group(1));
 			sb.append(System.getProperty("line.separator"));
 
-			if (m.group(1).contains(stationresourcePattern)) {
-				final Matcher callNameMatcher = callNamePattern.matcher(m.group(1));
-				if (callNameMatcher.find()) {
-					if (operation.getResources() == null)
-						operation.setResources(new ArrayList<OperationResource>());
-					try {
-						final OperationResourceDao rdao = new OperationResourceDao();
-						OperationResource resource = rdao.getResourceByCallname(callNameMatcher.group(1));
+			final Matcher callNameMatcher = callNamePattern.matcher(m.group(1));
+			if (callNameMatcher.find()) {
+				if (operation.getResources() == null)
+					operation.setResources(new ArrayList<OperationResource>());
 
-						if (resource == null) {
-							// create new adhoc resource
-							resource = new OperationResource();
-							resource.setCallName(callNameMatcher.group(1));
-							resource.setCrew("tbd.");
-							resource.setDescription("tbd.");
-							resource.setLicensePlate("tbd.");
-							resource.setType("tbd.");
-							resource = rdao.insert(resource);
-						}
+				final OperationResource resource = new OperationResource();
+				resource.setCrew("tbd.");
+				resource.setDescription("tbd.");
+				resource.setLicensePlate("tbd.");
+				resource.setType("tbd.");
 
-						operation.getResources().add(resource);
-					}
-					catch (final Exception e) {
-						log.error(e.getMessage(), e);
-					}
+				final String[] aRes = m.group(1).split(resourcePurposeSplitPattern);
+				if (aRes.length > 1 && !StringUtils.isEmpty(aRes[1].trim()))
+					resource.setPurpose(aRes[1].trim());
+
+				if (m.group(1).contains(stationresourcePattern)) {
+					resource.setExternal(false);
+					resource.setCallName(callNameMatcher.group(1));
 				}
+				else {
+					resource.setExternal(true);
+					resource.setCallName(aRes[0]);
+				}
+
+				operation.getResources().add(resource);
 			}
 		}
 		operation.setResourcesRaw(sb.toString());
