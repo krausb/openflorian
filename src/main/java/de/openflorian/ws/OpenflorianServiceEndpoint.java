@@ -7,6 +7,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import de.openflorian.ws.api.impl.AlarmResourceImpl;
+import de.openflorian.ws.api.impl.OperationResourceImpl;
 
 /**
  * Openflorian REST Service Endpoint
@@ -16,10 +17,11 @@ import de.openflorian.ws.api.impl.AlarmResourceImpl;
 @ApplicationPath("/rest/api")
 public class OpenflorianServiceEndpoint extends Application {
 
-	private Set<Object> singletons = new HashSet<Object>();
+	private final Set<Object> singletons = new HashSet<Object>();
 
 	public OpenflorianServiceEndpoint() {
 		singletons.add(new AlarmResourceImpl());
+		singletons.add(new OperationResourceImpl());
 	}
 
 	@Override

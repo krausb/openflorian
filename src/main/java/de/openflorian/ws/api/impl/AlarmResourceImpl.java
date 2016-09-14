@@ -1,5 +1,7 @@
 package de.openflorian.ws.api.impl;
 
+import java.util.List;
+
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 
@@ -23,6 +25,19 @@ public class AlarmResourceImpl implements AlarmResource {
 	}
 
 	@Override
+	public List<Operation> getAllOperations() {
+		try {
+			return new OperationDao().list();
+		}
+		catch (final NotFoundException e) {
+			throw new WebApplicationException(new IllegalArgumentException("No operation found."), 404);
+		}
+		catch (final Exception e) {
+			throw new WebApplicationException(e, 500);
+		}
+	}
+
+	@Override
 	public void incurre(long operationId) {
 		try {
 			final Operation o = new OperationDao().getById(operationId);
@@ -34,6 +49,23 @@ public class AlarmResourceImpl implements AlarmResource {
 		catch (final NotFoundException e) {
 			throw new WebApplicationException(
 					new IllegalArgumentException("No operation with ID " + operationId + " found."), 404);
+		}
+		catch (final Exception e) {
+			throw new WebApplicationException(e, 500);
+		}
+	}
+
+	@Override
+	public void incurreLast() {
+		try {
+			final Operation o = new OperationDao().getLastOperation();
+			if (o != null)
+				OpenflorianContext.vertx().eventBus().publish(EventBusAddresses.ALARM_INCURRED, o);
+			else
+				throw new NotFoundException();
+		}
+		catch (final NotFoundException e) {
+			throw new WebApplicationException(new IllegalArgumentException("No operation found."), 404);
 		}
 		catch (final Exception e) {
 			throw new WebApplicationException(e, 500);

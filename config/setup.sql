@@ -25,7 +25,7 @@ CREATE TABLE `of_operation_resource` (
   `description` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `licensePlate` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `isExternal` varchar(255) NOT NULL DEFAULT 0,
+  `isExternal` tinyint NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 

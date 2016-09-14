@@ -104,7 +104,7 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 			layout.addComponent(buzzword, "buzzword");
 			layout.addComponent(currentTime, "currentTime");
 			layout.addComponent(operationNr, "operationNr");
-			layout.addComponent(object, "object");
+			// layout.addComponent(object, "object");
 			layout.addComponent(city, "city");
 			layout.addComponent(street, "street");
 

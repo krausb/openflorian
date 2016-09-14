@@ -145,6 +145,55 @@ public class OperationDao extends DatabaseConnector {
 	}
 
 	/**
+	 * Gets a specific {@link Operation} by <code>id</code>
+	 * 
+	 * @param id
+	 * @return {@link Operation}
+	 * @throws Exception
+	 */
+	public Operation getLastOperation() throws Exception {
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+
+		final String stmt = "SELECT " + FIELD_LIST + " FROM of_operation ORDER BY id DESC LIMIT 0,1";
+
+		try {
+			dbConnection = getDataSource().getConnection();
+			preparedStatement = dbConnection.prepareStatement(stmt);
+
+			// execute select SQL stetement
+			final ResultSet rs = preparedStatement.executeQuery();
+
+			if (log.isDebugEnabled()) {
+				log.debug(rs.getStatement().toString());
+			}
+
+			if (rs.next()) {
+				return getOperationFromResultSet(rs);
+			}
+			else {
+				return null;
+			}
+
+		}
+		catch (final SQLException e) {
+			log.error("Error while executing SQL Query: " + stmt + " - " + e.getMessage(), e);
+			throw e;
+		}
+		finally {
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (dbConnection != null) {
+				dbConnection.close();
+			}
+
+		}
+	}
+
+	/**
 	 * Lists all available {@link Operation}s
 	 * 
 	 * @return {@link List}<{@link Operation}>
@@ -159,6 +208,54 @@ public class OperationDao extends DatabaseConnector {
 		try {
 			dbConnection = getDataSource().getConnection();
 			preparedStatement = dbConnection.prepareStatement(stmt);
+
+			// execute select SQL stetement
+			final ResultSet rs = preparedStatement.executeQuery();
+
+			if (log.isDebugEnabled()) {
+				log.debug(rs.getStatement().toString());
+			}
+
+			final List<Operation> ops = new ArrayList<>();
+			while (rs.next()) {
+				ops.add(getOperationFromResultSet(rs));
+			}
+			return ops;
+		}
+		catch (final SQLException e) {
+			log.error("Error while executing SQL Query: " + stmt + " - " + e.getMessage(), e);
+			throw e;
+		}
+		finally {
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (dbConnection != null) {
+				dbConnection.close();
+			}
+
+		}
+	}
+
+	/**
+	 * Lists last {@link Operation}s with <code>limit</code>
+	 * 
+	 * @param limit
+	 * @return {@link List}<{@link Operation}>
+	 * @throws Exception
+	 */
+	public List<Operation> listLast(int limit) throws Exception {
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+
+		final String stmt = "SELECT " + FIELD_LIST + " FROM of_operation ORDER BY id DESC limit 0, ?";
+
+		try {
+			dbConnection = getDataSource().getConnection();
+			preparedStatement = dbConnection.prepareStatement(stmt);
+			preparedStatement.setInt(1, limit);
 
 			// execute select SQL stetement
 			final ResultSet rs = preparedStatement.executeQuery();
