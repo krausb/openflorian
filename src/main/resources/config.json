@@ -30,7 +30,7 @@
       "resourcesPattern":		"\\d{1}[\\s.]{1}\\d{1}[\\s.]{1}\\d{1}\\s+([^\\n]*)",
       "resourcePurposeSplitPattern": ">> gefordert:",
       "stationresourcePattern":	"Vohburg",
-      "resourcecallnamePattern":"([0-9]+/[0-9]+)"
+      "resourcecallnamePattern":"([0-9a-zA-Z]+[\\-/]{1}[a-zA-Z0-9]+)"
     },
     "geocoordinates": {
       "source": "epsg:31468",
