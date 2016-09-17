@@ -46,6 +46,10 @@ Openflorian is a Java based Servlet 3.0 Web Application with a Vert.X Reactive C
 * [Server Installation](install-server.md)
 * [Viewer Installation](install-viewer.md)
 
+## OpenFlorian REST API Doc
+
+* [REST API](apidoc/generated/api-doc.html)
+
 ## Additional Projects and Tools
 To give you additional experience and tooling for OpenFlorian, I'm developing additional software tools you may find here:
 
