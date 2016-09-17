@@ -33,13 +33,6 @@
         "description" : "",
         "operationId" : "incurre",
         "produces" : [ "text/plain" ],
-        "parameters" : [ {
-          "name" : "operationId",
-          "in" : "query",
-          "required" : false,
-          "type" : "integer",
-          "format" : "int64"
-        } ],
         "responses" : {
           "default" : {
             "description" : "successful operation"
