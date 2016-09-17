@@ -1,5 +1,8 @@
 package de.openflorian.weather.impl;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +18,23 @@ import net.aksingh.owmjapis.OpenWeatherMap.Units;
 public class OpenWeatherMapSource implements WeatherSource {
 
 	private static final Logger log = LoggerFactory.getLogger(OpenWeatherMapSource.class);
+
+	// TODO: remove this workaround when owm-japis-2.5.0.5 is released on maven central!!!
+	static {
+		try {
+			final Field paramLangField = OpenWeatherMap.class.getDeclaredField("PARAM_LANG");
+			paramLangField.setAccessible(true);
+
+			final Field modifiersField = Field.class.getDeclaredField("modifiers");
+			modifiersField.setAccessible(true);
+			modifiersField.setInt(paramLangField, paramLangField.getModifiers() & ~Modifier.FINAL);
+
+			paramLangField.set(null, "lang=");
+		}
+		catch (final Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
 
 	private final OpenWeatherMap owm = new OpenWeatherMap(Units.METRIC,
 			OpenflorianConfig.config().weather.openWeatherMapApi.apiKey);

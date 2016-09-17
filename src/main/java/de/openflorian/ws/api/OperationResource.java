@@ -9,12 +9,15 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import de.openflorian.data.model.Operation;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * REST Resource for Operation Handlinng
  * 
  * @author Bastian kraus <bofh@k-hive.de>
  */
+@Api(value = "/operation", description = "API functions for managing operations")
 @Path("/operation")
 public interface OperationResource {
 
@@ -23,6 +26,7 @@ public interface OperationResource {
 	 * 
 	 * @return {@link List}<{@link Operation}>
 	 */
+	@ApiOperation(value = "List all operations", response = Operation.class, responseContainer = "List")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/all")
@@ -33,6 +37,7 @@ public interface OperationResource {
 	 * 
 	 * @return {@link List}<{@link Operation}>
 	 */
+	@ApiOperation(value = "List all operations sorted by id descending with given limit", response = Operation.class, responseContainer = "List")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/last")

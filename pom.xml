@@ -256,6 +256,18 @@
 			<version>${supercsv.version}</version>
 		</dependency>
 
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-core</artifactId>
+            <scope>compile</scope>
+            <version>${swagger.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>jsr311-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -328,6 +340,42 @@
 					</lifecycleMappingMetadata>
 				</configuration>
 			</plugin>
+	        <plugin>
+	            <groupId>com.github.kongchen</groupId>
+	            <artifactId>swagger-maven-plugin</artifactId>
+	            <version>${swagger-maven-plugin.version}</version>
+	            <configuration>
+	                <apiSources>
+	                    <apiSource>
+                            <springmvc>false</springmvc>
+                            <locations>de.openflorian.ws.api</locations>
+                            <schemes>http,https</schemes>
+                            <host>of-server</host>
+                            <basePath>/openflorian/rest/api</basePath>
+                            <info>
+                                <title>Openflorian REST API</title>
+                                <version>v1</version>
+                                <description>The OpenFlorian REST API enables management of the server via REST</description>
+                                <termsOfService>
+                                    http://bitbucket.org/ceth/openflorian
+                                </termsOfService>
+                                <contact>
+                                    <email>bofh@cpotr.de</email>
+                                    <name>Bastian Kraus</name>
+                                    <url>http://about.me/bastian.kraus</url>
+                                </contact>
+                                <license>
+                                    <url>hhttp://www.gnu.de/documents/gpl.en.html</url>
+                                    <name>GPL v3</name>
+                                </license>
+                            </info>
+                            <templatePath>${basedir}/apidoc/template/strapdown.html.hbs</templatePath>
+                            <outputPath>${basedir}/apidoc/generated/api-doc.html</outputPath>
+                            <swaggerDirectory>${basedir}/apidoc/generated/swagger-ui</swaggerDirectory>
+	                    </apiSource>
+	                </apiSources>
+	            </configuration>
+	        </plugin>
 		</plugins>
 	</build>
 
@@ -338,6 +386,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<build.version>0.1-DEV</build.version>
+
+		<swagger-maven-plugin.version>3.1.4</swagger-maven-plugin.version>
+		<swagger.version>1.5.3</swagger.version>
 
 		<!-- Dependency properties -->
 		<junit.version>4.12</junit.version>

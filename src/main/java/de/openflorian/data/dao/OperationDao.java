@@ -47,6 +47,8 @@ public class OperationDao extends DatabaseConnector {
 	private static final String UPDATE_FIELD_LIST = "object = ?, keyword = ?, operationNr = ?, city = ?, crossway = ?, priority = ?, buzzword = ?, street = ?, positionLatitude = ?, positionLongitude = ?, resourcesRaw = ?, incurredAt = ?, takenOverAt = ?, dispatchedAt = ?";
 	private static final String FIELD_LIST = "id, " + INSERT_FIELD_LIST;
 
+	private final OperationResourceDao resourceDao = new OperationResourceDao();
+
 	/**
 	 * Get the amount of all available {@link Operation} in persistence context.
 	 * 
@@ -586,7 +588,9 @@ public class OperationDao extends DatabaseConnector {
 		o.setIncurredAt(rs.getDate("incurredAt"));
 		o.setDispatchedAt(rs.getDate("dispatchedAt"));
 		o.setTakenOverAt(rs.getDate("takenOverAt"));
-		o.setResources(new ArrayList<>());
+
+		if (o.getId() != 0)
+			o.setResources(resourceDao.getByOperationId(o.getId()));
 
 		return o;
 	}

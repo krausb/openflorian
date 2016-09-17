@@ -1,7 +1,5 @@
 package de.openflorian.ws.api.impl;
 
-import java.util.List;
-
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 
@@ -22,19 +20,6 @@ public class AlarmResourceImpl implements AlarmResource {
 	@Override
 	public Operation getCurrentOperation() {
 		return AlarmContextVerticle.getInstance().getCurrentOperation();
-	}
-
-	@Override
-	public List<Operation> getAllOperations() {
-		try {
-			return new OperationDao().list();
-		}
-		catch (final NotFoundException e) {
-			throw new WebApplicationException(new IllegalArgumentException("No operation found."), 404);
-		}
-		catch (final Exception e) {
-			throw new WebApplicationException(e, 500);
-		}
 	}
 
 	@Override

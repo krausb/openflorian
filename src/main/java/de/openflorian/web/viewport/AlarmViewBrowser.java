@@ -151,14 +151,6 @@ public class AlarmViewBrowser extends AbstractBrowser implements PollListener {
 		if (currentOperation.getOperationNr() != null)
 			operationNr.setValue(currentOperation.getOperationNr());
 
-		if (!StringUtils.isEmpty(currentOperation.getObject())) {
-			object.setValue(currentOperation.getObject());
-			// objectBox.setVisible(true);
-		}
-		else {
-			// objectBox.setVisible(false);
-		}
-
 		if (currentOperation.getPositionLatitude() != 0)
 			positionLatitude.setValue(String.valueOf(currentOperation.getPositionLatitude()));
 

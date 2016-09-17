@@ -1,0 +1,377 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "The OpenFlorian REST API enables management of the server via REST",
+    "version" : "v1",
+    "title" : "Openflorian REST API",
+    "termsOfService" : "http://bitbucket.org/ceth/openflorian",
+    "contact" : {
+      "name" : "Bastian Kraus",
+      "url" : "http://about.me/bastian.kraus",
+      "email" : "bofh@cpotr.de"
+    },
+    "license" : {
+      "name" : "GPL v3",
+      "url" : "hhttp://www.gnu.de/documents/gpl.en.html"
+    }
+  },
+  "host" : "of-server",
+  "basePath" : "/openflorian/rest/api",
+  "tags" : [ {
+    "name" : "alarm",
+    "description" : "Operations for alarm handling"
+  }, {
+    "name" : "operation",
+    "description" : "API functions for managing operations"
+  } ],
+  "schemes" : [ "http", "https" ],
+  "paths" : {
+    "/alarm" : {
+      "post" : {
+        "tags" : [ "alarm" ],
+        "summary" : "Incurre alarm",
+        "description" : "",
+        "operationId" : "incurre",
+        "produces" : [ "text/plain" ],
+        "parameters" : [ {
+          "name" : "operationId",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/alarm/current" : {
+      "get" : {
+        "tags" : [ "alarm" ],
+        "summary" : "Get the current incurred operation",
+        "description" : "",
+        "operationId" : "getCurrentOperation",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Operation"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "alarm" ],
+        "summary" : "Takeover current incurred operation",
+        "description" : "",
+        "operationId" : "takeOver",
+        "produces" : [ "text/plain" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "alarm" ],
+        "summary" : "Dispatch current incurred operation",
+        "description" : "",
+        "operationId" : "dispatch",
+        "produces" : [ "text/plain" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/alarm/last" : {
+      "post" : {
+        "tags" : [ "alarm" ],
+        "summary" : "Re-incurre last incurred alarm",
+        "description" : "",
+        "operationId" : "incurreLast",
+        "produces" : [ "text/plain" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/operation/all" : {
+      "get" : {
+        "tags" : [ "operation" ],
+        "summary" : "List all operations",
+        "description" : "",
+        "operationId" : "getAllOperations",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Operation"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operation/last" : {
+      "get" : {
+        "tags" : [ "operation" ],
+        "summary" : "List all operations sorted by id descending with given limit",
+        "description" : "",
+        "operationId" : "getLastOperations",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Operation"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Country" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "iso2" : {
+          "type" : "string"
+        },
+        "shortName" : {
+          "type" : "string"
+        },
+        "longName" : {
+          "type" : "string"
+        },
+        "iso3" : {
+          "type" : "string"
+        },
+        "numcode" : {
+          "type" : "string"
+        },
+        "unMember" : {
+          "type" : "string"
+        },
+        "callingCode" : {
+          "type" : "string"
+        },
+        "cctld" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Department" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string"
+        },
+        "contactFirstname" : {
+          "type" : "string"
+        },
+        "contactLastname" : {
+          "type" : "string"
+        },
+        "street" : {
+          "type" : "string"
+        },
+        "zip" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "city" : {
+          "type" : "string"
+        },
+        "country" : {
+          "$ref" : "#/definitions/Country"
+        },
+        "vatid" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "fax" : {
+          "type" : "string"
+        },
+        "geoLatitude" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "geoLongitude" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "token" : {
+          "type" : "string"
+        },
+        "tokenSecret" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "Operation" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "operationNr" : {
+          "type" : "string"
+        },
+        "positionLongitude" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "positionLatitude" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "object" : {
+          "type" : "string"
+        },
+        "street" : {
+          "type" : "string"
+        },
+        "crossway" : {
+          "type" : "string"
+        },
+        "city" : {
+          "type" : "string"
+        },
+        "priority" : {
+          "type" : "string"
+        },
+        "keyword" : {
+          "type" : "string"
+        },
+        "buzzword" : {
+          "type" : "string"
+        },
+        "resourcesRaw" : {
+          "type" : "string"
+        },
+        "incurredAt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "takenOverAt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dispatchedAt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "resources" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OperationResource"
+          }
+        },
+        "technicalAssistanceOperation" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "fireOperation" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "OperationResource" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "station" : {
+          "$ref" : "#/definitions/Station"
+        },
+        "callName" : {
+          "type" : "string"
+        },
+        "licensePlate" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "crew" : {
+          "type" : "string"
+        },
+        "purpose" : {
+          "type" : "string"
+        },
+        "external" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "Station" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "department" : {
+          "$ref" : "#/definitions/Department"
+        },
+        "street" : {
+          "type" : "string"
+        },
+        "zip" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "city" : {
+          "type" : "string"
+        },
+        "country" : {
+          "$ref" : "#/definitions/Country"
+        }
+      }
+    }
+  }
+}

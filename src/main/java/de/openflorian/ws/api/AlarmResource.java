@@ -1,7 +1,5 @@
 package de.openflorian.ws.api;
 
-import java.util.List;
-
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -12,12 +10,15 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import de.openflorian.data.model.Operation;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * REST Resource for Alarm Handlinng
  * 
  * @author Bastian kraus <bofh@k-hive.de>
  */
+@Api(value = "/alarm", description = "Operations for alarm handling")
 @Path("/alarm")
 public interface AlarmResource {
 
@@ -29,6 +30,7 @@ public interface AlarmResource {
 	 * @param operationId
 	 * @return
 	 */
+	@ApiOperation(value = "Incurre alarm")
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/")
@@ -41,6 +43,7 @@ public interface AlarmResource {
 	 * 
 	 * @return
 	 */
+	@ApiOperation(value = "Re-incurre last incurred alarm")
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/last")
@@ -53,20 +56,11 @@ public interface AlarmResource {
 	 * 
 	 * @return {@link Operation}
 	 */
+	@ApiOperation(value = "Get the current incurred operation", response = Operation.class)
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/current")
 	public Operation getCurrentOperation();
-
-	/**
-	 * REST Resource to load a {@link List}<{@link Operation}>
-	 * 
-	 * @return {@link List}<{@link Operation}>
-	 */
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/all")
-	public List<Operation> getAllOperations();
 
 	/**
 	 * REST Resource to takeOver an {@link Operation} with given <code>operationId</code><br/>
@@ -76,6 +70,7 @@ public interface AlarmResource {
 	 * @param operationId
 	 * @return
 	 */
+	@ApiOperation(value = "Takeover current incurred operation")
 	@PUT
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/current")
@@ -91,6 +86,7 @@ public interface AlarmResource {
 	 * @param operationId
 	 * @return
 	 */
+	@ApiOperation(value = "Dispatch current incurred operation")
 	@DELETE
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/current")
