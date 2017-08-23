@@ -4,7 +4,7 @@
 
 ```shell
 &> sudo apt-get update && sudo apt-get upgrade -y
-&> sudo apt-get install iceweasel
+&> sudo apt-get install iceweasel unclutter
 ```
 
 Install R-Kiosk Addon for Iceweasel/Firefox:
@@ -26,6 +26,7 @@ AND
 
 # start iceweasel in kiosk mode
 @iceweasel http://<openflorianserver>/openflorian/
+@unclutter -grab -visible
 ```
 
 ##4. Install CEC Library for Raspbian
