@@ -39,10 +39,11 @@
 	</appender>
 	<logger name="de.openflorian">
 		<level value="DEBUG" />
+		<appender-ref ref="stdout" />
 	</logger>
 
 	<root>
-		<level value="debug" />
+		<level value="info" />
 		<appender-ref ref="stdout" />
 	</root>
 

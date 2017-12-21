@@ -22,6 +22,7 @@ package de.openflorian.config;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,8 +82,17 @@ public class OpenflorianConfig {
 		public FaxTransformer faxTransformer;
 		@JsonProperty("faxParser")
 		public FaxParser faxParser;
+		@JsonProperty(value = "alerter", required = false)
+		public List<Alerter> alerter;
 		@JsonProperty("weather")
 		public Weather weather;
+	}
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class Alerter {
+
+		@JsonProperty("url")
+		public String url;
 	}
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)

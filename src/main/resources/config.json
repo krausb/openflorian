@@ -27,7 +27,7 @@
       "priorityPattern":		"pri[od]?rit[aä]t\\s?['13=:]+(\\d{1})\\s?([^\\n]*)",
       "keywordPattern": 		"stichw[od]?rt\\s?['13=:]+([^\\n]*)",
       "buzzwordPattern": 		"schlagw[od]?rt\\s?['13=:]+([^\\n]*)",
-      "resourcesPattern":		"\\d{1}[\\s.]{1}\\d{1}[\\s.]{1}\\d{1}\\s+([^\\n]*)",
+      "resourcesPattern":		"(?m)^\\d{1}[\\s.]{1}\\d{1}[\\s.]{1}\\d{1}\\s+([^\\n]*)$",
       "resourcePurposeSplitPattern": ">> gefordert:",
       "stationresourcePattern":	"Vohburg",
       "resourcecallnamePattern":"([0-9a-zA-Z]+[\\-/]{1}[a-zA-Z0-9]+)"
