@@ -82,14 +82,14 @@ public class OpenflorianConfig {
 		public FaxTransformer faxTransformer;
 		@JsonProperty("faxParser")
 		public FaxParser faxParser;
-		@JsonProperty(value = "alerter", required = false)
-		public List<Alerter> alerter;
+		@JsonProperty(value = "urlAlerter", required = false)
+		public List<UrlAlerter> urlAlerter;
 		@JsonProperty("weather")
 		public Weather weather;
 	}
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	public static class Alerter {
+	public static class UrlAlerter {
 
 		@JsonProperty("protocol")
 		public String protocol;

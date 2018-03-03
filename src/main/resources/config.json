@@ -38,7 +38,7 @@
       "targetParams": "+title=long/lat:WGS84 +proj=longlat +datum=WGS84 +units=degrees"
     }
   },
-  "alerter": [
+  "urlAlerter": [
     {
       "protocol": "http",
       "host": "localhost",

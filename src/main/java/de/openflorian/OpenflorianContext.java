@@ -22,6 +22,8 @@ package de.openflorian;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import de.openflorian.alarm.alert.impl.UrlAlerterVerticle;
+import de.openflorian.config.OpenflorianConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,6 +123,10 @@ public class OpenflorianContext implements ServletContextListener {
 		vertx.deployVerticle(new AlarmFaxParserVerticle());
 		vertx.deployVerticle(new AlarmFaxArchiver());
 		vertx.deployVerticle(new WeatherProvisioningVerticle());
+
+		if(!OpenflorianConfig.config().urlAlerter.isEmpty()) {
+			OpenflorianConfig.config().urlAlerter.stream().forEach(a -> vertx.deployVerticle(new UrlAlerterVerticle(a)));
+		}
 	}
 
 	/**

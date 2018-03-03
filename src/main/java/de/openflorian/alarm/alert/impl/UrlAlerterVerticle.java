@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import static de.openflorian.OpenflorianGlobals.HTTP_USER_AGENT;
 
 /**
- * URL Alerter
+ * URL UrlAlerter
  *
  * Alerts / sends serialized {@link Operation} to a configured URL.
  */
@@ -45,7 +45,7 @@ public class UrlAlerterVerticle extends AbstractAlerter {
 
     private final HttpClient httpClient = new DefaultHttpClient();
 
-    private final OpenflorianConfig.Alerter alerter;
+    private final OpenflorianConfig.UrlAlerter alerter;
     private final HttpPost postRequest;
 
     /**
@@ -53,7 +53,7 @@ public class UrlAlerterVerticle extends AbstractAlerter {
      *
      * @param alerter
      */
-    public UrlAlerterVerticle(OpenflorianConfig.Alerter alerter) {
+    public UrlAlerterVerticle(OpenflorianConfig.UrlAlerter alerter) {
         this.alerter = alerter;
         postRequest = new HttpPost(getAlertingUrl());
         // add header
@@ -87,7 +87,7 @@ public class UrlAlerterVerticle extends AbstractAlerter {
     }
 
     /**
-     * Create URL from {@link OpenflorianConfig.Alerter}
+     * Create URL from {@link OpenflorianConfig.UrlAlerter}
      * @return
      */
     private String getAlertingUrl() {

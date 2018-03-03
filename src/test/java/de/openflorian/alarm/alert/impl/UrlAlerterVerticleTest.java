@@ -19,8 +19,11 @@ package de.openflorian.alarm.alert.impl;
  * along with Openflorian.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+
 import de.openflorian.OperationGenerator;
 import de.openflorian.config.OpenflorianConfig;
 import de.openflorian.crypt.CryptCipherService;
@@ -34,23 +37,27 @@ import java.util.List;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 /**
- * URL Alerter Verticle Unit Test
+ * URL UrlAlerter Verticle Unit Test
  */
 public class UrlAlerterVerticleTest {
 
     private static final Logger log = LoggerFactory.getLogger(UrlAlerterVerticleTest.class);
 
-    private static final List<OpenflorianConfig.Alerter> alerters = OpenflorianConfig.config().alerter;
+    private static final List<OpenflorianConfig.UrlAlerter> alerters = OpenflorianConfig.config().urlAlerter;
 
     @ClassRule
-    public static final WireMockRule httpServerMock = new WireMockRule();
+    public static final WireMockRule httpServerMock = new WireMockRule(options().dynamicPort());
 
     @Test
     public void testUrlAlertNotEncrypted() throws Exception {
 
-        OpenflorianConfig.Alerter alerter = alerters.get(0);
-        alerter.encryptPayload = false;
-        String url = String.format("%s://%s:%d%s", alerter.protocol, alerter.host, alerter.port, alerter.path);
+        OpenflorianConfig.UrlAlerter alerter = getAlerter();
+        String url = String.format(
+                "%s://%s:%d%s",
+                alerter.protocol,
+                alerter.host,
+                alerter.port,
+                alerter.path);
 
         Operation probe = OperationGenerator.generate();
         String probeJson = OperationGenerator.generateJson(probe);
@@ -75,8 +82,13 @@ public class UrlAlerterVerticleTest {
     @Test
     public void testUrlAlertEncrypted() throws Exception {
 
-        OpenflorianConfig.Alerter alerter = alerters.get(0);
-        String url = String.format("%s://%s:%d%s", alerter.protocol, alerter.host, alerter.port, alerter.path);
+        OpenflorianConfig.UrlAlerter alerter = getAlerter();
+        String url = String.format(
+                "%s://%s:%d%s",
+                alerter.protocol,
+                alerter.host,
+                alerter.port,
+                alerter.path);
 
         Operation probe = OperationGenerator.generate();
         String probeJson = OperationGenerator.generateJson(probe);
@@ -106,6 +118,16 @@ public class UrlAlerterVerticleTest {
                         .withRequestBody(equalTo(probeJson))
         );
 
+    }
+
+    private OpenflorianConfig.UrlAlerter getAlerter() throws Exception {
+        OpenflorianConfig.UrlAlerter alerter = OpenflorianConfig.UrlAlerter.class.newInstance();
+        alerter.encryptPayload = false;
+        alerter.protocol = "http";
+        alerter.host = "localhost";
+        alerter.port = httpServerMock.port();
+        alerter.path = "/alert";
+        return alerter;
     }
 
 }

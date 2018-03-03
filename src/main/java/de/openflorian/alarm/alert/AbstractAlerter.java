@@ -27,9 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract Alerter
+ * Abstract UrlAlerter
  *
- * Provides basic capabilities for implementation of a concrete alerter.
+ * Provides basic capabilities for implementation of a concrete urlAlerter.
  */
 public abstract class AbstractAlerter extends AbstractVerticle {
 
@@ -58,7 +58,7 @@ public abstract class AbstractAlerter extends AbstractVerticle {
     }
 
     /**
-     * Implementation of a concrete Alerter.
+     * Implementation of a concrete UrlAlerter.
      *
      * @param operation
      */
