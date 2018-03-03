@@ -20,6 +20,8 @@ package de.openflorian.alarm.alert.impl;
  */
 
 import de.openflorian.alarm.alert.AbstractAlerter;
+import de.openflorian.config.OpenflorianConfig;
+import de.openflorian.crypt.CryptCipherService;
 import de.openflorian.data.model.Operation;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -43,17 +45,17 @@ public class UrlAlerterVerticle extends AbstractAlerter {
 
     private final HttpClient httpClient = new DefaultHttpClient();
 
-    private final String url;
+    private final OpenflorianConfig.Alerter alerter;
     private final HttpPost postRequest;
 
     /**
      * CTOR for configuring an URL to alert {@link Operation}s to.
      *
-     * @param url
+     * @param alerter
      */
-    public UrlAlerterVerticle(String url) {
-        this.url = url;
-        postRequest = new HttpPost(this.url);
+    public UrlAlerterVerticle(OpenflorianConfig.Alerter alerter) {
+        this.alerter = alerter;
+        postRequest = new HttpPost(getAlertingUrl());
         // add header
         postRequest.setHeader("User-Agent", HTTP_USER_AGENT);
     }
@@ -61,16 +63,41 @@ public class UrlAlerterVerticle extends AbstractAlerter {
     @Override
     public void alert(Operation operation) throws Exception {
 
-        log.info("Alerting incurred operation to URL: " + url);
+        log.info("Alerting incurred operation to URL: " + getAlertingUrl());
 
         // Building HTTP Post Request
         ObjectMapper mapper = new ObjectMapper();
         String payload = mapper.writeValueAsString(operation);
+
+        if(alerter.encryptPayload) {
+            payload = CryptCipherService.service().encrypt(
+                    CryptCipherService.service().encrypt(
+                            payload,
+                            CryptCipherService.CipherTarget.Blowfish
+                    ),
+                    CryptCipherService.CipherTarget.Xor
+            );
+        }
+
         postRequest.setEntity(new StringEntity(payload));
 
         // Executing HTTP Post Request
         HttpResponse response = httpClient.execute(postRequest);
-        log.info("Response status: " + url);
+        log.info("Response status: " + response.toString());
+    }
+
+    /**
+     * Create URL from {@link OpenflorianConfig.Alerter}
+     * @return
+     */
+    private String getAlertingUrl() {
+        return String.format(
+            "%s://%s:%d%s",
+                this.alerter.protocol,
+                this.alerter.host,
+                this.alerter.port,
+                this.alerter.path
+        );
     }
 
 }

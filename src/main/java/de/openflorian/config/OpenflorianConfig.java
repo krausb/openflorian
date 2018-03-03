@@ -91,8 +91,16 @@ public class OpenflorianConfig {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public static class Alerter {
 
-		@JsonProperty("url")
-		public String url;
+		@JsonProperty("protocol")
+		public String protocol;
+		@JsonProperty("host")
+		public String host;
+		@JsonProperty("port")
+		public int port;
+		@JsonProperty("path")
+		public String path;
+		@JsonProperty("encryptPayload")
+		public boolean encryptPayload;
 	}
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)

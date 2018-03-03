@@ -38,7 +38,7 @@ public class CryptCipherService {
 
 	public static CryptCipherService service() {
 		if (instance == null) {
-
+			instance = new CryptCipherService();
 		}
 		return instance;
 	}

@@ -38,6 +38,15 @@
       "targetParams": "+title=long/lat:WGS84 +proj=longlat +datum=WGS84 +units=degrees"
     }
   },
+  "alerter": [
+    {
+      "protocol": "http",
+      "host": "localhost",
+      "port": 8080,
+      "path": "/alert",
+      "encryptPayload": true
+    }
+  ],
   "weather": {
   	"loadPeriod": 300,
     "yahooWeatherApi": {

@@ -100,7 +100,7 @@ public class AlarmFaxParserVerticle extends AbstractVerticle {
 	/**
 	 * Parses given file from <code>event</code> and extracts
 	 * 
-	 * @param event
+	 * @param msg
 	 * @throws FileNotFoundException
 	 * @returns {@link Operation}
 	 */
